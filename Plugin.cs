@@ -2,6 +2,7 @@
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
+using ReventureEndingRando.EndingEffects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace ReventureEndingRando
         public static ManualLogSource PatchLogger;
 
         public static EndingRandomizer randomizer;
+
+        public static List<EndingEffectsEnum> endingEffects;
 
         private void Awake()
         {
@@ -38,7 +41,11 @@ namespace ReventureEndingRando
         {
             if (Input.GetKeyDown(KeyCode.F5))
             {
-                randomizer.Randomize();
+                Logger.LogInfo($"Available Effects:");
+                foreach (EndingEffectsEnum ee in endingEffects)
+                {
+                    Logger.LogInfo($"{ee}");
+                }
             }
         }
 
@@ -82,7 +89,7 @@ namespace ReventureEndingRando
         {
             //First Run
             IProgressionService progression = Core.Get<IProgressionService>();
-            Plugin.randomizer.UpdateWorld(progression);
+            Plugin.endingEffects = Plugin.randomizer.UpdateWorld(progression);
             return;
         }
     }

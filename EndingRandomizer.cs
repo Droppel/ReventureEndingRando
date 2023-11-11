@@ -31,14 +31,19 @@ namespace ReventureEndingRando
             Plugin.PatchLogger.LogInfo("Finished generating Seed");
         }
 
-        public void UpdateWorld(IProgressionService progression)
+        public List<EndingEffectsEnum> UpdateWorld(IProgressionService progression)
         {
+            List<EndingEffectsEnum> enabledEffect = new List<EndingEffectsEnum>();
             foreach (KeyValuePair<EndingTypes, EndingEffectsEnum> entry in randomization)
             {
                 EndingEffect ee = EndingEffect.InitFromEnum(entry.Value);
                 bool endingAchieved = progression.IsEndingUnlocked(entry.Key);
                 if (ee != null) {
                     ee.ActivateEffect(endingAchieved);
+                    if (endingAchieved)
+                    {
+                        enabledEffect.Add(entry.Value);
+                    }
                 }
             }
 
@@ -47,6 +52,7 @@ namespace ReventureEndingRando
             {
                 p.deployTime = 3;
             }
+            return enabledEffect;
         }
 
         public bool LoadState()
