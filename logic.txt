@@ -1,0 +1,104 @@
+﻿#sword=(SpawnSwordPedestalItem | SpawnSwordChest)
+#mrhugs=SpawnMrHugsChest
+#nuke=(SpawnHookChest + SpawnNukeItem)
+#princessportalwithitem=(UnlockMirrorPortal + (16 | GrowVine))
+StabElder: $sword
+LonkFaceplant: 4
+KilledByMinion: free
+StabGuard: $sword
+KillTheKing: $sword + SpawnKing
+FallIntoLava: free
+JumpIntoPiranhaLake: free
+WaterfallsBottom: free
+StabShopKeeper: $sword + SpawnShopkeeper
+DigIntoBottomlessPit: SpawnShovelChest
+RescueCat: $mrhugs
+FindFishingRod: SpawnFishingRodChest
+HugMinion: $mrhugs
+RoastedByDragon: SpawnDragon
+KilledByDarkArenaMinion: free
+StabDragon: $sword + SpawnDragon
+FaultyCannonShot: 15 + (UnlockShopCannon | UnlockCastleToShopCannon | UnlockDarkCastleCannon | UnlockCastleToDarkCastleCannon)
+HugTheKing: $mrhugs + SpawnKing
+HugGuard: $mrhugs
+TakeTheDayOff: free
+FallIntoSpikes: free
+PickupAnvil: SpawnAnvilItem
+EatenByFakePrincess: SpawnMimic
+ClimbMountain: SpawnStrawberry
+StabMinionMultipleTimes: $sword
+CrushedByOwnStuff: %4
+ShootCannonballToCastle: $nuke + UnlockShopCannon
+CaughtByOwnBomb: SpawnBombsChest
+DragonWithShield: SpawnDragon + SpawnShieldChest
+EnterTheChimney: free
+DestroyAllPots: $sword
+StabBoulder: $sword
+LeapOfFaithFromTheMountain: free
+ElevatorCrush: UnlockElevatorButton | UnlockCallElevatorButtons
+GetIntoThePipe: free
+DragonWithFireTrinket: SpawnDragon + SpawnLavaTrinketChest
+HugShopkeeper: SpawnShopkeeper + $mrhugs
+WrongLever: free
+GetIntoBigChest: free
+HugElder: $mrhugs
+DragonWithShieldAndFireTrinket: SpawnDragon + SpawnLavaTrinketChest + SpawnShieldChest
+AirDuctsAccident: free
+HugDragon: SpawnDragon + $mrhugs
+WrongLever2: free
+TakePrincessToBed: SpawnPrincessItem
+JumpOffTheCliff: free
+HarakiriSuicide: $sword
+SelfDestructFortress: free
+HundredMinionsMassacre: $sword
+KilledByDarkLord: SpawnPrincessItem
+TakePrincessBackToTown: SpawnPrincessItem
+ShootPrincessToTown: SpawnPrincessItem + UnlockDarkCastleCannon
+FallWithPrincessToAnvilPit: SpawnPrincessItem
+HugBoulder: $mrhugs
+JumpOffTheBalconyWithPrincess: SpawnPrincessItem
+ShootCannonballToShop: $nuke + UnlockCastleToShopCannon
+HugPrincess: $mrhugs + SpawnPrincessItem
+JumpOffTheBalcony: free
+StayAfk: free
+PlaceBombUnderCastle: SpawnBombsChest
+DontKillMinions: free
+FindTreasure: SpawnShovelChest
+KillChicken: $sword + 16
+StabPrincess: $sword + SpawnPrincessItem + ($princessportalwithitem | SpawnHookChest | UnlockElevatorButton)
+OverhealByFairies: free
+DarkStoneToAltar: SpawnDarkstoneChest
+CrushedAtUltimateDoor: 6
+DarkLordComicStash: free
+StabDarkLord: $sword + SpawnPrincessItem + ($princessportalwithitem | SpawnHookChest | UnlockElevatorButton)
+TriggerTrollSpikes: free
+SacrificeEveryItem: %6
+SacrificePrincess: SpawnPrincessItem
+HugDarkLord: $mrhugs + SpawnPrincessItem
+ShotgunFakePrincess: $sword + SpawnShopkeeper + SpawnMimic
+FakePrincessInsideChest: SpawnPrincessItem
+TakePrincessToDarkAltar: SpawnPrincessItem
+GetIntoTheCloud: 16 | GrowVine
+KidnapPrincess: SpawnPrincessItem
+HugChicken: 16 + $mrhugs
+TakeChickenToDarkAltar: 16
+PrincessToDesertGate: SpawnPrincessItem
+FallIntoWaterfallWithPrincess: SpawnPrincessItem
+BreakSpaceTimeContinuum: SpawnWhistleChest
+ShootCannonballToTown: $nuke + UnlockDarkCastleCannon
+KillAllFairies: $sword | $mrhugs
+MakeBabiesWithPrincess: $sword + SpawnPrincessItem + ($princessportalwithitem | SpawnHookChest | UnlockElevatorButton)
+KillAllDevsHell: $sword + SpawnPrincessItem + (SpawnHookChest | (SpawnShovelChest + 16 + (UnlockElevatorButton | $princessportalwithitem)))
+DesertEnd: %4 + UnlockGeyserDesert2
+FindAlienLarvae: SpawnShovelChest
+FaceDarkLordWithShield: SpawnShieldChest + SpawnPrincessItem + ($princessportalwithitem | SpawnHookChest | UnlockElevatorButton)
+MultipleDesertJumps: %4
+DatePrincessAndDragon: SpawnPrincessItem + SpawnDragon
+GiveDarkStoneToDarkLord: SpawnDarkstoneChest + SpawnPrincessItem + ($princessportalwithitem | SpawnHookChest | UnlockElevatorButton)
+TakePrincessToLonksHouse: SpawnPrincessItem
+StayInTheWater: free
+AboardPirateShip: free
+SwimIntoTheOcean: free
+FeedTheMimic: SpawnBurgerChest + SpawnMimic + ($princessportalwithitem | SpawnHookChest | UnlockElevatorButton)
+FeedTheKing: SpawnBurgerChest + SpawnKing
+UltimateEnding: 99 + %4
