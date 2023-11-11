@@ -16,7 +16,7 @@ namespace ReventureEndingRando.EndingEffects
             switch (e)
             {
                 case EndingEffectsEnum.SpawnSwordPedestalItem:
-                    return new SpawnItemSimple("World/Items/Sword Item Pedestal/Item Sword");
+                    return new SpawnSwordPedestal();
                 case EndingEffectsEnum.SpawnSwordChest:
                     return new SpawnSwordChest();
                 case EndingEffectsEnum.SpawnShovelChest:
@@ -103,11 +103,22 @@ namespace ReventureEndingRando.EndingEffects
         {
             name = _name;
         }
-        
+
         public override void ActivateEffect(bool endingAchieved)
         {
             GameObject itemSword = GameObject.Find(name);
             itemSword.SetActive(endingAchieved);
+        }
+    }
+    class SpawnSwordPedestal: EndingEffect
+    {
+        public override void ActivateEffect(bool endingAchieved)
+        {
+            //TODO remove chest completely
+            GameObject itemSword = GameObject.Find("World/Items/Sword Item Pedestal/Item Sword");
+            GameObject pedestal = GameObject.Find("World/Items/Sword Item Pedestal");
+            itemSword.SetActive(endingAchieved);
+            pedestal.SetActive(endingAchieved);
         }
     }
 

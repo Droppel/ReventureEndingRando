@@ -57,14 +57,7 @@ namespace ReventureEndingRando
         private static bool Prefix(ref EndingCinematicConfiguration configuration)
         {
             configuration.skippable = true;
-            bool success = Plugin.randomizer.randomization.TryGetValue(configuration.ending, out EndingEffects.EndingEffectsEnum ee);
-            if (success)
-            {
-                Plugin.PatchLogger.LogInfo($"{configuration.ending} unlocked nothing!");
-            } else
-            {
-                Plugin.PatchLogger.LogInfo($"{configuration.ending} unlocked {ee}!");
-            }
+            Plugin.PatchLogger.LogInfo($"{configuration.ending} unlocked {Plugin.randomizer.randomization[configuration.ending]}!");
             return true;
         }
     }

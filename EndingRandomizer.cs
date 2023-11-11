@@ -41,6 +41,12 @@ namespace ReventureEndingRando
                     ee.ActivateEffect(endingAchieved);
                 }
             }
+
+            // Speed up grates
+            foreach (Platform p in GameObject.FindObjectsOfType<Platform>())
+            {
+                p.deployTime = 3;
+            }
         }
 
         public bool LoadState()
