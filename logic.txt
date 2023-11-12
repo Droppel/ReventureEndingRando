@@ -91,7 +91,7 @@ MakeBabiesWithPrincess: $sword + SpawnPrincessItem + ($princessportalwithitem | 
 KillAllDevsHell: $sword + SpawnPrincessItem + (SpawnHookChest | (SpawnShovelChest + 16 + (UnlockElevatorButton | $princessportalwithitem)))
 DesertEnd: %4 + UnlockGeyserDesert2
 FindAlienLarvae: SpawnShovelChest
-FaceDarkLordWithShield: SpawnShieldChest + SpawnPrincessItem + ($princessportalwithitem | SpawnHookChest | UnlockElevatorButton)
+FaceDarkLordWithShield: SpawnShieldChest + SpawnPrincessItem + ($princessportalwithitem | ((SpawnHookChest | UnlockElevatorButton) + ($sword | SpawnShovelChest | 16 | UnlockShopCannon | UnlockGeyserVolcanoe)))
 MultipleDesertJumps: %4
 DatePrincessAndDragon: SpawnPrincessItem + SpawnDragon
 GiveDarkStoneToDarkLord: SpawnDarkstoneChest + SpawnPrincessItem + ($princessportalwithitem | SpawnHookChest | UnlockElevatorButton)

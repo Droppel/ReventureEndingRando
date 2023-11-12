@@ -134,6 +134,8 @@ namespace ReventureEndingRando.EndingEffects
             //TODO remove chest completely
             GameObject swordChest = GameObject.Find("World/Items/SwordAtHome/TreasureChest_Sword");
             GameObject openChest = GameObject.Find("World/Items/SwordAtHome/OpenChest");
+            GameObject swordAtHome = GameObject.Find("World/Items/SwordAtHome");
+            swordAtHome.SetActive(endingAchieved);
             openChest.SetActive(!endingAchieved);
             swordChest.SetActive(endingAchieved);
         }
@@ -146,8 +148,10 @@ namespace ReventureEndingRando.EndingEffects
             //TODO remove chest completely
             GameObject badCrops = GameObject.Find("World/BackgroundElements/BadCrops");
             GameObject goodCrops = GameObject.Find("World/PersistentElements/GoodCrops");
+            GameObject cropsCloud = GameObject.Find("World/PersistentElements/CropsClouds");
             badCrops.SetActive(!endingAchieved);
             goodCrops.SetActive(endingAchieved);
+            cropsCloud.SetActive(endingAchieved);
         }
     }
 
