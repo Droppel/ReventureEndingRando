@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -23,6 +24,8 @@ namespace ReventureEndingRando
 
         public static List<EndingEffectsEnum> endingEffects;
 
+        public static Queue<EndingEffectsEnum> lastUnlocks;
+
         private void Awake()
         {
             // Plugin startup logic
@@ -34,7 +37,9 @@ namespace ReventureEndingRando
             randomizer = new EndingRandomizer();
             Logger.LogInfo($"Randomized: {randomizer.ToString()}");
 
-            Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
+            lastUnlocks = new Queue<EndingEffectsEnum>();
+
+            Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} Version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
         }
 
         private void Update()
@@ -64,7 +69,13 @@ namespace ReventureEndingRando
         private static bool Prefix(ref EndingCinematicConfiguration configuration)
         {
             configuration.skippable = true;
-            Plugin.PatchLogger.LogInfo($"{configuration.ending} unlocked {Plugin.randomizer.randomization[configuration.ending]}!");
+            EndingEffectsEnum ee = Plugin.randomizer.randomization[configuration.ending];
+            Plugin.lastUnlocks.Enqueue(ee);
+            if (Plugin.lastUnlocks.Count > 3)
+            {
+                Plugin.lastUnlocks.Dequeue();
+            }
+            Plugin.PatchLogger.LogInfo($"{configuration.ending} unlocked {ee}!");
             return true;
         }
     }
@@ -91,6 +102,25 @@ namespace ReventureEndingRando
             IProgressionService progression = Core.Get<IProgressionService>();
             Plugin.endingEffects = Plugin.randomizer.UpdateWorld(progression);
             return;
+        }
+    }
+
+    [HarmonyPatch(typeof(CameraZoneText))]
+    public class CameraZoneTextPatch
+    {
+        [HarmonyPatch("RefreshText", new Type[] { })]
+        private static bool Prefix(CameraZoneText __instance)
+        {
+            string lastUnlocksText = "Last Unlocks: ";
+            foreach (EndingEffectsEnum ee in Plugin.lastUnlocks.AsEnumerable())
+            {
+                lastUnlocksText += $"{ee}, ";
+            }
+
+            var field = typeof(CameraZoneText).GetField("cameraZone", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+            TextMeshProUGUI cameraZone = (TextMeshProUGUI) field.GetValue(__instance);
+            cameraZone.text = lastUnlocksText;
+            return false;
         }
     }
 

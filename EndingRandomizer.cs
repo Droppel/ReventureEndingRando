@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using TMPro;
 using UnityEngine;
 
 namespace ReventureEndingRando
@@ -46,6 +47,15 @@ namespace ReventureEndingRando
                     }
                 }
             }
+
+            //Update UI
+            GameObject versionTextObj = GameObject.Find("Canvasses/OverlayCanvas/GamePanel/ZonePanel/zoneText/versionText");
+            TextMeshProUGUI versionText = versionTextObj.GetComponent<TextMeshProUGUI>();
+            versionText.SetText($"{versionText.text}; Rando: {MyPluginInfo.PLUGIN_VERSION}");
+
+            //Show Last Unlocks
+
+
             return enabledEffect;
         }
 
