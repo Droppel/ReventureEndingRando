@@ -46,12 +46,6 @@ namespace ReventureEndingRando
                     }
                 }
             }
-
-            // Speed up grates
-            foreach (Platform p in GameObject.FindObjectsOfType<Platform>())
-            {
-                p.deployTime = 3;
-            }
             return enabledEffect;
         }
 
