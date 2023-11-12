@@ -106,8 +106,13 @@ namespace ReventureEndingRando.EndingEffects
 
         public override void ActivateEffect(bool endingAchieved)
         {
-            GameObject itemSword = GameObject.Find(name);
-            itemSword.SetActive(endingAchieved);
+            GameObject simpleItem = GameObject.Find(name);
+            AlterWithRestrictions awRestrictions = simpleItem.GetComponent<AlterWithRestrictions>();
+            if (awRestrictions != null)
+            {
+                GameObject.Destroy(awRestrictions);
+            }
+            simpleItem.SetActive(endingAchieved);
         }
     }
     class SpawnSwordPedestal: EndingEffect

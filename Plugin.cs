@@ -93,4 +93,20 @@ namespace ReventureEndingRando
             return;
         }
     }
+
+    //[HarmonyPatch(typeof(GameObject))]
+    //public class GameObjectPatch
+    //{
+    //    [HarmonyPatch("SetActive", new Type[] { typeof(bool) })]
+    //    private static void Postfix(GameObject __instance)
+    //    {
+    //        if (__instance.name == "TreasureChest_Map" || __instance.name == "TreasureChest_Compass")
+    //        {
+    //            Plugin.PatchLogger.LogInfo($"Gameobject: {__instance.name}");
+    //            System.Diagnostics.StackTrace t = new System.Diagnostics.StackTrace();
+    //            Plugin.PatchLogger.LogInfo(t.ToString());
+    //        }
+    //        return;
+    //    }
+    //}
 }
