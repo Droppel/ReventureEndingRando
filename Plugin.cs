@@ -52,6 +52,12 @@ namespace ReventureEndingRando
                     Logger.LogInfo($"{ee}");
                 }
             }
+
+            if (Input.GetKeyDown(KeyCode.F7))
+            {
+                randomizer.Randomize();
+                randomizer.StoreState();
+            }
         }
 
         private void OnDestroy()

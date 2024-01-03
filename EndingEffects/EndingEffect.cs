@@ -48,7 +48,7 @@ namespace ReventureEndingRando.EndingEffects
                 case EndingEffectsEnum.SpawnNukeItem:
                     return new SpawnItemSimple("World/Items/TreasureChest_Cannonball");
                 case EndingEffectsEnum.SpawnPrincessItem:
-                    return new SpawnItemSimple("World/NPCs/Item Princess");
+                    return new SpawnPrincess();
                 case EndingEffectsEnum.SpawnAnvilItem:
                     return new SpawnItemSimple("World/Items/AnvilRope/SwingRope/Item Anvil");
                 case EndingEffectsEnum.SpawnStrawberry:
@@ -82,13 +82,13 @@ namespace ReventureEndingRando.EndingEffects
                 case EndingEffectsEnum.OpenCastleFloor:
                     return new OpenCastleHole();
                 case EndingEffectsEnum.SpawnDragon:
-                    return new SpawnItemSimple("World/NPCs/Dragon");
+                    return new SpawnDragon();
                 case EndingEffectsEnum.SpawnShopkeeper:
                     return new SpawnItemSimple("World/NPCs/Shopkeepers");
                 case EndingEffectsEnum.SpawnMimic:
-                    return new SpawnItemSimple("World/NPCs/FakePrincess");
+                    return new SpawnMimic();
                 case EndingEffectsEnum.SpawnKing:
-                    return new SpawnItemSimple("World/NPCs/KindomNPCs/TheKing");
+                    return new SpawnKing();
                 default:
                     return null;
             }
@@ -115,6 +115,58 @@ namespace ReventureEndingRando.EndingEffects
             simpleItem.SetActive(endingAchieved);
         }
     }
+
+    class SpawnKing : EndingEffect
+    {
+        public override void ActivateEffect(bool endingAchieved)
+        {
+            GameObject king = GameObject.Find("World/NPCs/KindomNPCs/TheKing");
+            GameObject feedEnding = GameObject.Find("World/Interactables/98_FeedTheKing_End");
+            king.SetActive(endingAchieved);
+            feedEnding.SetActive(endingAchieved);
+        }
+    }
+    class SpawnDragon : EndingEffect
+    {
+        public override void ActivateEffect(bool endingAchieved)
+        {
+            GameObject dragon = GameObject.Find("World/NPCs/Dragon");
+            GameObject roastedEnding = GameObject.Find("World/EndTriggers/13_RoastedByDragon_End");
+            GameObject fireTrinketEnding = GameObject.Find("World/EndTriggers/47_DragonWithFireTrinket_End");
+            GameObject dateEnding = GameObject.Find("World/EndTriggers/49_DatePrincessAndDragon_End");
+            GameObject shieldEnding= GameObject.Find("World/EndTriggers/57_DragonWithShield_End");
+            GameObject shieldTrinketEnding = GameObject.Find("World/EndTriggers/58_DragonWithShieldAndFireTrinket_End");
+            dragon.SetActive(endingAchieved);
+            roastedEnding.SetActive(endingAchieved);
+            fireTrinketEnding.SetActive(endingAchieved);
+            dateEnding.SetActive(endingAchieved);
+            shieldEnding.SetActive(endingAchieved);
+            shieldTrinketEnding.SetActive(endingAchieved);
+        }
+    }
+
+    class SpawnMimic : EndingEffect
+    {
+        public override void ActivateEffect(bool endingAchieved)
+        {
+            GameObject mimic = GameObject.Find("World/NPCs/FakePrincess");
+            GameObject feedEnding = GameObject.Find("World/EndTriggers/84_FeedTheMimic_End");
+            mimic.SetActive(endingAchieved);
+            feedEnding.SetActive(endingAchieved);
+        }
+    }
+
+    class SpawnPrincess : EndingEffect
+    {
+        public override void ActivateEffect(bool endingAchieved)
+        {
+            GameObject princess = GameObject.Find("World/NPCs/Item Princess");
+            GameObject ventEnding = GameObject.Find("World/EndTriggers/24_AirDuctsAccident_End");
+            princess.SetActive(endingAchieved);
+            ventEnding.SetActive(endingAchieved);
+        }
+    }
+
     class SpawnSwordPedestal: EndingEffect
     {
         public override void ActivateEffect(bool endingAchieved)

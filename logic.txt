@@ -18,7 +18,7 @@ HugMinion: $mrhugs
 RoastedByDragon: SpawnDragon
 KilledByDarkArenaMinion: free
 StabDragon: $sword + SpawnDragon
-FaultyCannonShot: 15 + (UnlockShopCannon | UnlockCastleToShopCannon | UnlockDarkCastleCannon | UnlockCastleToDarkCastleCannon)
+FaultyCannonShot: 15 + (UnlockShopCannon | UnlockCastleToShopCannon | UnlockDarkCastleCannon)
 HugTheKing: $mrhugs + SpawnKing
 HugGuard: $mrhugs
 TakeTheDayOff: free
@@ -27,7 +27,7 @@ PickupAnvil: SpawnAnvilItem
 EatenByFakePrincess: SpawnMimic
 ClimbMountain: SpawnStrawberry
 StabMinionMultipleTimes: $sword
-CrushedByOwnStuff: %4
+CrushedByOwnStuff: %5
 ShootCannonballToCastle: $nuke + UnlockShopCannon
 CaughtByOwnBomb: SpawnBombsChest
 DragonWithShield: SpawnDragon + SpawnShieldChest
@@ -75,7 +75,7 @@ TriggerTrollSpikes: free
 SacrificeEveryItem: %6
 SacrificePrincess: SpawnPrincessItem
 HugDarkLord: $mrhugs + SpawnPrincessItem
-ShotgunFakePrincess: $sword + SpawnShopkeeper + SpawnMimic
+ShotgunFakePrincess: $sword + SpawnShopkeeper + SpawnMimic + UnlockShopCannon + UnlockElevatorButton
 FakePrincessInsideChest: SpawnPrincessItem
 TakePrincessToDarkAltar: SpawnPrincessItem
 GetIntoTheCloud: 16 | GrowVine
@@ -86,7 +86,7 @@ PrincessToDesertGate: SpawnPrincessItem
 FallIntoWaterfallWithPrincess: SpawnPrincessItem
 BreakSpaceTimeContinuum: SpawnWhistleChest
 ShootCannonballToTown: $nuke + UnlockDarkCastleCannon
-KillAllFairies: $sword | $mrhugs
+KillAllFairies: $sword | $mrhugs | (SpawnBoomerang + (SpawnHookChest | 16))
 MakeBabiesWithPrincess: $sword + SpawnPrincessItem + ($princessportalwithitem | SpawnHookChest | UnlockElevatorButton)
 KillAllDevsHell: $sword + SpawnPrincessItem + (SpawnHookChest | (SpawnShovelChest + 16 + (UnlockElevatorButton | $princessportalwithitem)))
 DesertEnd: %4 + UnlockGeyserDesert2
