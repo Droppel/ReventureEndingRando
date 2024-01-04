@@ -213,9 +213,10 @@ namespace ReventureEndingRando.EndingEffects
         {
             //TODO remove chest completely
             GameObject castleHole = GameObject.Find("World/PersistentElements/Castlehole");
-            GameObject boulderUnderCastle = GameObject.Find("World/Boulders/BoulderUnderCastle");
             castleHole.SetActive(!endingAchieved);
-            boulderUnderCastle.SetActive(!endingAchieved);
+            // Keep this enabled, by vanilla settings. The boulder has no collision, but the ending is still possible
+            //GameObject boulderUnderCastle = GameObject.Find("World/Boulders/BoulderUnderCastle");
+            //boulderUnderCastle.SetActive(!endingAchieved);
         }
     }
 
