@@ -3,7 +3,7 @@
 #nuke=(SpawnHookChest + SpawnNukeItem)
 #princessportalwithitem=(UnlockMirrorPortal + (16 | GrowVine))
 StabElder: $sword
-LonkFaceplant: 4
+LonkFaceplant: UnlockFacePlantStone
 KilledByMinion: free
 StabGuard: $sword
 KillTheKing: $sword + SpawnKing

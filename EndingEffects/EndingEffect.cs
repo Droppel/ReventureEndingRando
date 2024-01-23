@@ -89,6 +89,18 @@ namespace ReventureEndingRando.EndingEffects
                     return new SpawnMimic();
                 case EndingEffectsEnum.SpawnKing:
                     return new SpawnKing();
+                case EndingEffectsEnum.EnableCloset:
+                    return new SpawnItemSimple("World/PersistentElements/Wardrove");
+                case EndingEffectsEnum.BuildStatue:
+                    return new SpawnItemSimple("World/PersistentElements/PrincessStatue");
+                case EndingEffectsEnum.AddPC:
+                    return new AddPC();
+                case EndingEffectsEnum.SpawnDolphins:
+                    return new SpawnItemSimple("World/PersistentElements/Dolphins");
+                case EndingEffectsEnum.SpawnMimicPet:
+                    return new SpawnItemSimple("World/PersistentElements/MimicKennel");
+                case EndingEffectsEnum.UnlockFacePlantStone:
+                    return new UnlockFacePlantStone();
                 default:
                     return null;
             }
@@ -171,7 +183,6 @@ namespace ReventureEndingRando.EndingEffects
     {
         public override void ActivateEffect(bool endingAchieved)
         {
-            //TODO remove chest completely
             GameObject itemSword = GameObject.Find("World/Items/Sword Item Pedestal/Item Sword");
             GameObject pedestal = GameObject.Find("World/Items/Sword Item Pedestal");
             itemSword.SetActive(endingAchieved);
@@ -197,7 +208,6 @@ namespace ReventureEndingRando.EndingEffects
     {
         public override void ActivateEffect(bool endingAchieved)
         {
-            //TODO remove chest completely
             GameObject badCrops = GameObject.Find("World/BackgroundElements/BadCrops");
             GameObject goodCrops = GameObject.Find("World/PersistentElements/GoodCrops");
             GameObject cropsCloud = GameObject.Find("World/PersistentElements/CropsClouds");
@@ -211,12 +221,34 @@ namespace ReventureEndingRando.EndingEffects
     {
         public override void ActivateEffect(bool endingAchieved)
         {
-            //TODO remove chest completely
             GameObject castleHole = GameObject.Find("World/PersistentElements/Castlehole");
             castleHole.SetActive(!endingAchieved);
             // Keep this enabled, by vanilla settings. The boulder has no collision, but the ending is still possible
             //GameObject boulderUnderCastle = GameObject.Find("World/Boulders/BoulderUnderCastle");
             //boulderUnderCastle.SetActive(!endingAchieved);
+        }
+    }
+    class UnlockFacePlantStone : EndingEffect
+    {
+        public override void ActivateEffect(bool endingAchieved)
+        {
+            GameObject ending = GameObject.Find("Cinematics/75_LonkFaceplant_End");
+            EndTrigger trigger = ending.GetComponent<EndTrigger>();
+            EndingCountRequirement endingReq = (EndingCountRequirement) trigger.triggerRequirements[2];
+            endingReq.endingsUnlockedCount = 0;
+            ending.SetActive(endingAchieved);
+        }
+    }
+
+
+    class AddPC : EndingEffect
+    {
+        public override void ActivateEffect(bool endingAchieved)
+        {
+            GameObject pc = GameObject.Find("World/PersistentElements/Lonk's PC");
+            GameObject pcalt = GameObject.Find("World/PersistentElements/Lonk's PC Alt");
+            pc.SetActive(!endingAchieved);
+            pcalt.SetActive(!endingAchieved);
         }
     }
 
@@ -258,19 +290,47 @@ namespace ReventureEndingRando.EndingEffects
         UnlockFairyPortal,
         GrowVine,
         OpenCastleFloor,
+        UnlockFacePlantStone,
         //NPCs
         SpawnDragon,
         SpawnShopkeeper,
         SpawnMimic,
         SpawnKing,
-        ////Cosmetic
-        //EnableNamechange,
-        //EnablePrincessNamechange,
-        //EnableDarkLordNamechange,
-        //EnableCloset,
-        //BuildStatue,
-        //AddPC,
-        //SpawnDolphins,
-        //SpawnMimicPet,
+        //Cosmetic
+        EnableCloset,
+        BuildStatue,
+        AddPC,
+        SpawnDolphins,
+        SpawnMimicPet,
     }
+
+    //Effect ideas
+    //EnableNamechange,
+    //EnablePrincessNamechange
+    //EnableDarkLordNamechange
+    //schornstein
+    //desert druckplatte
+    //mimic kiste
+    //princess bed
+    //own bed
+    //lever1 darkstone room
+    //lever2 darkstone room
+    //lever3 darkstone room
+    //minion next to house
+    //Chicken1 progressive
+    //Chicken2 progressive
+    //Chicken3 progressive
+    //Chicken4 progressive
+    //Elder NPC
+    //Sewer pipe
+    //red orb
+    //green orb
+    //blue orb
+    //yellow orb
+    //Altar
+    //Boulder NPC
+    //River Grate Button
+    //Selfdestruct Button
+    //Princessgate Elevator
+    //Xray Goggles
 }
