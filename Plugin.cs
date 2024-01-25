@@ -5,8 +5,10 @@ using HarmonyLib;
 using ReventureEndingRando.EndingEffects;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -37,6 +39,16 @@ namespace ReventureEndingRando
             randomizer = new EndingRandomizer();
             Logger.LogInfo($"Randomized: {randomizer.ToString()}");
 
+            //Read settings file
+            string contents = File.ReadAllText("connectioninfo.txt");
+            string[] contentSplit = contents.Split(';');
+            string host = contentSplit[0];
+            int port = int.Parse(contentSplit[1]);
+            string slot = contentSplit[2];
+
+            ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(host, port, slot);
+            archipelagoConnection.Connect();
+
             lastUnlocks = new Queue<EndingEffectsEnum>();
 
             Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} Version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
@@ -62,6 +74,7 @@ namespace ReventureEndingRando
 
         private void OnDestroy()
         {
+            ArchipelagoConnection.session.Socket.DisconnectAsync();
             harmony.UnpatchSelf();
             Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} unloaded!");
         }
@@ -75,13 +88,17 @@ namespace ReventureEndingRando
         private static bool Prefix(ref EndingCinematicConfiguration configuration)
         {
             configuration.skippable = true;
-            EndingEffectsEnum ee = Plugin.randomizer.randomization[configuration.ending];
-            Plugin.lastUnlocks.Enqueue(ee);
-            if (Plugin.lastUnlocks.Count > 3)
-            {
-                Plugin.lastUnlocks.Dequeue();
-            }
-            Plugin.PatchLogger.LogInfo($"{configuration.ending} unlocked {ee}!");
+            //EndingEffectsEnum ee = Plugin.randomizer.randomization[configuration.ending];
+            //Plugin.lastUnlocks.Enqueue(ee);
+            //if (Plugin.lastUnlocks.Count > 3)
+            //{
+            //    Plugin.lastUnlocks.Dequeue();
+            //}
+            //Plugin.PatchLogger.LogInfo($"{configuration.ending} unlocked {ee}!");
+
+            //Report to Archipelago
+            ArchipelagoConnection.session.Locations.CompleteLocationChecks(20000 + (int) configuration.ending);
+            ArchipelagoConnection.Check_Send_completion();
             return true;
         }
     }
@@ -105,8 +122,9 @@ namespace ReventureEndingRando
         private static void Postfix()
         {
             //First Run
-            IProgressionService progression = Core.Get<IProgressionService>();
-            Plugin.endingEffects = Plugin.randomizer.UpdateWorld(progression);
+            //IProgressionService progression = Core.Get<IProgressionService>();
+            //Plugin.endingEffects = Plugin.randomizer.UpdateWorld(progression);
+            Plugin.endingEffects = Plugin.randomizer.UpdateWorldArchipelago();
             return;
         }
     }

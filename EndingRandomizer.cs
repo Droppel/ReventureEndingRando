@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Archipelago.MultiClient.Net.Models;
+using Newtonsoft.Json;
 using ReventureEndingRando.EndingEffects;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -59,6 +61,41 @@ namespace ReventureEndingRando
             return enabledEffect;
         }
 
+        public List<EndingEffectsEnum> UpdateWorldArchipelago()
+        {
+            List<EndingEffectsEnum> enabledEffect = new List<EndingEffectsEnum>();
+
+            List<long> receivedIDs = new List<long>();
+            foreach (NetworkItem item in ArchipelagoConnection.session.Items.AllItemsReceived)
+            {
+                receivedIDs.Add(item.Item);
+            }
+
+            foreach (EndingEffectsEnum effect in Enum.GetValues(typeof(EndingTypes)).Cast<EndingTypes>().ToList())
+            {
+                EndingEffect ee = EndingEffect.InitFromEnum(effect);
+                bool effectReceived = receivedIDs.Contains(10000 + (int) effect);
+                if (ee != null)
+                {
+                    ee.ActivateEffect(effectReceived);
+                    if (effectReceived)
+                    {
+                        enabledEffect.Add(effect);
+                    }
+                }
+            }
+
+            //Update UI
+            GameObject versionTextObj = GameObject.Find("Canvasses/OverlayCanvas/GamePanel/ZonePanel/zoneText/versionText");
+            TextMeshProUGUI versionText = versionTextObj.GetComponent<TextMeshProUGUI>();
+            versionText.SetText($"{versionText.text}; Rando: {MyPluginInfo.PLUGIN_VERSION}");
+
+            //Show Last Unlocks
+
+
+            return enabledEffect;
+        }
+
         public bool LoadState()
         {
             try
@@ -67,6 +104,7 @@ namespace ReventureEndingRando
                 return true;
             } catch (Exception e)
             {
+                Plugin.PatchLogger.LogInfo($"{e}");
                 return false;
             }
         }
