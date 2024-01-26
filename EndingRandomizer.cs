@@ -1,4 +1,5 @@
 ﻿using Archipelago.MultiClient.Net.Models;
+using Atto;
 using Newtonsoft.Json;
 using ReventureEndingRando.EndingEffects;
 using System;
@@ -6,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -34,51 +36,57 @@ namespace ReventureEndingRando
             Plugin.PatchLogger.LogInfo("Finished generating Seed");
         }
 
-        public List<EndingEffectsEnum> UpdateWorld(IProgressionService progression)
-        {
-            List<EndingEffectsEnum> enabledEffect = new List<EndingEffectsEnum>();
-            foreach (KeyValuePair<EndingTypes, EndingEffectsEnum> entry in randomization)
-            {
-                EndingEffect ee = EndingEffect.InitFromEnum(entry.Value);
-                bool endingAchieved = progression.IsEndingUnlocked(entry.Key);
-                if (ee != null) {
-                    ee.ActivateEffect(endingAchieved);
-                    if (endingAchieved)
-                    {
-                        enabledEffect.Add(entry.Value);
-                    }
-                }
-            }
+        //public List<EndingEffectsEnum> UpdateWorld(IProgressionService progression)
+        //{
+        //    List<EndingEffectsEnum> enabledEffect = new List<EndingEffectsEnum>();
+        //    foreach (KeyValuePair<EndingTypes, EndingEffectsEnum> entry in randomization)
+        //    {
+        //        EndingEffect ee = EndingEffect.InitFromEnum(entry.Value);
+        //        bool endingAchieved = progression.IsEndingUnlocked(entry.Key);
+        //        if (ee != null) {
+        //            ee.ActivateEffect(endingAchieved);
+        //            if (endingAchieved)
+        //            {
+        //                enabledEffect.Add(entry.Value);
+        //            }
+        //        }
+        //    }
 
-            //Update UI
-            GameObject versionTextObj = GameObject.Find("Canvasses/OverlayCanvas/GamePanel/ZonePanel/zoneText/versionText");
-            TextMeshProUGUI versionText = versionTextObj.GetComponent<TextMeshProUGUI>();
-            versionText.SetText($"{versionText.text}; Rando: {MyPluginInfo.PLUGIN_VERSION}");
+        //    //Update UI
+        //    GameObject versionTextObj = GameObject.Find("Canvasses/OverlayCanvas/GamePanel/ZonePanel/zoneText/versionText");
+        //    TextMeshProUGUI versionText = versionTextObj.GetComponent<TextMeshProUGUI>();
+        //    versionText.SetText($"{versionText.text}; Rando: {MyPluginInfo.PLUGIN_VERSION}");
 
-            //Show Last Unlocks
+        //    //Show Last Unlocks
 
 
-            return enabledEffect;
-        }
+        //    return enabledEffect;
+        //}
 
         public List<EndingEffectsEnum> UpdateWorldArchipelago()
         {
             List<EndingEffectsEnum> enabledEffect = new List<EndingEffectsEnum>();
 
-            List<long> receivedIDs = new List<long>();
+            Dictionary<long, int> receivedIDs = new Dictionary<long, int>();
             foreach (NetworkItem item in ArchipelagoConnection.session.Items.AllItemsReceived)
             {
-                receivedIDs.Add(item.Item);
+                if (receivedIDs.ContainsKey(item.Item))
+                {
+                    receivedIDs[item.Item] += 1;
+                } else
+                {
+                    receivedIDs.Add(item.Item, 1);
+                }
             }
 
             foreach (EndingEffectsEnum effect in Enum.GetValues(typeof(EndingTypes)).Cast<EndingTypes>().ToList())
             {
                 EndingEffect ee = EndingEffect.InitFromEnum(effect);
-                bool effectReceived = receivedIDs.Contains(10000 + (int) effect);
+                int effectReceived = receivedIDs.ContainsKey(10000 + (long) effect) ? receivedIDs[Plugin.reventureItemOffset + (long) effect] : 0;
                 if (ee != null)
                 {
                     ee.ActivateEffect(effectReceived);
-                    if (effectReceived)
+                    if (effectReceived != 0)
                     {
                         enabledEffect.Add(effect);
                     }
@@ -90,8 +98,14 @@ namespace ReventureEndingRando
             TextMeshProUGUI versionText = versionTextObj.GetComponent<TextMeshProUGUI>();
             versionText.SetText($"{versionText.text}; Rando: {MyPluginInfo.PLUGIN_VERSION}");
 
-            //Show Last Unlocks
-
+            //Permanent changes
+            //Disable cannon ending requirement
+            Cannon townToShopCannon = GameObject.Find("World/Interactables/Cannons/TownToShopCannon/33_ShootCannonballToShop_End").GetComponent<Cannon>();
+            ((EndingCountRequirement) townToShopCannon.requirementsToFail[0]).endingsUnlockedCount = 0;
+            Cannon fortressToTownCannon = GameObject.Find("World/Interactables/Cannons/FortressToTownCannon/34_ShootCannonballToTown_End").GetComponent<Cannon>();
+            ((EndingCountRequirement) fortressToTownCannon.requirementsToFail[0]).endingsUnlockedCount = 0;
+            Cannon shopToFortress = GameObject.Find("World/Interactables/Cannons/ShopToFortressCannon/32_ShootCannonballToCastle_End").GetComponent<Cannon>();
+            ((EndingCountRequirement) shopToFortress.requirementsToFail[2]).endingsUnlockedCount = 0;
 
             return enabledEffect;
         }

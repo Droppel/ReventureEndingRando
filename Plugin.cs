@@ -19,6 +19,10 @@ namespace ReventureEndingRando
     [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
     public class Plugin : BaseUnityPlugin
     {
+
+        public static long reventureItemOffset = 900270000;
+        public static long reventureEndingOffset = 900271000;
+
         Harmony harmony;
         public static ManualLogSource PatchLogger;
 
@@ -97,8 +101,11 @@ namespace ReventureEndingRando
             //Plugin.PatchLogger.LogInfo($"{configuration.ending} unlocked {ee}!");
 
             //Report to Archipelago
-            ArchipelagoConnection.session.Locations.CompleteLocationChecks(20000 + (int) configuration.ending);
-            ArchipelagoConnection.Check_Send_completion();
+            ArchipelagoConnection.session.Locations.CompleteLocationChecks(Plugin.reventureEndingOffset + (long) configuration.ending);
+            if (configuration.ending == EndingTypes.UltimateEnding)
+            {
+                ArchipelagoConnection.Check_Send_completion();
+            }
             return true;
         }
     }
@@ -129,6 +136,21 @@ namespace ReventureEndingRando
         }
     }
 
+    [HarmonyPatch(typeof(UltimateDoor))]
+    public class UltimateDoorPatch
+    {
+        [HarmonyPatch("Start", new Type[] { })]
+        private static void Postfix(UltimateDoor __instance)
+        {
+            IProgressionService progression = Core.Get<IProgressionService>();
+
+            var uDoorEndingsUnlocked = typeof(UltimateDoor).GetField("unlockedEndings", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+            uDoorEndingsUnlocked.SetValue(__instance, progression.UnlockedEndingsCount >= ArchipelagoConnection.requiredEndings ? 99 : 6);
+
+            return;
+        }
+    }
+
     [HarmonyPatch(typeof(CameraZoneText))]
     public class CameraZoneTextPatch
     {
@@ -145,6 +167,17 @@ namespace ReventureEndingRando
             TextMeshProUGUI cameraZone = (TextMeshProUGUI) field.GetValue(__instance);
             cameraZone.text = lastUnlocksText;
             return false;
+        }
+    }
+
+    [HarmonyPatch(typeof(SuperLonkTransformationTrigger))]
+    public class SuperLonkTransformationTriggerPatch
+    {
+        [HarmonyPatch("RunMetamorphosis", new Type[] { })]
+        private static void Postfix()
+        {
+            GameObject goodCrops = GameObject.Find("World/PersistentElements/GoodCrops");
+            goodCrops.SetActive(true);
         }
     }
 

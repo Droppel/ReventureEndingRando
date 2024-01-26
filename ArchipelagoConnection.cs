@@ -15,6 +15,7 @@ namespace ReventureEndingRando
     class ArchipelagoConnection
     {
         public static ArchipelagoSession session;
+        public static int requiredEndings;
         private string slot;
         private string server;
 
@@ -53,19 +54,15 @@ namespace ReventureEndingRando
                 return; // Did not connect, show the user the contents of `errorMessage`
             }
 
+            var slotData = ArchipelagoConnection.session.DataStorage.GetSlotData(ArchipelagoConnection.session.ConnectionInfo.Slot);
+            requiredEndings = int.Parse(slotData["endings"].ToString());
+
             // Successfully connected, `ArchipelagoSession` (assume statically defined as `session` from now on) can now be used to interact with the server and the returned `LoginSuccessful` contains some useful information about the initial connection (e.g. a copy of the slot data as `loginSuccess.SlotData`)
             var loginSuccess = (LoginSuccessful)result;
         }
 
         public static async void Check_Send_completion()
         {
-            IProgressionService progression = Core.Get<IProgressionService>();
-            var slotData = await session.DataStorage.GetSlotDataAsync(session.ConnectionInfo.Slot);
-            int requiredEndings = int.Parse(slotData["endings"].ToString());
-            if (progression.UnlockedEndingsCount < requiredEndings)
-            {
-                return;
-            }
             var statusUpdatePacket = new StatusUpdatePacket();
             statusUpdatePacket.Status = ArchipelagoClientState.ClientGoal;
             await session.Socket.SendPacketAsync(statusUpdatePacket);

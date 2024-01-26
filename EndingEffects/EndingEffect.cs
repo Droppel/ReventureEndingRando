@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Atto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,7 +10,7 @@ namespace ReventureEndingRando.EndingEffects
 {
     abstract class EndingEffect
     {
-        public abstract void ActivateEffect(bool endingAchieved);
+        public abstract void ActivateEffect(int effectsReceived);
 
         public static EndingEffect InitFromEnum(EndingEffectsEnum e)
         {
@@ -89,6 +90,8 @@ namespace ReventureEndingRando.EndingEffects
                     return new SpawnMimic();
                 case EndingEffectsEnum.SpawnKing:
                     return new SpawnKing();
+                case EndingEffectsEnum.GrowChicken:
+                    return new GrowChicken();
                 case EndingEffectsEnum.EnableCloset:
                     return new SpawnItemSimple("World/PersistentElements/Wardrove");
                 case EndingEffectsEnum.BuildStatue:
@@ -101,6 +104,14 @@ namespace ReventureEndingRando.EndingEffects
                     return new SpawnItemSimple("World/PersistentElements/MimicKennel");
                 case EndingEffectsEnum.UnlockFacePlantStone:
                     return new UnlockFacePlantStone();
+                case EndingEffectsEnum.EarthGem:
+                    return new UnlockMilestone(MilestoneTypes.GotEarthGem);
+                case EndingEffectsEnum.FireGem:
+                    return new UnlockMilestone(MilestoneTypes.GotFireGem);
+                case EndingEffectsEnum.WaterGem:
+                    return new UnlockMilestone(MilestoneTypes.GotWaterGem);
+                case EndingEffectsEnum.WindGem:
+                    return new UnlockMilestone(MilestoneTypes.GotWindGem);
                 default:
                     return null;
             }
@@ -116,7 +127,7 @@ namespace ReventureEndingRando.EndingEffects
             name = _name;
         }
 
-        public override void ActivateEffect(bool endingAchieved)
+        public override void ActivateEffect(int effectsReceived)
         {
             GameObject simpleItem = GameObject.Find(name);
             AlterWithRestrictions awRestrictions = simpleItem.GetComponent<AlterWithRestrictions>();
@@ -124,23 +135,23 @@ namespace ReventureEndingRando.EndingEffects
             {
                 GameObject.Destroy(awRestrictions);
             }
-            simpleItem.SetActive(endingAchieved);
+            simpleItem.SetActive(effectsReceived > 0);
         }
     }
 
     class SpawnKing : EndingEffect
     {
-        public override void ActivateEffect(bool endingAchieved)
+        public override void ActivateEffect(int effectsReceived)
         {
             GameObject king = GameObject.Find("World/NPCs/KindomNPCs/TheKing");
             GameObject feedEnding = GameObject.Find("World/Interactables/98_FeedTheKing_End");
-            king.SetActive(endingAchieved);
-            feedEnding.SetActive(endingAchieved);
+            king.SetActive(effectsReceived > 0);
+            feedEnding.SetActive(effectsReceived > 0);
         }
     }
     class SpawnDragon : EndingEffect
     {
-        public override void ActivateEffect(bool endingAchieved)
+        public override void ActivateEffect(int effectsReceived)
         {
             GameObject dragon = GameObject.Find("World/NPCs/Dragon");
             GameObject roastedEnding = GameObject.Find("World/EndTriggers/13_RoastedByDragon_End");
@@ -148,107 +159,143 @@ namespace ReventureEndingRando.EndingEffects
             GameObject dateEnding = GameObject.Find("World/EndTriggers/49_DatePrincessAndDragon_End");
             GameObject shieldEnding= GameObject.Find("World/EndTriggers/57_DragonWithShield_End");
             GameObject shieldTrinketEnding = GameObject.Find("World/EndTriggers/58_DragonWithShieldAndFireTrinket_End");
-            dragon.SetActive(endingAchieved);
-            roastedEnding.SetActive(endingAchieved);
-            fireTrinketEnding.SetActive(endingAchieved);
-            dateEnding.SetActive(endingAchieved);
-            shieldEnding.SetActive(endingAchieved);
-            shieldTrinketEnding.SetActive(endingAchieved);
+            dragon.SetActive(effectsReceived > 0);
+            roastedEnding.SetActive(effectsReceived > 0);
+            fireTrinketEnding.SetActive(effectsReceived > 0);
+            dateEnding.SetActive(effectsReceived > 0);
+            shieldEnding.SetActive(effectsReceived > 0);
+            shieldTrinketEnding.SetActive(effectsReceived > 0);
         }
     }
 
     class SpawnMimic : EndingEffect
     {
-        public override void ActivateEffect(bool endingAchieved)
+        public override void ActivateEffect(int effectsReceived)
         {
             GameObject mimic = GameObject.Find("World/NPCs/FakePrincess");
             GameObject feedEnding = GameObject.Find("World/EndTriggers/84_FeedTheMimic_End");
-            mimic.SetActive(endingAchieved);
-            feedEnding.SetActive(endingAchieved);
+            mimic.SetActive(effectsReceived > 0);
+            feedEnding.SetActive(effectsReceived > 0);
         }
     }
 
     class SpawnPrincess : EndingEffect
     {
-        public override void ActivateEffect(bool endingAchieved)
+        public override void ActivateEffect(int effectsReceived)
         {
             GameObject princess = GameObject.Find("World/NPCs/Item Princess");
             GameObject ventEnding = GameObject.Find("World/EndTriggers/24_AirDuctsAccident_End");
-            princess.SetActive(endingAchieved);
-            ventEnding.SetActive(endingAchieved);
+            princess.SetActive(effectsReceived > 0);
+            ventEnding.SetActive(effectsReceived > 0);
         }
     }
 
     class SpawnSwordPedestal: EndingEffect
     {
-        public override void ActivateEffect(bool endingAchieved)
+        public override void ActivateEffect(int effectsReceived)
         {
             GameObject itemSword = GameObject.Find("World/Items/Sword Item Pedestal/Item Sword");
             GameObject pedestal = GameObject.Find("World/Items/Sword Item Pedestal");
-            itemSword.SetActive(endingAchieved);
-            pedestal.SetActive(endingAchieved);
+            itemSword.SetActive(effectsReceived > 0);
+            pedestal.SetActive(effectsReceived > 0);
         }
     }
 
     class SpawnSwordChest : EndingEffect
     {
-        public override void ActivateEffect(bool endingAchieved)
+        public override void ActivateEffect(int effectsReceived)
         {
             //TODO remove chest completely
             GameObject swordChest = GameObject.Find("World/Items/SwordAtHome/TreasureChest_Sword");
             GameObject openChest = GameObject.Find("World/Items/SwordAtHome/OpenChest");
             GameObject swordAtHome = GameObject.Find("World/Items/SwordAtHome");
-            swordAtHome.SetActive(endingAchieved);
-            openChest.SetActive(!endingAchieved);
-            swordChest.SetActive(endingAchieved);
+            swordAtHome.SetActive(effectsReceived > 0);
+            openChest.SetActive(effectsReceived == 0);
+            swordChest.SetActive(effectsReceived > 0);
         }
     }
 
     class SpawnVine : EndingEffect
     {
-        public override void ActivateEffect(bool endingAchieved)
+        public override void ActivateEffect(int effectsReceived)
         {
             GameObject badCrops = GameObject.Find("World/BackgroundElements/BadCrops");
             GameObject goodCrops = GameObject.Find("World/PersistentElements/GoodCrops");
             GameObject cropsCloud = GameObject.Find("World/PersistentElements/CropsClouds");
-            badCrops.SetActive(!endingAchieved);
-            goodCrops.SetActive(endingAchieved);
-            cropsCloud.SetActive(endingAchieved);
+            badCrops.SetActive(effectsReceived == 0);
+            goodCrops.SetActive(effectsReceived > 0);
+            cropsCloud.SetActive(effectsReceived > 0);
         }
     }
 
     class OpenCastleHole : EndingEffect
     {
-        public override void ActivateEffect(bool endingAchieved)
+        public override void ActivateEffect(int effectsReceived)
         {
             GameObject castleHole = GameObject.Find("World/PersistentElements/Castlehole");
-            castleHole.SetActive(!endingAchieved);
+            castleHole.SetActive(effectsReceived == 0);
             // Keep this enabled, by vanilla settings. The boulder has no collision, but the ending is still possible
             //GameObject boulderUnderCastle = GameObject.Find("World/Boulders/BoulderUnderCastle");
-            //boulderUnderCastle.SetActive(!endingAchieved);
+            //boulderUnderCastle.SetActive(effectsReceived == 0);
         }
     }
     class UnlockFacePlantStone : EndingEffect
     {
-        public override void ActivateEffect(bool endingAchieved)
+        public override void ActivateEffect(int effectsReceived)
         {
             GameObject ending = GameObject.Find("Cinematics/75_LonkFaceplant_End");
             EndTrigger trigger = ending.GetComponent<EndTrigger>();
             EndingCountRequirement endingReq = (EndingCountRequirement) trigger.triggerRequirements[2];
             endingReq.endingsUnlockedCount = 0;
-            ending.SetActive(endingAchieved);
+            ending.SetActive(effectsReceived > 0);
         }
     }
 
 
     class AddPC : EndingEffect
     {
-        public override void ActivateEffect(bool endingAchieved)
+        public override void ActivateEffect(int effectsReceived)
         {
             GameObject pc = GameObject.Find("World/PersistentElements/Lonk's PC");
             GameObject pcalt = GameObject.Find("World/PersistentElements/Lonk's PC Alt");
-            pc.SetActive(!endingAchieved);
-            pcalt.SetActive(!endingAchieved);
+            pc.SetActive(effectsReceived > 0);
+            pcalt.SetActive(effectsReceived > 0);
+        }
+    }
+
+    class GrowChicken : EndingEffect
+    {
+        public override void ActivateEffect(int effectsReceived)
+        {
+            GameObject phase0 = GameObject.Find("World/PersistentElements/ChickenNest/Phase0");
+            GameObject phase1 = GameObject.Find("World/PersistentElements/ChickenNest/Phase1");
+            GameObject phase2 = GameObject.Find("World/PersistentElements/ChickenNest/Phase2");
+            GameObject phase3 = GameObject.Find("World/PersistentElements/ChickenNest/Phase3");
+            GameObject.Destroy(phase0.GetComponent<AlterWithRestrictions>());
+            GameObject.Destroy(phase1.GetComponent<AlterWithRestrictions>());
+            GameObject.Destroy(phase2.GetComponent<AlterWithRestrictions>());
+            GameObject.Destroy(phase3.GetComponent<AlterWithRestrictions>());
+
+            phase0.SetActive(effectsReceived == 1);
+            phase1.SetActive(effectsReceived == 2);
+            phase2.SetActive(effectsReceived == 3);
+            phase3.SetActive(effectsReceived == 4);
+        }
+    }
+
+    class UnlockMilestone : EndingEffect
+    {
+        MilestoneTypes milestone;
+
+        public UnlockMilestone(MilestoneTypes _milestone)
+        {
+            milestone = _milestone;
+        }
+
+        public override void ActivateEffect(int effectsReceived)
+        {
+            IProgressionService progression = Core.Get<IProgressionService>();
+            progression.UnlockMilestone(milestone);
         }
     }
 
@@ -296,12 +343,18 @@ namespace ReventureEndingRando.EndingEffects
         SpawnShopkeeper,
         SpawnMimic,
         SpawnKing,
+        GrowChicken,
         //Cosmetic
         EnableCloset,
         BuildStatue,
         AddPC,
         SpawnDolphins,
         SpawnMimicPet,
+        //Milestones
+        EarthGem,
+        FireGem,
+        WaterGem,
+        WindGem
     }
 
     //Effect ideas
