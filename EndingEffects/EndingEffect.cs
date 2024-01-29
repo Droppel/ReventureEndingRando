@@ -224,7 +224,7 @@ namespace ReventureEndingRando.EndingEffects
             GameObject cropsCloud = GameObject.Find("World/PersistentElements/CropsClouds");
             badCrops.SetActive(effectsReceived == 0);
             goodCrops.SetActive(effectsReceived > 0);
-            cropsCloud.SetActive(effectsReceived > 0);
+            cropsCloud.SetActive(effectsReceived == 0);
         }
     }
 

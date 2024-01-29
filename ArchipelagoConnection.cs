@@ -54,7 +54,7 @@ namespace ReventureEndingRando
                 return; // Did not connect, show the user the contents of `errorMessage`
             }
 
-            var slotData = ArchipelagoConnection.session.DataStorage.GetSlotData(ArchipelagoConnection.session.ConnectionInfo.Slot);
+            var slotData = session.DataStorage.GetSlotData(ArchipelagoConnection.session.ConnectionInfo.Slot);
             requiredEndings = int.Parse(slotData["endings"].ToString());
 
             // Successfully connected, `ArchipelagoSession` (assume statically defined as `session` from now on) can now be used to interact with the server and the returned `LoginSuccessful` contains some useful information about the initial connection (e.g. a copy of the slot data as `loginSuccess.SlotData`)

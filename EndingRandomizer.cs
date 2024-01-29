@@ -20,13 +20,13 @@ namespace ReventureEndingRando
 
         public EndingRandomizer()
         {
-            randomization = new Dictionary<EndingTypes, EndingEffectsEnum>();
+            //randomization = new Dictionary<EndingTypes, EndingEffectsEnum>();
             //if (true)
-            if (!LoadState())
-            {
-                Randomize();
-                StoreState();
-            }
+            //if (!LoadState())
+            //{
+            //    Randomize();
+            //    StoreState();
+            //}
         }
 
         public void Randomize()
@@ -70,6 +70,7 @@ namespace ReventureEndingRando
             Dictionary<long, int> receivedIDs = new Dictionary<long, int>();
             foreach (NetworkItem item in ArchipelagoConnection.session.Items.AllItemsReceived)
             {
+                //Plugin.PatchLogger.LogInfo($"{item.Item}: ");
                 if (receivedIDs.ContainsKey(item.Item))
                 {
                     receivedIDs[item.Item] += 1;
@@ -82,7 +83,8 @@ namespace ReventureEndingRando
             foreach (EndingEffectsEnum effect in Enum.GetValues(typeof(EndingTypes)).Cast<EndingTypes>().ToList())
             {
                 EndingEffect ee = EndingEffect.InitFromEnum(effect);
-                int effectReceived = receivedIDs.ContainsKey(10000 + (long) effect) ? receivedIDs[Plugin.reventureItemOffset + (long) effect] : 0;
+                int effectReceived = receivedIDs.ContainsKey(Plugin.reventureItemOffset + (long) effect) ? receivedIDs[Plugin.reventureItemOffset + (long) effect] : 0;
+                //Plugin.PatchLogger.LogInfo($"{effect}: {effectReceived}");
                 if (ee != null)
                 {
                     ee.ActivateEffect(effectReceived);

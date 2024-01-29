@@ -41,7 +41,7 @@ namespace ReventureEndingRando
             harmony.PatchAll(Assembly.GetExecutingAssembly());
 
             randomizer = new EndingRandomizer();
-            Logger.LogInfo($"Randomized: {randomizer.ToString()}");
+            //Logger.LogInfo($"Randomized: {randomizer.ToString()}");
 
             //Read settings file
             string contents = File.ReadAllText("connectioninfo.txt");
@@ -60,20 +60,20 @@ namespace ReventureEndingRando
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.F5))
-            {
-                Logger.LogInfo($"Available Effects:");
-                foreach (EndingEffectsEnum ee in endingEffects)
-                {
-                    Logger.LogInfo($"{ee}");
-                }
-            }
+            //if (Input.GetKeyDown(KeyCode.F5))
+            //{
+            //    Logger.LogInfo($"Available Effects:");
+            //    foreach (EndingEffectsEnum ee in endingEffects)
+            //    {
+            //        Logger.LogInfo($"{ee}");
+            //    }
+            //}
 
-            if (Input.GetKeyDown(KeyCode.F7))
-            {
-                randomizer.Randomize();
-                randomizer.StoreState();
-            }
+            //if (Input.GetKeyDown(KeyCode.F7))
+            //{
+            //    randomizer.Randomize();
+            //    randomizer.StoreState();
+            //}
         }
 
         private void OnDestroy()
