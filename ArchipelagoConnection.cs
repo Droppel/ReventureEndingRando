@@ -19,9 +19,10 @@ namespace ReventureEndingRando
         private string slot;
         private string server;
 
-        public ArchipelagoConnection(string host, int port, string slot)
+        public ArchipelagoConnection(string host, string slot)
         {
-            session = ArchipelagoSessionFactory.CreateSession(host, port);
+            string[] hostSplit = host.Split(':');
+            session = ArchipelagoSessionFactory.CreateSession(hostSplit[0], int.Parse(hostSplit[1]));
             this.slot = slot;
             this.server = host;
         }
@@ -51,6 +52,7 @@ namespace ReventureEndingRando
                     errorMessage += $"\n    {error}";
                 }
 
+                Plugin.PatchLogger.LogInfo(errorMessage);
                 return; // Did not connect, show the user the contents of `errorMessage`
             }
 

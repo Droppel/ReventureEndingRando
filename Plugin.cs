@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace ReventureEndingRando
@@ -23,14 +24,21 @@ namespace ReventureEndingRando
         public static long reventureItemOffset = 900270000;
         public static long reventureEndingOffset = 900271000;
 
+        public static bool isRandomizer = false;
+
+        public static GameObject archipelagoSettings;
+        public static bool archipelagoSettingsActive = false;
+        public static string currentHost;
+        public static string currentSlot;
+
         Harmony harmony;
         public static ManualLogSource PatchLogger;
-
-        public static EndingRandomizer randomizer;
 
         public static List<EndingEffectsEnum> endingEffects;
 
         public static Queue<EndingEffectsEnum> lastUnlocks;
+
+        public static Dictionary<int, string> saves;
 
         private void Awake()
         {
@@ -40,18 +48,28 @@ namespace ReventureEndingRando
             harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
             harmony.PatchAll(Assembly.GetExecutingAssembly());
 
-            randomizer = new EndingRandomizer();
             //Logger.LogInfo($"Randomized: {randomizer.ToString()}");
 
-            //Read settings file
-            string contents = File.ReadAllText("connectioninfo.txt");
-            string[] contentSplit = contents.Split(';');
-            string host = contentSplit[0];
-            int port = int.Parse(contentSplit[1]);
-            string slot = contentSplit[2];
+            //Read saves
+            saves = new Dictionary<int, string>();
+            string saveFile = File.ReadAllText("randosaves");
+            foreach (string line in saveFile.Split('n')) {
+                if (line == "")
+                {
+                    continue;
+                }
+                string[] lineSplit = line.Split(':');
+                saves.Add(int.Parse(lineSplit[0]), lineSplit[1]);
+            }
 
-            ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(host, port, slot);
-            archipelagoConnection.Connect();
+            //Read settings file
+            //string contents = File.ReadAllText("connectioninfo.txt");
+            //string[] contentSplit = contents.Split(';');
+            //string host = contentSplit[0];
+            //int port = int.Parse(contentSplit[1]);
+            //string slot = contentSplit[2];
+            //ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(host, port, slot);
+            //archipelagoConnection.Connect();
 
             lastUnlocks = new Queue<EndingEffectsEnum>();
 
@@ -60,27 +78,51 @@ namespace ReventureEndingRando
 
         private void Update()
         {
-            //if (Input.GetKeyDown(KeyCode.F5))
-            //{
-            //    Logger.LogInfo($"Available Effects:");
-            //    foreach (EndingEffectsEnum ee in endingEffects)
-            //    {
-            //        Logger.LogInfo($"{ee}");
-            //    }
-            //}
+            if (Input.GetKeyDown(KeyCode.F5))
+            {
+                if (archipelagoSettingsActive)
+                {
+                    //Plugin.PatchLogger.LogInfo(Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text);
+                    currentHost = Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
+                    PatchLogger.LogInfo(currentHost);
+                    currentSlot = Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(1).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
+                } else
+                {
+                    GameObject archipelagoPanelOptions = Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
+                    GameObject archipelagoHostOption = archipelagoPanelOptions.transform.GetChild(0).gameObject;
+                    archipelagoHostOption.SetActive(true);
 
-            //if (Input.GetKeyDown(KeyCode.F7))
-            //{
-            //    randomizer.Randomize();
-            //    randomizer.StoreState();
-            //}
+                    GameObject archipelagoSlotOption = archipelagoPanelOptions.transform.GetChild(1).gameObject;
+                    archipelagoSlotOption.SetActive(true);
+                }
+                archipelagoSettingsActive = !archipelagoSettingsActive;
+                archipelagoSettings.SetActive(archipelagoSettingsActive);
+            }
+
+            if (Input.GetKeyDown(KeyCode.F7))
+            {
+                var test = Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0/*1*/).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
+                Plugin.PatchLogger.LogInfo(test);
+            }
         }
 
         private void OnDestroy()
         {
+            Destroy(archipelagoSettings);
             ArchipelagoConnection.session.Socket.DisconnectAsync();
             harmony.UnpatchSelf();
             Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} unloaded!");
+        }
+
+        public static void WriteConnectionInfos()
+        {
+            string output = "";
+            foreach (int slot in saves.Keys)
+            {
+                output += slot + ":" + saves[slot] + "\n";
+            }
+            output = output.Substring(0, output.Length - 1);
+            File.WriteAllText("randosaves", output);
         }
     }
 
@@ -91,6 +133,12 @@ namespace ReventureEndingRando
         [HarmonyPatch("FinalizeRun", new Type[] { typeof(float), typeof(EndingCinematicConfiguration), typeof(bool) })]
         private static bool Prefix(ref EndingCinematicConfiguration configuration)
         {
+            Plugin.PatchLogger.LogInfo(Plugin.isRandomizer);
+            if (!Plugin.isRandomizer)
+            {
+                return true;
+            }
+
             configuration.skippable = true;
             //EndingEffectsEnum ee = Plugin.randomizer.randomization[configuration.ending];
             //Plugin.lastUnlocks.Enqueue(ee);
@@ -117,6 +165,11 @@ namespace ReventureEndingRando
         [HarmonyPatch("IsInitialTextReaded", new Type[] { typeof(EndingTypes) })]
         private static bool Prefix(ref bool __result)
         {
+            if (!Plugin.isRandomizer)
+            {
+                return true;
+            }
+
             __result = true;
             return false;
         }
@@ -128,10 +181,12 @@ namespace ReventureEndingRando
         [HarmonyPatch("Start", new Type[] { })]
         private static void Postfix()
         {
-            //First Run
-            //IProgressionService progression = Core.Get<IProgressionService>();
-            //Plugin.endingEffects = Plugin.randomizer.UpdateWorld(progression);
-            Plugin.endingEffects = Plugin.randomizer.UpdateWorldArchipelago();
+            if (!Plugin.isRandomizer)
+            {
+                return;
+            }
+
+            Plugin.endingEffects = EndingRandomizer.UpdateWorldArchipelago();
             return;
         }
     }
@@ -142,6 +197,11 @@ namespace ReventureEndingRando
         [HarmonyPatch("Start", new Type[] { })]
         private static void Postfix(UltimateDoor __instance)
         {
+            if (!Plugin.isRandomizer)
+            {
+                return;
+            }
+
             IProgressionService progression = Core.Get<IProgressionService>();
 
             var uDoorEndingsUnlocked = typeof(UltimateDoor).GetField("unlockedEndings", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
@@ -157,6 +217,11 @@ namespace ReventureEndingRando
         [HarmonyPatch("RefreshText", new Type[] { })]
         private static bool Prefix(CameraZoneText __instance)
         {
+            if (!Plugin.isRandomizer)
+            {
+                return true;
+            }
+
             string lastUnlocksText = "Last Unlocks: ";
             foreach (EndingEffectsEnum ee in Plugin.lastUnlocks.AsEnumerable())
             {
@@ -176,8 +241,120 @@ namespace ReventureEndingRando
         [HarmonyPatch("RunMetamorphosis", new Type[] { })]
         private static void Postfix()
         {
+            if (!Plugin.isRandomizer)
+            {
+                return;
+            }
+
             GameObject goodCrops = GameObject.Find("World/PersistentElements/GoodCrops");
             goodCrops.SetActive(true);
+        }
+    }
+
+    [HarmonyPatch(typeof(SaveSlotController))]
+    public class SaveSlotSelectPatch
+    {
+        [HarmonyPatch("OnClick", new Type[] { })]
+        private static bool Prefix(SaveSlotController __instance)
+        {
+            if (ArchipelagoConnection.session != null)
+            {
+                ArchipelagoConnection.session.Socket.DisconnectAsync();
+            }
+            int slotNumber = __instance.GetDisplaySlotNumber() - 1;
+
+            var isEmptyField = typeof(SaveSlotController).GetField("isEmpty", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+            if (!(bool)isEmptyField.GetValue(__instance))
+            {
+                if (Plugin.saves.ContainsKey(slotNumber))
+                {
+                    Plugin.isRandomizer = true;
+                    string[] connectionInfo = Plugin.saves[slotNumber].Split(';');
+                    ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(connectionInfo[0], connectionInfo[1]);
+                    archipelagoConnection.Connect();
+                } else
+                {
+                    Plugin.isRandomizer = false;
+                }
+                return true;
+            } else
+            {
+                // Open Connection menu
+                string host = Plugin.currentHost;
+                string slot = Plugin.currentSlot;
+                Plugin.isRandomizer = true;
+                ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(host, slot);
+                archipelagoConnection.Connect();
+                Plugin.saves[slotNumber] = host + ";" + slot;
+                Plugin.WriteConnectionInfos();
+                return true;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(TitleDirector))]
+    public class TitleDirectorPatch
+    {
+        [HarmonyPatch("Start", new Type[] { })]
+        private static void Postfix(GameObject __instance)
+        {
+            // Change Options menu
+            if (Plugin.archipelagoSettings != null)
+            {
+                GameObject.DestroyImmediate(Plugin.archipelagoSettings);
+            }
+            GameObject globalCanvas = GameObject.Find("GlobalCanvas(Clone)");
+            Plugin.archipelagoSettings = GameObject.Instantiate(globalCanvas.transform.GetChild(2).gameObject, globalCanvas.transform);
+            Plugin.archipelagoSettings.name = "Archipelago";
+            GameObject.DestroyImmediate(Plugin.archipelagoSettings.GetComponent<OptionsController>());
+            GameObject archipelagoPanel = Plugin.archipelagoSettings.transform.GetChild(0).gameObject;
+            GameObject archipelagoPanelTabs = archipelagoPanel.transform.GetChild(0).gameObject;
+            archipelagoPanelTabs.transform.GetChild(3).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Archipelago");
+            GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(0).gameObject);
+            GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(0).gameObject);
+            GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(0).gameObject);
+            GameObject archipelagoPanelPanels = archipelagoPanel.transform.GetChild(1).gameObject;
+            GameObject.DestroyImmediate(archipelagoPanelPanels.transform.GetChild(0).gameObject);
+            GameObject.DestroyImmediate(archipelagoPanelPanels.transform.GetChild(0).gameObject);
+            GameObject.DestroyImmediate(archipelagoPanelPanels.transform.GetChild(0).gameObject);
+
+            GameObject archipelagoPanelOptions = archipelagoPanelPanels.transform.GetChild(0).gameObject;
+            archipelagoPanelOptions.SetActive(true);
+            GameObject.DestroyImmediate(archipelagoPanelOptions.transform.GetChild(0).gameObject);
+            GameObject.DestroyImmediate(archipelagoPanelOptions.transform.GetChild(2).gameObject);
+            GameObject.DestroyImmediate(archipelagoPanelOptions.transform.GetChild(2).gameObject);
+            GameObject.DestroyImmediate(archipelagoPanelOptions.transform.GetChild(2).gameObject);
+            GameObject.DestroyImmediate(archipelagoPanelOptions.transform.GetChild(2).gameObject);
+            GameObject.DestroyImmediate(archipelagoPanelOptions.transform.GetChild(2).gameObject);
+            GameObject.DestroyImmediate(archipelagoPanelOptions.transform.GetChild(2).gameObject);
+
+            GameObject archipelagoHostOption = archipelagoPanelOptions.transform.GetChild(0).gameObject;
+            archipelagoHostOption.transform.GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Host/Port");
+            GameObject.DestroyImmediate(archipelagoHostOption.GetComponent<OptionInputParam>());
+            GameObject.DestroyImmediate(archipelagoHostOption.GetComponent<OptionActiveWatcher>());
+            GameObject.DestroyImmediate(archipelagoHostOption.GetComponent<OptionActiveWatcher>());
+            archipelagoHostOption.name = "Host Option";
+            archipelagoHostOption.SetActive(true);
+
+            GameObject archipelagoSlotOption = archipelagoPanelOptions.transform.GetChild(1).gameObject;
+            archipelagoSlotOption.transform.GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Slot");
+            GameObject.DestroyImmediate(archipelagoSlotOption.GetComponent<OptionInputParam>());
+            GameObject.DestroyImmediate(archipelagoSlotOption.GetComponent<OptionActiveWatcher>());
+            GameObject.DestroyImmediate(archipelagoSlotOption.GetComponent<OptionActiveWatcher>());
+            archipelagoSlotOption.name = "Slot Option";
+            archipelagoSlotOption.SetActive(true);
+
+            GameObject buttonGO = archipelagoPanel.transform.GetChild(2).GetChild(0).gameObject;
+            GameObject.DestroyImmediate(buttonGO.GetComponent<ButtonContentPusher>());
+            buttonGO.SetActive(true);
+            Button button = buttonGO.AddComponent<Button>();
+            button.onClick.AddListener(() => {
+                Plugin.currentHost = Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
+                Plugin.currentSlot = Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(1).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
+
+                Plugin.archipelagoSettingsActive = false;
+                Plugin.archipelagoSettings.SetActive(false);
+            });
         }
     }
 

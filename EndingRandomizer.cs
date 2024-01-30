@@ -63,7 +63,7 @@ namespace ReventureEndingRando
         //    return enabledEffect;
         //}
 
-        public List<EndingEffectsEnum> UpdateWorldArchipelago()
+        public static List<EndingEffectsEnum> UpdateWorldArchipelago()
         {
             List<EndingEffectsEnum> enabledEffect = new List<EndingEffectsEnum>();
 
