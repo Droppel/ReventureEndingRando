@@ -52,24 +52,19 @@ namespace ReventureEndingRando
 
             //Read saves
             saves = new Dictionary<int, string>();
-            string saveFile = File.ReadAllText("randosaves");
-            foreach (string line in saveFile.Split('n')) {
-                if (line == "")
+            if (File.Exists("randosaves"))
+            {
+                string saveFile = File.ReadAllText("randosaves");
+                foreach (string line in saveFile.Split('\n'))
                 {
-                    continue;
+                    if (line == "")
+                    {
+                        continue;
+                    }
+                    string[] lineSplit = line.Split('=');
+                    saves.Add(int.Parse(lineSplit[0]), lineSplit[1]);
                 }
-                string[] lineSplit = line.Split(':');
-                saves.Add(int.Parse(lineSplit[0]), lineSplit[1]);
             }
-
-            //Read settings file
-            //string contents = File.ReadAllText("connectioninfo.txt");
-            //string[] contentSplit = contents.Split(';');
-            //string host = contentSplit[0];
-            //int port = int.Parse(contentSplit[1]);
-            //string slot = contentSplit[2];
-            //ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(host, port, slot);
-            //archipelagoConnection.Connect();
 
             lastUnlocks = new Queue<EndingEffectsEnum>();
 
@@ -119,7 +114,7 @@ namespace ReventureEndingRando
             string output = "";
             foreach (int slot in saves.Keys)
             {
-                output += slot + ":" + saves[slot] + "\n";
+                output += slot + "=" + saves[slot] + "\n";
             }
             output = output.Substring(0, output.Length - 1);
             File.WriteAllText("randosaves", output);
@@ -133,7 +128,6 @@ namespace ReventureEndingRando
         [HarmonyPatch("FinalizeRun", new Type[] { typeof(float), typeof(EndingCinematicConfiguration), typeof(bool) })]
         private static bool Prefix(ref EndingCinematicConfiguration configuration)
         {
-            Plugin.PatchLogger.LogInfo(Plugin.isRandomizer);
             if (!Plugin.isRandomizer)
             {
                 return true;
@@ -269,6 +263,10 @@ namespace ReventureEndingRando
                 if (Plugin.saves.ContainsKey(slotNumber))
                 {
                     Plugin.isRandomizer = true;
+                    foreach (int key in Plugin.saves.Keys)
+                    {
+                        Plugin.PatchLogger.LogInfo($"{key}: {Plugin.saves[key]}");
+                    }
                     string[] connectionInfo = Plugin.saves[slotNumber].Split(';');
                     ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(connectionInfo[0], connectionInfo[1]);
                     archipelagoConnection.Connect();

@@ -16,6 +16,7 @@ namespace ReventureEndingRando
     {
         public static ArchipelagoSession session;
         public static int requiredEndings;
+        public static int gemsSetting;
         private string slot;
         private string server;
 
@@ -58,6 +59,8 @@ namespace ReventureEndingRando
 
             var slotData = session.DataStorage.GetSlotData(ArchipelagoConnection.session.ConnectionInfo.Slot);
             requiredEndings = int.Parse(slotData["endings"].ToString());
+
+            gemsSetting = int.Parse(slotData["gems"].ToString());
 
             // Successfully connected, `ArchipelagoSession` (assume statically defined as `session` from now on) can now be used to interact with the server and the returned `LoginSuccessful` contains some useful information about the initial connection (e.g. a copy of the slot data as `loginSuccess.SlotData`)
             var loginSuccess = (LoginSuccessful)result;

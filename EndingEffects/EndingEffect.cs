@@ -294,8 +294,11 @@ namespace ReventureEndingRando.EndingEffects
 
         public override void ActivateEffect(int effectsReceived)
         {
-            IProgressionService progression = Core.Get<IProgressionService>();
-            progression.UnlockMilestone(milestone);
+            if (effectsReceived > 0)
+            {
+                IProgressionService progression = Core.Get<IProgressionService>();
+                progression.UnlockMilestone(milestone);
+            }
         }
     }
 
