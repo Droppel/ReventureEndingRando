@@ -12,8 +12,11 @@
 9. Start a new file (Saveslots can be delted by holding down "delete" for 10 seconds)
 10. The mod remembers the connection info for existing files. So when you want to continue later, just load the associated save file (No need to use F5 again)
 
-## World Generation
-Currently the only setting is "endings". This can be any Value between 0 and 99. It reflects the amount of endings required, to trigger the final ending.
+## Settings
+| Setting | Range | Default | Description                              |
+|---------|-------|---------|------------------------------------------|
+|endings  |0-99   |40       |The amount of endings required to finish the game|
+|gems     |0-2    |1        | Vanilla(0): Gems are obtained as in the vanilla game; Randomized(1): Gems are AP Items; Free(2): Gems are obtained from the start| 
 
 ## Changes to Vanilla
 All normaly accesible items are now disabled by default. This includes all chest items, the strawberry, the anvil and the princess.
