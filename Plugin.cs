@@ -304,6 +304,7 @@ namespace ReventureEndingRando
             GameObject globalCanvas = GameObject.Find("GlobalCanvas(Clone)");
             Plugin.archipelagoSettings = GameObject.Instantiate(globalCanvas.transform.GetChild(2).gameObject, globalCanvas.transform);
             Plugin.archipelagoSettings.name = "Archipelago";
+            Plugin.archipelagoSettings.SetActive(true);
             GameObject.DestroyImmediate(Plugin.archipelagoSettings.GetComponent<OptionsController>());
             GameObject archipelagoPanel = Plugin.archipelagoSettings.transform.GetChild(0).gameObject;
             GameObject archipelagoPanelTabs = archipelagoPanel.transform.GetChild(0).gameObject;
@@ -327,20 +328,20 @@ namespace ReventureEndingRando
             GameObject.DestroyImmediate(archipelagoPanelOptions.transform.GetChild(2).gameObject);
 
             GameObject archipelagoHostOption = archipelagoPanelOptions.transform.GetChild(0).gameObject;
-            archipelagoHostOption.transform.GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Host/Port");
+            archipelagoHostOption.name = "Host Option";
             GameObject.DestroyImmediate(archipelagoHostOption.GetComponent<OptionInputParam>());
             GameObject.DestroyImmediate(archipelagoHostOption.GetComponent<OptionActiveWatcher>());
             GameObject.DestroyImmediate(archipelagoHostOption.GetComponent<OptionActiveWatcher>());
-            archipelagoHostOption.name = "Host Option";
             archipelagoHostOption.SetActive(true);
+            archipelagoHostOption.transform.GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Host/Port");
 
             GameObject archipelagoSlotOption = archipelagoPanelOptions.transform.GetChild(1).gameObject;
-            archipelagoSlotOption.transform.GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Slot");
+            archipelagoSlotOption.name = "Slot Option";
             GameObject.DestroyImmediate(archipelagoSlotOption.GetComponent<OptionInputParam>());
             GameObject.DestroyImmediate(archipelagoSlotOption.GetComponent<OptionActiveWatcher>());
             GameObject.DestroyImmediate(archipelagoSlotOption.GetComponent<OptionActiveWatcher>());
-            archipelagoSlotOption.name = "Slot Option";
             archipelagoSlotOption.SetActive(true);
+            archipelagoSlotOption.transform.GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Slot");
 
             GameObject buttonGO = archipelagoPanel.transform.GetChild(2).GetChild(0).gameObject;
             GameObject.DestroyImmediate(buttonGO.GetComponent<ButtonContentPusher>());
@@ -353,6 +354,7 @@ namespace ReventureEndingRando
                 Plugin.archipelagoSettingsActive = false;
                 Plugin.archipelagoSettings.SetActive(false);
             });
+            Plugin.archipelagoSettings.SetActive(false);
         }
     }
 
