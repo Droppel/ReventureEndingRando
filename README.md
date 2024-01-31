@@ -7,13 +7,16 @@
 4. Download the files from the current release
 5. Put the ReventureEndingRando.dll into the /BepInEx/plugins folder
 6. Put the Archipelago.MultiClient.Net.dllinto /BepInEx/core folder
-7. Create a file named "connectioninfo.txt" in the games main folder (So next to Reventure.exe)
-8. In this file add the connection info like so: <host>;<port>;<slotname> (e.g: localhost;38281;ReventureSlot or archipelago.gg;56372;DroppelReventure) 
-9. Start the game and start a new file (Saveslots can be delted by holding down "delete" for 10 seconds)
+7. Start the game. BEFORE selecting a new save file, press F5.
+8. In the now open menu input <host>:<port> into the upper input field and your slot name into the lower inputfield.
+9. Start a new file (Saveslots can be delted by holding down "delete" for 10 seconds)
+10. The mod remembers the connection info for existing files. So when you want to continue later, just load the associated save file (No need to use F5 again)
 
-
-## World Generation
-Currently the only setting is "endings". This can be any Value between 0 and 99. It reflects the amount of endings required, to trigger the final ending.
+## Settings
+| Setting | Range | Default | Description                              |
+|---------|-------|---------|------------------------------------------|
+|endings  |0-99   |40       |The amount of endings required to finish the game|
+|gems     |0-2    |1        | Vanilla(0): Gems are obtained as in the vanilla game; Randomized(1): Gems are AP Items; Free(2): Gems are obtained from the start| 
 
 ## Changes to Vanilla
 All normaly accesible items are now disabled by default. This includes all chest items, the strawberry, the anvil and the princess.
