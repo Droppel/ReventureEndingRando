@@ -82,6 +82,14 @@ namespace ReventureEndingRando.EndingEffects
                     return new SpawnVine();
                 case EndingEffectsEnum.OpenCastleFloor:
                     return new OpenCastleHole();
+                case EndingEffectsEnum.OpenSewerPipe:
+                    return new SpawnItemSimple("World/PersistentElements/PipeGrate", true);
+                case EndingEffectsEnum.DarkstoneLeverLeft:
+                    return new SpawnItemSimple("World/Interactables/Levers/ActiveLevers/LeftLever");
+                case EndingEffectsEnum.DarkstoneLeverMiddle:
+                    return new SpawnItemSimple("World/Interactables/Levers/MiddleLever");
+                case EndingEffectsEnum.DarkstoneLeverRight:
+                    return new SpawnItemSimple("World/Interactables/Levers/ActiveLevers/RightLever");
                 case EndingEffectsEnum.SpawnDragon:
                     return new SpawnDragon();
                 case EndingEffectsEnum.SpawnShopkeeper:
@@ -92,6 +100,10 @@ namespace ReventureEndingRando.EndingEffects
                     return new SpawnKing();
                 case EndingEffectsEnum.GrowChicken:
                     return new GrowChicken();
+                case EndingEffectsEnum.SpawnElder:
+                    return new SpawnItemSimple("World/NPCs/Elder");
+                case EndingEffectsEnum.SpawnBoulderNPC:
+                    return new SpawnBoulderNPC();
                 case EndingEffectsEnum.EnableCloset:
                     return new SpawnItemSimple("World/PersistentElements/Wardrove");
                 case EndingEffectsEnum.BuildStatue:
@@ -121,10 +133,12 @@ namespace ReventureEndingRando.EndingEffects
     class SpawnItemSimple : EndingEffect
     {
         string name;
+        bool inverted;
 
-        public SpawnItemSimple(string _name)
+        public SpawnItemSimple(string _name, bool _inverted=false)
         {
             name = _name;
+            inverted = _inverted;
         }
 
         public override void ActivateEffect(int effectsReceived)
@@ -135,7 +149,12 @@ namespace ReventureEndingRando.EndingEffects
             {
                 GameObject.Destroy(awRestrictions);
             }
-            simpleItem.SetActive(effectsReceived > 0);
+            AlterWithEnding awEnding = simpleItem.GetComponent<AlterWithEnding>();
+            if (awEnding != null)
+            {
+                GameObject.Destroy(awEnding);
+            }
+            simpleItem.SetActive(inverted != effectsReceived > 0);
         }
     }
 
@@ -283,6 +302,20 @@ namespace ReventureEndingRando.EndingEffects
         }
     }
 
+    class SpawnBoulderNPC : EndingEffect
+    {
+        public override void ActivateEffect(int effectsReceived)
+        {
+            GameObject boulder = GameObject.Find("World/Boulders/NonNPC Boulder");
+            GameObject.Destroy(boulder.GetComponent<AlterWithRestrictions>());
+            GameObject boulderNPC = GameObject.Find("World/Boulders/NPC Boulder");
+            GameObject.Destroy(boulderNPC.GetComponent<AlterWithRestrictions>());
+
+            boulder.SetActive(effectsReceived == 0);
+            boulderNPC.SetActive(effectsReceived > 0);
+        }
+    }
+
     class UnlockMilestone : EndingEffect
     {
         MilestoneTypes milestone;
@@ -341,12 +374,18 @@ namespace ReventureEndingRando.EndingEffects
         GrowVine,
         OpenCastleFloor,
         UnlockFacePlantStone,
+        OpenSewerPipe,
+        DarkstoneLeverLeft,
+        DarkstoneLeverMiddle,
+        DarkstoneLeverRight,
         //NPCs
         SpawnDragon,
         SpawnShopkeeper,
         SpawnMimic,
         SpawnKing,
         GrowChicken,
+        SpawnElder,
+        SpawnBoulderNPC,
         //Cosmetic
         EnableCloset,
         BuildStatue,
@@ -360,31 +399,18 @@ namespace ReventureEndingRando.EndingEffects
         WindGem
     }
 
+    //Selected for implementation
+
     //Effect ideas
+    //schornstein World/EndTriggers/79_EnterTheChimney_End
     //EnableNamechange,
     //EnablePrincessNamechange
     //EnableDarkLordNamechange
-    //schornstein
     //desert druckplatte
     //mimic kiste
     //princess bed
     //own bed
-    //lever1 darkstone room
-    //lever2 darkstone room
-    //lever3 darkstone room
-    //minion next to house
-    //Chicken1 progressive
-    //Chicken2 progressive
-    //Chicken3 progressive
-    //Chicken4 progressive
-    //Elder NPC
-    //Sewer pipe
-    //red orb
-    //green orb
-    //blue orb
-    //yellow orb
     //Altar
-    //Boulder NPC
     //River Grate Button
     //Selfdestruct Button
     //Princessgate Elevator

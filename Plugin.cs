@@ -262,10 +262,10 @@ namespace ReventureEndingRando
                 if (Plugin.saves.ContainsKey(slotNumber))
                 {
                     Plugin.isRandomizer = true;
-                    foreach (int key in Plugin.saves.Keys)
-                    {
-                        Plugin.PatchLogger.LogInfo($"{key}: {Plugin.saves[key]}");
-                    }
+                    //foreach (int key in Plugin.saves.Keys)
+                    //{
+                    //    Plugin.PatchLogger.LogInfo($"{key}: {Plugin.saves[key]}");
+                    //}
                     string[] connectionInfo = Plugin.saves[slotNumber].Split(';');
                     ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(connectionInfo[0], connectionInfo[1]);
                     archipelagoConnection.Connect();
