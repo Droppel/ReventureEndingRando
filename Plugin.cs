@@ -79,7 +79,6 @@ namespace ReventureEndingRando
                 {
                     //Plugin.PatchLogger.LogInfo(Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text);
                     currentHost = Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
-                    PatchLogger.LogInfo(currentHost);
                     currentSlot = Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(1).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
                 } else
                 {
@@ -306,18 +305,23 @@ namespace ReventureEndingRando
             Plugin.archipelagoSettings.name = "Archipelago";
             Plugin.archipelagoSettings.SetActive(true);
             GameObject.DestroyImmediate(Plugin.archipelagoSettings.GetComponent<OptionsController>());
-            GameObject archipelagoPanel = Plugin.archipelagoSettings.transform.GetChild(0).gameObject;
-            GameObject archipelagoPanelTabs = archipelagoPanel.transform.GetChild(0).gameObject;
-            archipelagoPanelTabs.transform.GetChild(3).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Archipelago");
+            GameObject archipelagoPanel = Plugin.archipelagoSettings.transform.GetChild(0).gameObject; // Options Panel
+            GameObject archipelagoPanelTabs = archipelagoPanel.transform.GetChild(0).gameObject; // Tabs
+            GameObject.DestroyImmediate(archipelagoPanelTabs.GetComponent<OptionTabs>());
+            archipelagoPanelTabs.transform.GetChild(3) // Stream
+                .GetChild(0) // Text
+                .gameObject.GetComponent<TextMeshProUGUI>().SetText("Archipelago");
             GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(0).gameObject);
             GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(0).gameObject);
             GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(0).gameObject);
+            GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(0) // Stream
+                .GetComponent<OptionTabElement>());
             GameObject archipelagoPanelPanels = archipelagoPanel.transform.GetChild(1).gameObject;
             GameObject.DestroyImmediate(archipelagoPanelPanels.transform.GetChild(0).gameObject);
             GameObject.DestroyImmediate(archipelagoPanelPanels.transform.GetChild(0).gameObject);
             GameObject.DestroyImmediate(archipelagoPanelPanels.transform.GetChild(0).gameObject);
 
-            GameObject archipelagoPanelOptions = archipelagoPanelPanels.transform.GetChild(0).gameObject;
+            GameObject archipelagoPanelOptions = archipelagoPanelPanels.transform.GetChild(0).gameObject; // Stream Options
             archipelagoPanelOptions.SetActive(true);
             GameObject.DestroyImmediate(archipelagoPanelOptions.transform.GetChild(0).gameObject);
             GameObject.DestroyImmediate(archipelagoPanelOptions.transform.GetChild(2).gameObject);
@@ -334,6 +338,11 @@ namespace ReventureEndingRando
             GameObject.DestroyImmediate(archipelagoHostOption.GetComponent<OptionActiveWatcher>());
             archipelagoHostOption.SetActive(true);
             archipelagoHostOption.transform.GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Host/Port");
+            archipelagoHostOption.transform.GetChild(1) //Options Container
+                .GetChild(0) //Input
+                .GetChild(0) //Text Area
+                .GetChild(1) //Placeholder
+                .gameObject.GetComponent<TextMeshProUGUI>().SetText("host:port");
 
             GameObject archipelagoSlotOption = archipelagoPanelOptions.transform.GetChild(1).gameObject;
             archipelagoSlotOption.name = "Slot Option";
@@ -342,6 +351,11 @@ namespace ReventureEndingRando
             GameObject.DestroyImmediate(archipelagoSlotOption.GetComponent<OptionActiveWatcher>());
             archipelagoSlotOption.SetActive(true);
             archipelagoSlotOption.transform.GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Slot");
+            archipelagoSlotOption.transform.GetChild(1) //Options Container
+                .GetChild(0) //Input
+                .GetChild(0) //Text Area
+                .GetChild(1) //Placeholder
+                .gameObject.GetComponent<TextMeshProUGUI>().SetText("slot");
 
             GameObject buttonGO = archipelagoPanel.transform.GetChild(2).GetChild(0).gameObject;
             GameObject.DestroyImmediate(buttonGO.GetComponent<ButtonContentPusher>());
