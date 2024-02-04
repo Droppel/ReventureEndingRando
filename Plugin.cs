@@ -124,7 +124,7 @@ namespace ReventureEndingRando
     [HarmonyPatch(typeof(EndingProvider))]
     public class EndingProviderPatch
     {
-        [HarmonyPatch("FinalizeRun", new Type[] { typeof(float), typeof(EndingCinematicConfiguration), typeof(bool) })]
+        [HarmonyPatch("LoadEnding", new Type[] { typeof(EndingCinematicConfiguration), typeof(bool), typeof(Action) })]
         private static bool Prefix(ref EndingCinematicConfiguration configuration)
         {
             if (!Plugin.isRandomizer)
@@ -136,7 +136,7 @@ namespace ReventureEndingRando
             //EndingEffectsEnum ee = Plugin.randomizer.randomization[configuration.ending];
             //Plugin.lastUnlocks.Enqueue(ee);
             //if (Plugin.lastUnlocks.Count > 3)
-            //{
+            //{<
             //    Plugin.lastUnlocks.Dequeue();
             //}
             //Plugin.PatchLogger.LogInfo($"{configuration.ending} unlocked {ee}!");
