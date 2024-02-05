@@ -1,4 +1,5 @@
-﻿using Atto;
+﻿using Archipelago.MultiClient.Net.Models;
+using Atto;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
@@ -25,18 +26,19 @@ namespace ReventureEndingRando
         public static long reventureEndingOffset = 900271000;
 
         public static bool isRandomizer = false;
+        public static string lastUnlocksText = "Last Unlocked: ";
 
         public static GameObject archipelagoSettings;
         public static bool archipelagoSettingsActive = false;
         public static string currentHost;
         public static string currentSlot;
 
+        private int lastItemListSize = 0;
+
         Harmony harmony;
         public static ManualLogSource PatchLogger;
 
         public static List<EndingEffectsEnum> endingEffects;
-
-        public static Queue<EndingEffectsEnum> lastUnlocks;
 
         public static Dictionary<int, string> saves;
 
@@ -65,8 +67,6 @@ namespace ReventureEndingRando
                     saves.Add(int.Parse(lineSplit[0]), lineSplit[1]);
                 }
             }
-
-            lastUnlocks = new Queue<EndingEffectsEnum>();
 
             Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} Version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
         }
@@ -97,6 +97,23 @@ namespace ReventureEndingRando
             {
                 var test = Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0/*1*/).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
                 Plugin.PatchLogger.LogInfo(test);
+            }
+
+            int currentItemListSize = ArchipelagoConnection.session.Items.AllItemsReceived.Count();
+            if (currentItemListSize > lastItemListSize)
+            {
+                lastItemListSize = currentItemListSize;
+
+                //Update Text
+                lastUnlocksText = "Last unlocked: ";
+                foreach (NetworkItem item in ArchipelagoConnection.session.Items.AllItemsReceived.Skip(Math.Max(0, currentItemListSize - 3)))
+                {
+                    lastUnlocksText += ((EndingEffectsEnum) (item.Item - reventureItemOffset)).ToString() + ",";
+                }
+                lastUnlocksText = lastUnlocksText.Remove(lastUnlocksText.Length - 1);
+
+                TextMeshProUGUI text = GameObject.Find("Canvasses/OverlayCanvas/GamePanel/ZonePanel/zoneText").GetComponent<TextMeshProUGUI>();
+                text.text = lastUnlocksText;
             }
         }
 
@@ -133,13 +150,6 @@ namespace ReventureEndingRando
             }
 
             configuration.skippable = true;
-            //EndingEffectsEnum ee = Plugin.randomizer.randomization[configuration.ending];
-            //Plugin.lastUnlocks.Enqueue(ee);
-            //if (Plugin.lastUnlocks.Count > 3)
-            //{<
-            //    Plugin.lastUnlocks.Dequeue();
-            //}
-            //Plugin.PatchLogger.LogInfo($"{configuration.ending} unlocked {ee}!");
 
             //Report to Archipelago
             ArchipelagoConnection.session.Locations.CompleteLocationChecks(Plugin.reventureEndingOffset + (long) configuration.ending);
@@ -215,15 +225,9 @@ namespace ReventureEndingRando
                 return true;
             }
 
-            string lastUnlocksText = "Last Unlocks: ";
-            foreach (EndingEffectsEnum ee in Plugin.lastUnlocks.AsEnumerable())
-            {
-                lastUnlocksText += $"{ee}, ";
-            }
-
             var field = typeof(CameraZoneText).GetField("cameraZone", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
             TextMeshProUGUI cameraZone = (TextMeshProUGUI) field.GetValue(__instance);
-            cameraZone.text = lastUnlocksText;
+            cameraZone.text = Plugin.lastUnlocksText;
             return false;
         }
     }
