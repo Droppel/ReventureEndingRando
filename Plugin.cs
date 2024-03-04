@@ -93,12 +93,11 @@ namespace ReventureEndingRando
                 archipelagoSettings.SetActive(archipelagoSettingsActive);
             }
 
-            if (Input.GetKeyDown(KeyCode.F7))
+            if (ArchipelagoConnection.session == null)
             {
-                var test = Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0/*1*/).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
-                Plugin.PatchLogger.LogInfo(test);
+                return;
             }
-
+            // Only run when connected
             int currentItemListSize = ArchipelagoConnection.session.Items.AllItemsReceived.Count();
             if (currentItemListSize > lastItemListSize)
             {

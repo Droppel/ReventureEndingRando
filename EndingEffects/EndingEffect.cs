@@ -23,7 +23,7 @@ namespace ReventureEndingRando.EndingEffects
                 case EndingEffectsEnum.SpawnShovelChest:
                     return new SpawnItemSimple("World/Items/TreasureChest_Shovel");
                 case EndingEffectsEnum.SpawnBoomerang:
-                    return new SpawnItemSimple("World/Items/Item Boomerang");
+                    return new SpawnBoomerang();
                 case EndingEffectsEnum.SpawnMapChest:
                     return new SpawnItemSimple("World/Items/TreasureChest_Map");
                 case EndingEffectsEnum.SpawnCompassChest:
@@ -168,6 +168,31 @@ namespace ReventureEndingRando.EndingEffects
             feedEnding.SetActive(effectsReceived > 0);
         }
     }
+    class SpawnBoomerang: EndingEffect
+    {
+        public override void ActivateEffect(int effectsReceived)
+        {
+            if (effectsReceived == 0)
+            {
+                return;
+            }
+            GameObject boomerang = GameObject.Find("World/Items/Item Boomerang");
+            GameObject shovelChest = GameObject.Find("World/Items/TreasureChest_Shovel");
+            GameObject boomerangChest = GameObject.Instantiate(shovelChest, new Vector2(297, -2.5f), Quaternion.identity, shovelChest.transform.parent);
+            boomerangChest.name = "TreasureChest_Boomerang";
+            TreasureChest boomerangTreasureChest = boomerangChest.GetComponent<TreasureChest>();
+            boomerangTreasureChest.content = boomerang;
+            boomerangTreasureChest.item = ItemTypes.Boomerang;
+            boomerang.transform.position = new Vector3(297, 5, 1);
+            boomerangChest.SetActive(true);
+            boomerang.SetActive(true);
+
+            GameObject extraPlatform = GameObject.Instantiate(GameObject.Find("World/PersistentElements/Castlehole/BreakableBlock (9)"), new Vector2(323.5f, -3.5f), Quaternion.identity);
+            extraPlatform.name = "BoomerangExtraPlatform";
+            extraPlatform.SetActive(true);
+        }
+    }
+
     class SpawnDragon : EndingEffect
     {
         public override void ActivateEffect(int effectsReceived)
