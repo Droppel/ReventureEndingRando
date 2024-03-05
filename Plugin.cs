@@ -314,11 +314,16 @@ namespace ReventureEndingRando
             archipelagoPanelTabs.transform.GetChild(3) // Stream
                 .GetChild(0) // Text
                 .gameObject.GetComponent<TextMeshProUGUI>().SetText("Archipelago");
+            GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(0).GetComponent<OptionTabElement>()); //General
+            GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(1).GetComponent<OptionTabElement>()); //Extra
+            GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(2).GetComponent<ControlsOptionsController>()); //Controls
+            Plugin.PatchLogger.LogInfo("For some reason deleting the objects causes an NPE when running the components OnDestroy method. This doesn't matter because we don't care about it anyways");
+            GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(2).GetComponent<OptionTabElement>()); //Controls
+            GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(3).GetComponent<OptionTabElement>());
+            GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(3).GetComponent<AlterWithRestrictionsInEachScene>());
             GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(0).gameObject);
             GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(0).gameObject);
             GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(0).gameObject);
-            GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(0) // Stream
-                .GetComponent<OptionTabElement>());
             GameObject archipelagoPanelPanels = archipelagoPanel.transform.GetChild(1).gameObject;
             GameObject.DestroyImmediate(archipelagoPanelPanels.transform.GetChild(0).gameObject);
             GameObject.DestroyImmediate(archipelagoPanelPanels.transform.GetChild(0).gameObject);
@@ -375,18 +380,13 @@ namespace ReventureEndingRando
         }
     }
 
-    //[HarmonyPatch(typeof(GameObject))]
-    //public class GameObjectPatch
+    //[HarmonyPatch(typeof(AlterWithRestrictions))]
+    //public class AlterWithRestrictionsPatch
     //{
-    //    [HarmonyPatch("SetActive", new Type[] { typeof(bool) })]
-    //    private static void Postfix(GameObject __instance)
+    //    [HarmonyPatch("Alter", new Type[] { })]
+    //    private static void Postfix(AlterWithRestrictions __instance)
     //    {
-    //        if (__instance.name == "TreasureChest_Map" || __instance.name == "TreasureChest_Compass")
-    //        {
-    //            Plugin.PatchLogger.LogInfo($"Gameobject: {__instance.name}");
-    //            System.Diagnostics.StackTrace t = new System.Diagnostics.StackTrace();
-    //            Plugin.PatchLogger.LogInfo(t.ToString());
-    //        }
+    //        Plugin.PatchLogger.LogInfo($"Gameobject: {__instance.gameObject}");
     //        return;
     //    }
     //}

@@ -12,6 +12,20 @@ namespace ReventureEndingRando.EndingEffects
     {
         public abstract void ActivateEffect(int effectsReceived);
 
+        public void RemoveAlterWithObjects(GameObject go)
+        {
+            AlterWithRestrictions awRestrictions = go.GetComponent<AlterWithRestrictions>();
+            if (awRestrictions != null)
+            {
+                GameObject.Destroy(awRestrictions);
+            }
+            AlterWithEnding awEnding = go.GetComponent<AlterWithEnding>();
+            if (awEnding != null)
+            {
+                GameObject.Destroy(awEnding);
+            }
+        }
+
         public static EndingEffect InitFromEnum(EndingEffectsEnum e)
         {
             switch (e)
@@ -144,16 +158,7 @@ namespace ReventureEndingRando.EndingEffects
         public override void ActivateEffect(int effectsReceived)
         {
             GameObject simpleItem = GameObject.Find(name);
-            AlterWithRestrictions awRestrictions = simpleItem.GetComponent<AlterWithRestrictions>();
-            if (awRestrictions != null)
-            {
-                GameObject.Destroy(awRestrictions);
-            }
-            AlterWithEnding awEnding = simpleItem.GetComponent<AlterWithEnding>();
-            if (awEnding != null)
-            {
-                GameObject.Destroy(awEnding);
-            }
+            RemoveAlterWithObjects(simpleItem);
             simpleItem.SetActive(inverted != effectsReceived > 0);
         }
     }
