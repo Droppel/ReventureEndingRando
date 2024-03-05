@@ -93,7 +93,12 @@ namespace ReventureEndingRando
                 archipelagoSettings.SetActive(archipelagoSettingsActive);
             }
 
-            if (ArchipelagoConnection.session == null)
+            if (Input.GetKeyDown(KeyCode.F7))
+            {
+
+            }
+
+                if (ArchipelagoConnection.session == null)
             {
                 return;
             }
@@ -244,6 +249,7 @@ namespace ReventureEndingRando
 
             GameObject goodCrops = GameObject.Find("World/PersistentElements/GoodCrops");
             goodCrops.SetActive(true);
+            ArchipelagoConnection.Check_Send_completion();
         }
     }
 
