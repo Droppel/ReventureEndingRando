@@ -15,8 +15,13 @@ namespace ReventureEndingRando
     class ArchipelagoConnection
     {
         public static ArchipelagoSession session;
+
         public static int requiredEndings;
-        public static int gemsSetting;
+        public static int gemsRandomized;
+        public static int gemsAmount;
+        public static int gemsRequired;
+
+
         private string slot;
         private string server;
 
@@ -59,8 +64,9 @@ namespace ReventureEndingRando
 
             var slotData = session.DataStorage.GetSlotData(ArchipelagoConnection.session.ConnectionInfo.Slot);
             requiredEndings = int.Parse(slotData["endings"].ToString());
-
-            gemsSetting = int.Parse(slotData["gems"].ToString());
+            gemsRandomized = int.Parse(slotData["randomizeGems"].ToString());
+            gemsAmount = int.Parse(slotData["gemsInPool"].ToString());
+            gemsRequired = int.Parse(slotData["gemsRequired"].ToString());
 
             // Successfully connected, `ArchipelagoSession` (assume statically defined as `session` from now on) can now be used to interact with the server and the returned `LoginSuccessful` contains some useful information about the initial connection (e.g. a copy of the slot data as `loginSuccess.SlotData`)
             var loginSuccess = (LoginSuccessful)result;

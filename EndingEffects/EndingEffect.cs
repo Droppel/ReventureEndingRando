@@ -130,14 +130,8 @@ namespace ReventureEndingRando.EndingEffects
                     return new SpawnItemSimple("World/PersistentElements/MimicKennel");
                 case EndingEffectsEnum.UnlockFacePlantStone:
                     return new UnlockFacePlantStone();
-                case EndingEffectsEnum.EarthGem:
-                    return new UnlockMilestone(MilestoneTypes.GotEarthGem);
-                case EndingEffectsEnum.FireGem:
-                    return new UnlockMilestone(MilestoneTypes.GotFireGem);
-                case EndingEffectsEnum.WaterGem:
-                    return new UnlockMilestone(MilestoneTypes.GotWaterGem);
-                case EndingEffectsEnum.WindGem:
-                    return new UnlockMilestone(MilestoneTypes.GotWindGem);
+                case EndingEffectsEnum.Gem:
+                    return new UnlockGems();
                 default:
                     return null;
             }
@@ -365,6 +359,22 @@ namespace ReventureEndingRando.EndingEffects
         }
     }
 
+    class UnlockGems : EndingEffect
+    {
+        public override void ActivateEffect(int effectsReceived)
+        {
+            int requiredGems = (ArchipelagoConnection.gemsAmount * ArchipelagoConnection.gemsRequired) / 100;
+            if (effectsReceived >= requiredGems)
+            {
+                IProgressionService progression = Core.Get<IProgressionService>();
+                progression.UnlockMilestone(MilestoneTypes.GotEarthGem);
+                progression.UnlockMilestone(MilestoneTypes.GotWaterGem);
+                progression.UnlockMilestone(MilestoneTypes.GotFireGem);
+                progression.UnlockMilestone(MilestoneTypes.GotWindGem);
+            }
+        }
+    }
+
     public enum EndingEffectsEnum
     {
         Nothing,
@@ -422,11 +432,8 @@ namespace ReventureEndingRando.EndingEffects
         AddPC,
         SpawnDolphins,
         SpawnMimicPet,
-        //Milestones
-        EarthGem,
-        FireGem,
-        WaterGem,
-        WindGem
+        //Gems
+        Gem
     }
 
     //Selected for implementation

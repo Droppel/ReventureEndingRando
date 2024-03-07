@@ -96,26 +96,13 @@ namespace ReventureEndingRando
             }
 
             // Handle Gems
-
-
-            if (ArchipelagoConnection.gemsSetting == 0)
-            {
-                //Vanilla Gems do nothing
-            } else if (ArchipelagoConnection.gemsSetting == 1)
+            if (ArchipelagoConnection.gemsRandomized == 1)
             {
                 //Randomized Gems, Disable Vanilla Locations
                 GameObject.Find("World/Items/TetraGems/EarthGem").SetActive(false);
                 GameObject.Find("World/Items/TetraGems/WindGem").SetActive(false);
                 GameObject.Find("World/Items/TetraGems/WaterGem").SetActive(false);
                 GameObject.Find("World/Items/TetraGems/FireGem").SetActive(false);
-            } else if (ArchipelagoConnection.gemsSetting == 2)
-            {
-                //Free Gems, just give them to the player
-                IProgressionService progression = Core.Get<IProgressionService>();
-                progression.UnlockMilestone(MilestoneTypes.GotEarthGem);
-                progression.UnlockMilestone(MilestoneTypes.GotWaterGem);
-                progression.UnlockMilestone(MilestoneTypes.GotFireGem);
-                progression.UnlockMilestone(MilestoneTypes.GotWindGem);
             }
 
             //Update UI
