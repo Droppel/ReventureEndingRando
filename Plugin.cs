@@ -278,6 +278,7 @@ namespace ReventureEndingRando
                     string[] connectionInfo = Plugin.saves[slotNumber].Split(';');
                     ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(connectionInfo[0], connectionInfo[1]);
                     archipelagoConnection.Connect();
+                    UnlockEndings(slotNumber);
                 } else
                 {
                     Plugin.isRandomizer = false;
@@ -285,16 +286,23 @@ namespace ReventureEndingRando
                 return true;
             } else
             {
-                // Open Connection menu
                 string host = Plugin.currentHost;
                 string slot = Plugin.currentSlot;
                 Plugin.isRandomizer = true;
                 ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(host, slot);
                 archipelagoConnection.Connect();
+                UnlockEndings(slotNumber);
                 Plugin.saves[slotNumber] = host + ";" + slot;
                 Plugin.WriteConnectionInfos();
                 return true;
             }
+        }
+
+        private static void UnlockEndings(int saveSlot)
+        {
+            ISaveSlotService saveService = Core.Get<ISaveSlotService>();
+            IEnumerable<EndingTypes> unlockedEndings = ArchipelagoConnection.session.Locations.AllLocationsChecked.Select(location => (EndingTypes)(location - Plugin.reventureEndingOffset));
+            saveService.Save<List<global::EndingTypes>>(saveSlot, "unlockedEndingsList", unlockedEndings.ToList());
         }
     }
 
