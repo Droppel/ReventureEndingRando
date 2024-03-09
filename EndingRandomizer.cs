@@ -139,25 +139,28 @@ namespace ReventureEndingRando
             //This temple is guarded by the 4 gems that keep nature in balance: Earth, Water, Wind and Fire
             int requiredGems = (ArchipelagoConnection.gemsAmount * ArchipelagoConnection.gemsRequired) / 100;
             string gemText = "";
+
+            string[] gemNames = { "Earth", "Water", "Wind", "Fire", "Air", "Normal", "Electric", "Grass", "Ice", "Fighting",
+                "Poison", "Ground", "Flying", "Psychic", "Bug", "Rock", "Ghost", "Dragon", "Dark", "Steel",
+                "Fairy", "Stellar", "Metal", "Eldritch", "Aura", "Mind", "Light", "Death", "Energy", "Magic",
+                "Void", "Life", "Crystal", "Stone", "Leaf", "Tree", "Plant", "Shadow", "Sky", "Ocean"};
             if (requiredGems == 0)
             {
                 gemText = "This temple is not guarded.";
 
             } else if (requiredGems == 1)
             {
-                gemText = "This temple is guarded by the 1 gem that keeps nature in balance: Earth";
-            } else if (requiredGems == 2)
-            {
-                gemText = "This temple is guarded by the 2 gems that keep nature in balance: Earth and Water";
-            } else if (requiredGems == 3)
-            {
-                gemText = "This temple is guarded by the 3 gems that keep nature in balance: Earth, Water and Wind";
-            } else if (requiredGems == 4)
-            {
-                gemText = "This temple is guarded by the 4 gems that keep nature in balance: Earth, Water, Wind and Fire";
+                string randomElement = gemNames[UnityEngine.Random.RandomRangeInt(0, 40)];
+                gemText = "This temple is guarded by the 1 gem that keeps nature in balance: " + randomElement;
             } else
             {
-                gemText = "This temple is guarded by the " + requiredGems + " gems that keep nature in balance: Earth, Water, Wind, Fire and more";
+                List<string> selectedGems = gemNames.OrderBy(x => UnityEngine.Random.Range(0, 40)).Take(requiredGems).ToList();
+                gemText = "This temple is guarded by the " + requiredGems + " gems that keep nature in balance:";
+                for (int i = 0; i < requiredGems - 1; i++)
+                {
+                    gemText += " " + selectedGems[i] + ",";
+                }
+                gemText = gemText.Substring(0, gemText.Length - 1) + " and " + selectedGems[requiredGems - 1];
             }
             signRight[0].textToDisplay = gemText;
             signRight[0].useString = true;
