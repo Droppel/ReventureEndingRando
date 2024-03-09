@@ -111,13 +111,15 @@ namespace ReventureEndingRando
             versionText.SetText($"{versionText.text}; Rando: {MyPluginInfo.PLUGIN_VERSION}");
 
             //Permanent changes
-            //Disable cannon ending requirement
+            //Disable cannon ending requirement and Add the missing ones to castle cannon
             Cannon townToShopCannon = GameObject.Find("World/Interactables/Cannons/TownToShopCannon/33_ShootCannonballToShop_End").GetComponent<Cannon>();
             ((EndingCountRequirement) townToShopCannon.requirementsToFail[0]).endingsUnlockedCount = 0;
             Cannon fortressToTownCannon = GameObject.Find("World/Interactables/Cannons/FortressToTownCannon/34_ShootCannonballToTown_End").GetComponent<Cannon>();
             ((EndingCountRequirement) fortressToTownCannon.requirementsToFail[0]).endingsUnlockedCount = 0;
             Cannon shopToFortress = GameObject.Find("World/Interactables/Cannons/ShopToFortressCannon/32_ShootCannonballToCastle_End").GetComponent<Cannon>();
             ((EndingCountRequirement) shopToFortress.requirementsToFail[2]).endingsUnlockedCount = 0;
+            Cannon castleToDarkCastle = GameObject.Find("World/Interactables/Cannons/CastleToFortressCannon/CannonContents").GetComponent<Cannon>();
+            castleToDarkCastle.requirementsToFail = shopToFortress.requirementsToFail;
 
             return enabledEffect;
         }
