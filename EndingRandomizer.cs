@@ -121,6 +121,46 @@ namespace ReventureEndingRando
             Cannon castleToDarkCastle = GameObject.Find("World/Interactables/Cannons/CastleToFortressCannon/CannonContents").GetComponent<Cannon>();
             castleToDarkCastle.requirementsToFail = shopToFortress.requirementsToFail;
 
+            // Change Ultimate Door signs texts
+            DisplayChat[] signLeft = Resources.FindObjectsOfTypeAll<DisplayChat>().Where(obj => obj.transform.position.x == 194.0 && obj.transform.position.y == -24.0).ToArray();
+            DisplayChat[] signRight= Resources.FindObjectsOfTypeAll<DisplayChat>().Where(obj => obj.transform.position.x == 201.0 && obj.transform.position.y == -24.0).ToArray();
+            //Perseverance and Patience yield the ultimate reward.
+            if (ArchipelagoConnection.requiredEndings == 0)
+            {
+                signLeft[0].textToDisplay = "Perseverance and Patience yield... Wait ZERO? REALLY?";
+            } else if (ArchipelagoConnection.requiredEndings == 1)
+            {
+                signLeft[0].textToDisplay = "Perseverance and Patience yield the ultimate reward. Or 1 Ending will do to";
+            } else
+            {
+                signLeft[0].textToDisplay = "Perseverance and Patience yield the ultimate reward. Or " + ArchipelagoConnection.requiredEndings +" Endings will do to";
+            }
+            signLeft[0].useString = true;
+            //This temple is guarded by the 4 gems that keep nature in balance: Earth, Water, Wind and Fire
+            int requiredGems = (ArchipelagoConnection.gemsAmount * ArchipelagoConnection.gemsRequired) / 100;
+            string gemText = "";
+            if (requiredGems == 0)
+            {
+                gemText = "This temple is not guarded.";
+
+            } else if (requiredGems == 1)
+            {
+                gemText = "This temple is guarded by the 1 gem that keeps nature in balance: Earth";
+            } else if (requiredGems == 2)
+            {
+                gemText = "This temple is guarded by the 2 gems that keep nature in balance: Earth and Water";
+            } else if (requiredGems == 3)
+            {
+                gemText = "This temple is guarded by the 3 gems that keep nature in balance: Earth, Water and Wind";
+            } else if (requiredGems == 4)
+            {
+                gemText = "This temple is guarded by the 4 gems that keep nature in balance: Earth, Water, Wind and Fire";
+            } else
+            {
+                gemText = "This temple is guarded by the " + requiredGems + " gems that keep nature in balance: Earth, Water, Wind, Fire and more";
+            }
+            signRight[0].textToDisplay = gemText;
+            signRight[0].useString = true;
             return enabledEffect;
         }
 
