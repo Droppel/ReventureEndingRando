@@ -20,48 +20,7 @@ namespace ReventureEndingRando
 
         public EndingRandomizer()
         {
-            //randomization = new Dictionary<EndingTypes, EndingEffectsEnum>();
-            //if (true)
-            //if (!LoadState())
-            //{
-            //    Randomize();
-            //    StoreState();
-            //}
         }
-
-        public void Randomize()
-        {
-            Seed seed = new Seed();
-            randomization = seed.randomization;
-            Plugin.PatchLogger.LogInfo("Finished generating Seed");
-        }
-
-        //public List<EndingEffectsEnum> UpdateWorld(IProgressionService progression)
-        //{
-        //    List<EndingEffectsEnum> enabledEffect = new List<EndingEffectsEnum>();
-        //    foreach (KeyValuePair<EndingTypes, EndingEffectsEnum> entry in randomization)
-        //    {
-        //        EndingEffect ee = EndingEffect.InitFromEnum(entry.Value);
-        //        bool endingAchieved = progression.IsEndingUnlocked(entry.Key);
-        //        if (ee != null) {
-        //            ee.ActivateEffect(endingAchieved);
-        //            if (endingAchieved)
-        //            {
-        //                enabledEffect.Add(entry.Value);
-        //            }
-        //        }
-        //    }
-
-        //    //Update UI
-        //    GameObject versionTextObj = GameObject.Find("Canvasses/OverlayCanvas/GamePanel/ZonePanel/zoneText/versionText");
-        //    TextMeshProUGUI versionText = versionTextObj.GetComponent<TextMeshProUGUI>();
-        //    versionText.SetText($"{versionText.text}; Rando: {MyPluginInfo.PLUGIN_VERSION}");
-
-        //    //Show Last Unlocks
-
-
-        //    return enabledEffect;
-        //}
 
         public static List<EndingEffectsEnum> UpdateWorldArchipelago()
         {
@@ -80,11 +39,10 @@ namespace ReventureEndingRando
                 }
             }
 
-            foreach (EndingEffectsEnum effect in Enum.GetValues(typeof(EndingTypes)).Cast<EndingTypes>().ToList())
+            foreach (EndingEffectsEnum effect in Enum.GetValues(typeof(EndingEffectsEnum)).Cast<EndingEffectsEnum>().ToList())
             {
                 EndingEffect ee = EndingEffect.InitFromEnum(effect);
                 int effectReceived = receivedIDs.ContainsKey(Plugin.reventureItemOffset + (long) effect) ? receivedIDs[Plugin.reventureItemOffset + (long) effect] : 0;
-                //Plugin.PatchLogger.LogInfo($"{effect}: {effectReceived}");
                 if (ee != null)
                 {
                     ee.ActivateEffect(effectReceived);
