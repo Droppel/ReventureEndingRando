@@ -95,7 +95,8 @@ namespace ReventureEndingRando
 
             if (Input.GetKeyDown(KeyCode.F7))
             {
-
+                GameObject hero = GameObject.Find("Hero");
+                hero.transform.position.Set(272, 50, 0);
             }
 
                 if (ArchipelagoConnection.session == null)
@@ -138,6 +139,42 @@ namespace ReventureEndingRando
             }
             output = output.Substring(0, output.Length - 1);
             File.WriteAllText("randosaves", output);
+        }
+    }
+
+    //Disable Extrea swords, if one is picked up
+    [HarmonyPatch(typeof(TreasureItem))]
+    public class TreasureItemPatch
+    {
+        [HarmonyPatch("OnItemPicked", new Type[] { })]
+        private static void Postfix(TreasureItem __instance)
+        {
+            if (__instance.ItemGrantedPrefab.ItemType != ItemTypes.Sword)
+            {
+                return;
+            }
+            Plugin.PatchLogger.LogInfo($"{ __instance.ItemGrantedPrefab }");
+            //Treasureroom Sword
+            GameObject treasureSword = GameObject.Find("World/PersistentElements/TreasureLonk/Item Sword");
+            if (treasureSword != null)
+            {
+                treasureSword.SetActive(false);
+            }
+
+            //Mountain Sword
+            GameObject itemSword = GameObject.Find("World/Items/Sword Item Pedestal/Item Sword");
+            if (itemSword != null)
+            {
+                itemSword.SetActive(false);
+            }
+
+            //Home Sword
+            GameObject swordChest = GameObject.Find("World/Items/SwordAtHome/TreasureChest_Sword");
+            if (swordChest != null)
+            {
+                TreasureChest tChest = swordChest.GetComponent<TreasureChest>();
+                tChest.Open();
+            }
         }
     }
 

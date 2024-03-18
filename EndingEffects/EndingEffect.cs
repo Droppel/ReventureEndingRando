@@ -30,10 +30,8 @@ namespace ReventureEndingRando.EndingEffects
         {
             switch (e)
             {
-                case EndingEffectsEnum.SpawnSwordPedestalItem:
-                    return new SpawnSwordPedestal();
-                case EndingEffectsEnum.SpawnSwordChest:
-                    return new SpawnSwordChest();
+                case EndingEffectsEnum.ProgressiveSword:
+                    return new SpawnSword();
                 case EndingEffectsEnum.SpawnShovelChest:
                     return new SpawnItemSimple("World/Items/TreasureChest_Shovel");
                 case EndingEffectsEnum.SpawnBoomerang:
@@ -233,28 +231,34 @@ namespace ReventureEndingRando.EndingEffects
         }
     }
 
-    class SpawnSwordPedestal: EndingEffect
+    class SpawnSword : EndingEffect
     {
         public override void ActivateEffect(int effectsReceived)
         {
+            // If the treasureRoomSword is not in logic, simply increase the itemcount by one
+            if (ArchipelagoConnection.treasureRoomSword == 0)
+            {
+                effectsReceived += 1;
+            }
+            //Treasureroom Sword
+            GameObject treasureSword = GameObject.Find("World/PersistentElements/TreasureLonk/Item Sword");
+            RemoveAlterWithObjects(treasureSword);
+            treasureSword.SetActive(effectsReceived > 0);
+
+            //Mountain Sword
             GameObject itemSword = GameObject.Find("World/Items/Sword Item Pedestal/Item Sword");
             GameObject pedestal = GameObject.Find("World/Items/Sword Item Pedestal");
-            itemSword.SetActive(effectsReceived > 0);
-            pedestal.SetActive(effectsReceived > 0);
-        }
-    }
+            itemSword.SetActive(effectsReceived > 1);
+            pedestal.SetActive(effectsReceived > 1);
 
-    class SpawnSwordChest : EndingEffect
-    {
-        public override void ActivateEffect(int effectsReceived)
-        {
+            //Home Sword
             //TODO remove chest completely
             GameObject swordChest = GameObject.Find("World/Items/SwordAtHome/TreasureChest_Sword");
             GameObject openChest = GameObject.Find("World/Items/SwordAtHome/OpenChest");
             GameObject swordAtHome = GameObject.Find("World/Items/SwordAtHome");
-            swordAtHome.SetActive(effectsReceived > 0);
-            openChest.SetActive(effectsReceived == 0);
-            swordChest.SetActive(effectsReceived > 0);
+            openChest.SetActive(effectsReceived <= 2);
+            swordAtHome.SetActive(effectsReceived > 2);
+            swordChest.SetActive(effectsReceived > 2);
         }
     }
 
@@ -379,8 +383,8 @@ namespace ReventureEndingRando.EndingEffects
     {
         Nothing,
         //Item Locations
-        SpawnSwordPedestalItem,
-        SpawnSwordChest,
+        ProgressiveSword,
+        UNUSED, //Unused
         SpawnShovelChest,
         SpawnBoomerang,
         SpawnMapChest,
