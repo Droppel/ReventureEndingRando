@@ -176,6 +176,7 @@ namespace ReventureEndingRando.EndingEffects
             GameObject boomerang = GameObject.Find("World/Items/Item Boomerang");
             GameObject shovelChest = GameObject.Find("World/Items/TreasureChest_Shovel");
             GameObject boomerangChest = GameObject.Instantiate(shovelChest, new Vector2(297, -2.5f), Quaternion.identity, shovelChest.transform.parent);
+            //boomerangChest.transform.position = new Vector3(136, 7.5f, 1);
             boomerangChest.name = "TreasureChest_Boomerang";
             TreasureChest boomerangTreasureChest = boomerangChest.GetComponent<TreasureChest>();
             boomerangTreasureChest.content = boomerang;

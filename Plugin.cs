@@ -95,11 +95,9 @@ namespace ReventureEndingRando
 
             if (Input.GetKeyDown(KeyCode.F7))
             {
-                GameObject hero = GameObject.Find("Hero");
-                hero.transform.position.Set(272, 50, 0);
             }
 
-                if (ArchipelagoConnection.session == null)
+            if (ArchipelagoConnection.session == null)
             {
                 return;
             }
@@ -149,6 +147,23 @@ namespace ReventureEndingRando
         [HarmonyPatch("OnItemPicked", new Type[] { })]
         private static void Postfix(TreasureItem __instance)
         {
+            if (__instance.ItemGrantedPrefab.ItemType == ItemTypes.Boomerang)
+            {
+                // Fix Boomerang Audio
+                GameObject boomerangItem = GameObject.Find("Hero/Items/Boomerang(Clone)");
+                Plugin.PatchLogger.LogInfo("asdasd");
+                Plugin.PatchLogger.LogInfo(boomerangItem);
+                AudioSource boomerangAudio = boomerangItem.GetComponent<AudioSource>();
+                Plugin.PatchLogger.LogInfo(boomerangAudio);
+                AudioSource audioHero = GameObject.Find("Hero").GetComponent<AudioSource>();
+                Plugin.PatchLogger.LogInfo(audioHero);
+                Plugin.PatchLogger.LogInfo(audioHero.outputAudioMixerGroup);
+                Plugin.PatchLogger.LogInfo(boomerangAudio.outputAudioMixerGroup);
+                boomerangAudio.outputAudioMixerGroup = audioHero.outputAudioMixerGroup;
+                Plugin.PatchLogger.LogInfo(boomerangAudio.outputAudioMixerGroup);
+                return;
+            }
+
             if (__instance.ItemGrantedPrefab.ItemType != ItemTypes.Sword)
             {
                 return;
