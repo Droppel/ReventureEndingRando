@@ -13,10 +13,16 @@
 10. The mod remembers the connection info for existing files. So when you want to continue later, just load the associated save file (No need to use F5 again)
 
 ## Settings
-| Setting | Range | Default | Description                              |
-|---------|-------|---------|------------------------------------------|
-|endings  |0-99   |40       |The amount of endings required to finish the game|
-|gems     |0-2    |1        | Vanilla(0): Gems are obtained as in the vanilla game; Randomized(1): Gems are AP Items; Free(2): Gems are obtained from the start| 
+| Setting      | Range   | Default | Description                              |
+|--------------|---------|---------|------------------------------------------|
+|endings       | 0-99    | 40      |The amount of endings required to finish the game|
+|randomizeGems | boolean | true    |If the gem unlocks are randomized|
+|gemsInPool    | 0-40    | 4       |How many gems are in the pool|
+|gemsRequired  | 0-100   | 75      |What percentage (rounded down) of the gems are required to open the ultimatre door|
+|hardjumps     | boolean | false   |This includes jumps in logic that are difficult and result in death if missed|
+|hardcombat    | boolean | false   |This adds ending 49 into logic without shield|
+|treasureSword | boolean | false   |This adds the sword in the treasure room into the sword progression|
+
 
 ## Changes to Vanilla
 All normaly accesible items are now disabled by default. This includes all chest items, the strawberry, the anvil and the princess.
@@ -25,7 +31,5 @@ The buttons to call/use the elevator need to be unlocked.
 The two portals are now unlocked as AP Items instead of by their respective endings
 The stone you trip over, opening the castle floor and growing the vine are all AP Items
 Various NPCs only spawn after getting their respective AP item. This includes the chicken which requires all 4 GrowChicken items to be available.
-The 4 Gems are now AP items. These are always required to finish the game. So for now consider adding them to the starting_inventory if you want to guerantee a short game.
-Some mostly cosmetic changes to the world are AP unlocks instead of requiring certain endings.
 
 All Endings that require a specific amount of endings are now always available.
