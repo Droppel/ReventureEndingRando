@@ -21,6 +21,8 @@ namespace ReventureEndingRando
         public static int gemsRandomized;
         public static int gemsAmount;
         public static int gemsRequired;
+        public static int hardJumps;
+        public static int hardCombat;
 
 
         private string slot;
@@ -69,6 +71,11 @@ namespace ReventureEndingRando
             gemsAmount = int.Parse(slotData["gemsInPool"].ToString());
             gemsRequired = int.Parse(slotData["gemsRequired"].ToString());
             treasureRoomSword = int.Parse(slotData["treasureSword"].ToString());
+            hardJumps = int.Parse(slotData["hardjumps"].ToString());
+            hardCombat = int.Parse(slotData["hardcombat"].ToString());
+
+
+            Plugin.endingEffects = EndingRandomizer.GetCurrentEndingEffects();
 
             // Successfully connected, `ArchipelagoSession` (assume statically defined as `session` from now on) can now be used to interact with the server and the returned `LoginSuccessful` contains some useful information about the initial connection (e.g. a copy of the slot data as `loginSuccess.SlotData`)
             var loginSuccess = (LoginSuccessful)result;

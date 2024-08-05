@@ -38,9 +38,11 @@ namespace ReventureEndingRando
         Harmony harmony;
         public static ManualLogSource PatchLogger;
 
-        public static List<EndingEffectsEnum> endingEffects;
+        public static Dictionary<EndingEffectsEnum, int> endingEffects;
 
         public static Dictionary<int, string> saves;
+
+        public static Logic logic;
 
         private void Awake()
         {
@@ -68,6 +70,7 @@ namespace ReventureEndingRando
                 }
             }
 
+            logic = new Logic();
             Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} Version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
         }
 
@@ -122,9 +125,9 @@ namespace ReventureEndingRando
 
         private void OnDestroy()
         {
+            harmony.UnpatchSelf();
             Destroy(archipelagoSettings);
             ArchipelagoConnection.session.Socket.DisconnectAsync();
-            harmony.UnpatchSelf();
             Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} unloaded!");
         }
 
@@ -446,14 +449,43 @@ namespace ReventureEndingRando
         }
     }
 
-    //[HarmonyPatch(typeof(AlterWithRestrictions))]
-    //public class AlterWithRestrictionsPatch
-    //{
-    //    [HarmonyPatch("Alter", new Type[] { })]
-    //    private static void Postfix(AlterWithRestrictions __instance)
-    //    {
-    //        Plugin.PatchLogger.LogInfo($"Gameobject: {__instance.gameObject}");
-    //        return;
+    [HarmonyPatch(typeof(EndingCellController))]
+    public class EndingCellControllerPatch {
+        [HarmonyPatch("Setup", new Type[] { typeof(EndingTypes), typeof(GalleryController), typeof(CellStatus) })]
+        private static void Postfix(EndingCellController __instance) {
+            if (!Plugin.isRandomizer) {
+                return;
+            }
+
+            if (Core.Get<IProgressionService>().IsEndingUnlocked(__instance.Ending)) {
+                return;
+            }
+
+            bool available = Plugin.logic.rulesDict[__instance.Ending].Invoke();
+
+            GameObject background = __instance.transform.GetChild(1).gameObject;
+            background.SetActive(available);
+            GameObject hinticon = __instance.transform.GetChild(1).GetChild(2).gameObject;
+            hinticon.SetActive(true);
+            GameObject frame = __instance.transform.GetChild(1).GetChild(4).gameObject;
+            frame.SetActive(false);
+
+            var field = typeof(EndingCellController).GetField("cellStatus", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+            field.SetValue(__instance, CellStatus.Unlocked);
+            return;
+        }
+    }
+
+    //[HarmonyPatch(typeof(EndingCellController))]
+    //public class EndingCellControllerPatch {
+    //    [HarmonyPatch("Setup", new Type[] { typeof(EndingTypes), typeof(GalleryController), typeof(CellStatus) })]
+    //    private static bool Prefix(EndingCellController __instance, ref CellStatus cellStatus) {
+    //        if (Core.Get<IProgressionService>().IsEndingUnlocked(__instance.Ending)) {
+    //            Plugin.PatchLogger.LogInfo($"Inif: {__instance.Ending}");
+    //            return true;
+    //        }
+    //        cellStatus = CellStatus.Hint;
+    //        return true;
     //    }
     //}
 }

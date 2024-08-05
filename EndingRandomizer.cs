@@ -22,34 +22,50 @@ namespace ReventureEndingRando
         {
         }
 
-        public static List<EndingEffectsEnum> UpdateWorldArchipelago()
-        {
-            List<EndingEffectsEnum> enabledEffect = new List<EndingEffectsEnum>();
+        public static Dictionary<EndingEffectsEnum, int> GetCurrentEndingEffects() {
+            Dictionary<EndingEffectsEnum, int> enabledEffect = new Dictionary<EndingEffectsEnum, int>();
 
             Dictionary<long, int> receivedIDs = new Dictionary<long, int>();
-            foreach (NetworkItem item in ArchipelagoConnection.session.Items.AllItemsReceived)
-            {
+            foreach (NetworkItem item in ArchipelagoConnection.session.Items.AllItemsReceived) {
                 //Plugin.PatchLogger.LogInfo($"{item.Item}: ");
-                if (receivedIDs.ContainsKey(item.Item))
-                {
+                if (receivedIDs.ContainsKey(item.Item)) {
                     receivedIDs[item.Item] += 1;
-                } else
-                {
+                } else {
                     receivedIDs.Add(item.Item, 1);
                 }
             }
 
+
+            foreach (EndingEffectsEnum effect in Enum.GetValues(typeof(EndingEffectsEnum)).Cast<EndingEffectsEnum>().ToList()) {
+                EndingEffect ee = EndingEffect.InitFromEnum(effect);
+                int effectReceived = receivedIDs.ContainsKey(Plugin.reventureItemOffset + (long)effect) ? receivedIDs[Plugin.reventureItemOffset + (long)effect] : 0;
+                if (ee != null) {
+                    if (effectReceived != 0) {
+                        if (enabledEffect.ContainsKey(effect)) {
+                            enabledEffect[effect] += 1;
+                        } else {
+                            enabledEffect.Add(effect, 1);
+                        }
+                    }
+                }
+            }
+            return enabledEffect;
+        }
+
+        public static Dictionary<EndingEffectsEnum, int> UpdateWorldArchipelago()
+        {
+            Dictionary<EndingEffectsEnum, int> enabledEffect = GetCurrentEndingEffects();
+
             foreach (EndingEffectsEnum effect in Enum.GetValues(typeof(EndingEffectsEnum)).Cast<EndingEffectsEnum>().ToList())
             {
                 EndingEffect ee = EndingEffect.InitFromEnum(effect);
-                int effectReceived = receivedIDs.ContainsKey(Plugin.reventureItemOffset + (long) effect) ? receivedIDs[Plugin.reventureItemOffset + (long) effect] : 0;
+                int effectReceived;
+                enabledEffect.TryGetValue(effect, out effectReceived);
                 if (ee != null)
                 {
                     ee.ActivateEffect(effectReceived);
-                    if (effectReceived != 0)
-                    {
-                        enabledEffect.Add(effect);
-                    }
+                } else {
+                    Plugin.PatchLogger.LogError($"EE is null for {effect}");
                 }
             }
 
