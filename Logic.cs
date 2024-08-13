@@ -189,14 +189,14 @@ namespace ReventureEndingRando {
                 [EndingTypes.JumpOffTheBalcony] = () => true,
                 [EndingTypes.StayAfk] = () => true,
                 [EndingTypes.PlaceBombUnderCastle] = () => Has(EE.SpawnBombsChest),
-                [EndingTypes.DontKillMinions] = () => true,
+                [EndingTypes.DontKillMinions] = () => ArchipelagoConnection.hardJumps == 1 || Has(EE.SpawnHookChest) || (CanPassCastleWithItem() && HasChicken()),
                 [EndingTypes.FindTreasure] = () => Has(EE.SpawnShovelChest) && (HasSword() || HasAny(EE.SpawnHookChest, EE.UnlockGeyserWaterfall)),
                 [EndingTypes.KillChicken] = () => HasSword() && HasChicken(),
                 [EndingTypes.StabPrincess] = () => HasSword() && CanReachPrincessWithItem(),
                 [EndingTypes.OverhealByFairies] = () => true,
                 [EndingTypes.DarkStoneToAltar] = () => HasDarkStone(),
                 [EndingTypes.CrushedAtUltimateDoor] = () => true,
-                [EndingTypes.DarkLordComicStash] = () => true,
+                [EndingTypes.DarkLordComicStash] = () => ArchipelagoConnection.hardJumps == 1 || Has(EE.SpawnPrincessItem),
                 [EndingTypes.StabDarkLord] = () => HasSword() && CanReachPrincessWithItem(),
                 [EndingTypes.SacrificeEveryItem] = () => HasItems(6) &&
                     (HasSword() ||

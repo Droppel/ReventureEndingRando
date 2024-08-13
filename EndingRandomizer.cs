@@ -65,7 +65,7 @@ namespace ReventureEndingRando
                 {
                     ee.ActivateEffect(effectReceived);
                 } else {
-                    Plugin.PatchLogger.LogError($"EE is null for {effect}");
+                    //Plugin.PatchLogger.LogError($"EE is null for {effect}");
                 }
             }
 
