@@ -7,7 +7,7 @@ namespace ReventureEndingRando {
     public class Logic {
         private static bool Has(EE effect, int reqAmount = 1) {
             int effectAmount;
-            if (Plugin.endingEffects.TryGetValue(effect, out effectAmount)) {
+            if (!Plugin.endingEffects.TryGetValue(effect, out effectAmount)) {
                 effectAmount = 0;
             }
             return effectAmount >= reqAmount;

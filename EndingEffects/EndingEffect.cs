@@ -130,6 +130,8 @@ namespace ReventureEndingRando.EndingEffects
                     return new UnlockFacePlantStone();
                 case EndingEffectsEnum.Gem:
                     return new UnlockGems();
+                //case EndingEffectsEnum.JumpHeight:
+                //    return new JumpHeight();
                 default:
                     return null;
             }
@@ -380,9 +382,18 @@ namespace ReventureEndingRando.EndingEffects
         }
     }
 
+    class JumpHeight : EndingEffect {
+        public override void ActivateEffect(int effectsReceived) {
+            GameObject heroObject = GameObject.Find("Hero");
+            Hero hero = heroObject.GetComponent<Hero>();
+            hero.SetWeight(effectsReceived + 2);
+        }
+    }
+
     public enum EndingEffectsEnum
     {
         Nothing,
+        //JumpHeight,
         //Item Locations
         ProgressiveSword,
         UNUSED, //Unused

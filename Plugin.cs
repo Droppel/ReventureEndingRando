@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -314,34 +315,27 @@ namespace ReventureEndingRando
     }
 
     [HarmonyPatch(typeof(SaveSlotController))]
-    public class SaveSlotSelectPatch
-    {
+    public class SaveSlotSelectPatch {
         [HarmonyPatch("OnClick", new Type[] { })]
-        private static bool Prefix(SaveSlotController __instance)
-        {
-            if (ArchipelagoConnection.session != null)
-            {
+        private static bool Prefix(SaveSlotController __instance) {
+            if (ArchipelagoConnection.session != null) {
                 ArchipelagoConnection.session.Socket.DisconnectAsync();
             }
             int slotNumber = __instance.GetDisplaySlotNumber() - 1;
 
             var isEmptyField = typeof(SaveSlotController).GetField("isEmpty", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
-            if (!(bool)isEmptyField.GetValue(__instance))
-            {
-                if (Plugin.saves.ContainsKey(slotNumber))
-                {
+            if (!(bool)isEmptyField.GetValue(__instance)) {
+                if (Plugin.saves.ContainsKey(slotNumber)) {
                     Plugin.isRandomizer = true;
                     string[] connectionInfo = Plugin.saves[slotNumber].Split(';');
                     ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(connectionInfo[0], connectionInfo[1]);
                     archipelagoConnection.Connect();
                     UnlockEndings(slotNumber);
-                } else
-                {
+                } else {
                     Plugin.isRandomizer = false;
                 }
                 return true;
-            } else
-            {
+            } else {
                 string host = Plugin.currentHost;
                 string slot = Plugin.currentSlot;
                 Plugin.isRandomizer = true;
@@ -354,6 +348,20 @@ namespace ReventureEndingRando
             }
         }
 
+        [HarmonyPrefix]
+        [HarmonyPatch("Update", new Type[] { })]
+        private static bool PrefixUpdate(SaveSlotController __instance) {
+            return true;
+            if (Input.GetKeyDown(KeyCode.F4)) {
+                var buttonVar = typeof(SaveSlotController).GetField("button", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+                if (EventSystem.current.currentSelectedGameObject != ((Button)buttonVar.GetValue(__instance)).gameObject) {
+                    return true;
+                }
+                var deleteSlot = typeof(SaveSlotController).GetMethod("DeleteSlot", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+                deleteSlot.Invoke(__instance, new object[] { __instance.GetDisplaySlotNumber() - 1 });
+            }
+            return true;
+        }
         private static void UnlockEndings(int saveSlot)
         {
             ISaveSlotService saveService = Core.Get<ISaveSlotService>();
@@ -388,27 +396,16 @@ namespace ReventureEndingRando
 
             GameObject background = __instance.transform.GetChild(1).gameObject;
             background.SetActive(available);
-            GameObject hinticon = __instance.transform.GetChild(1).GetChild(2).gameObject;
-            hinticon.SetActive(true);
-            GameObject frame = __instance.transform.GetChild(1).GetChild(4).gameObject;
-            frame.SetActive(false);
+            if (available) {
+                GameObject hinticon = __instance.transform.GetChild(1).GetChild(2).gameObject;
+                hinticon.SetActive(true);
+                GameObject frame = __instance.transform.GetChild(1).GetChild(4).gameObject;
+                frame.SetActive(false);
 
-            var field = typeof(EndingCellController).GetField("cellStatus", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
-            field.SetValue(__instance, CellStatus.Unlocked);
+                var field = typeof(EndingCellController).GetField("cellStatus", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+                field.SetValue(__instance, CellStatus.Unlocked);
+            }
             return;
         }
     }
-
-    //[HarmonyPatch(typeof(EndingCellController))]
-    //public class EndingCellControllerPatch {
-    //    [HarmonyPatch("Setup", new Type[] { typeof(EndingTypes), typeof(GalleryController), typeof(CellStatus) })]
-    //    private static bool Prefix(EndingCellController __instance, ref CellStatus cellStatus) {
-    //        if (Core.Get<IProgressionService>().IsEndingUnlocked(__instance.Ending)) {
-    //            Plugin.PatchLogger.LogInfo($"Inif: {__instance.Ending}");
-    //            return true;
-    //        }
-    //        cellStatus = CellStatus.Hint;
-    //        return true;
-    //    }
-    //}
 }
