@@ -204,7 +204,7 @@ namespace ReventureEndingRando
     [HarmonyPatch(typeof(EndingProvider))]
     public class EndingProviderPatch
     {
-        [HarmonyPatch("LoadEnding", new Type[] { typeof(EndingCinematicConfiguration), typeof(bool), typeof(Action) })]
+        [HarmonyPatch("FinalizeRun", new Type[] { typeof(float), typeof(EndingCinematicConfiguration), typeof(bool)})]
         private static bool Prefix(ref EndingCinematicConfiguration configuration)
         {
             if (!Plugin.isRandomizer)
