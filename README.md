@@ -25,11 +25,11 @@
 
 
 ## Changes to Vanilla
-All normaly accesible items are now disabled by default. This includes all chest items, the strawberry, the anvil and the princess.
+All normally accessible items are now disabled by default. This includes all chest items, the strawberry, the anvil and the princess.
 The various cannons and geysers need to be unlocked first.
 The buttons to call/use the elevator need to be unlocked.
-The two portals are now unlocked as AP Items instead of by their respective endings
-The stone you trip over, opening the castle floor and growing the vine are all AP Items
+The two portals are now unlocked as AP Items instead of by their respective endings.
+The stone you trip over, opening the castle floor and growing the vine are all AP Items.
 Various NPCs only spawn after getting their respective AP item. This includes the chicken which requires all 4 GrowChicken items to be available.
 
 All Endings that require a specific amount of endings are now always available.
