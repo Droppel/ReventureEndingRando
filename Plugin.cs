@@ -352,15 +352,15 @@ namespace ReventureEndingRando
         [HarmonyPatch("Update", new Type[] { })]
         private static bool PrefixUpdate(SaveSlotController __instance) {
             return true;
-            if (Input.GetKeyDown(KeyCode.F4)) {
-                var buttonVar = typeof(SaveSlotController).GetField("button", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
-                if (EventSystem.current.currentSelectedGameObject != ((Button)buttonVar.GetValue(__instance)).gameObject) {
-                    return true;
-                }
-                var deleteSlot = typeof(SaveSlotController).GetMethod("DeleteSlot", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
-                deleteSlot.Invoke(__instance, new object[] { __instance.GetDisplaySlotNumber() - 1 });
-            }
-            return true;
+            //if (Input.GetKeyDown(KeyCode.F4)) {
+            //    var buttonVar = typeof(SaveSlotController).GetField("button", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+            //    if (EventSystem.current.currentSelectedGameObject != ((Button)buttonVar.GetValue(__instance)).gameObject) {
+            //        return true;
+            //    }
+            //    var deleteSlot = typeof(SaveSlotController).GetMethod("DeleteSlot", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+            //    deleteSlot.Invoke(__instance, new object[] { __instance.GetDisplaySlotNumber() - 1 });
+            //}
+            //return true;
         }
         private static void UnlockEndings(int saveSlot)
         {

@@ -131,7 +131,7 @@ namespace ReventureEndingRando {
             rulesDict = new Dictionary<EndingTypes, Func<bool>>() {
                 [EndingTypes.StabElder] = () => HasSword() && Has(EE.SpawnElder),
                 [EndingTypes.LonkFaceplant] = () => Has(EE.UnlockFacePlantStone),
-                [EndingTypes.KillTheKing] = () => true,
+                [EndingTypes.KilledByMinion] = () => true,
                 [EndingTypes.StabGuard] = () => HasSword(),
                 [EndingTypes.KillTheKing] = () => HasSword() && Has(EE.SpawnKing),
                 [EndingTypes.FallIntoLava] = () => true,
