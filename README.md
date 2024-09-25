@@ -33,3 +33,6 @@ The stone you trip over, opening the castle floor and growing the vine are all A
 Various NPCs only spawn after getting their respective AP item. This includes the chicken which requires all 4 GrowChicken items to be available.
 
 All Endings that require a specific amount of endings are now always available.
+
+## Ingame Tracker
+Endings marked with the hint icon in the ending overview are currently in logic. The normal hint menu where you can select the hint the compass and map show you still works the same way.
