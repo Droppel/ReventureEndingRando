@@ -39,12 +39,12 @@ namespace ReventureEndingRando
         Harmony harmony;
         public static ManualLogSource PatchLogger;
 
-        public static Dictionary<EndingEffectsEnum, int> endingEffects;
-
         public static Dictionary<int, string> saves;
 
+        public static ItemManager itemManager;
         public static Logic logic;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Not unused, will be executed by Unity")]
         private void Awake()
         {
             // Plugin startup logic
@@ -75,6 +75,7 @@ namespace ReventureEndingRando
             Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} Version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Not unused, will be executed by Unity")]
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.F5))
@@ -100,8 +101,12 @@ namespace ReventureEndingRando
                 archipelagoSettings.SetActive(archipelagoSettingsActive);
             }
 
-            if (Input.GetKeyDown(KeyCode.F7))
-            {
+            if (Input.GetKeyDown(KeyCode.F7)) {
+
+                ILocalizationParametersService paramservice= Core.Get<ILocalizationParametersService>();
+                Plugin.PatchLogger.LogInfo(paramservice[LocalizationParameterKeys.hero]);
+
+                paramservice[LocalizationParameterKeys.hero] = "Hallelujah";
             }
 
             if (ArchipelagoConnection.session == null)
@@ -127,6 +132,7 @@ namespace ReventureEndingRando
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Not unused, will be executed by Unity")]
         private void OnDestroy()
         {
             harmony.UnpatchSelf();
@@ -204,7 +210,7 @@ namespace ReventureEndingRando
     [HarmonyPatch(typeof(EndingProvider))]
     public class EndingProviderPatch
     {
-        [HarmonyPatch("FinalizeRun", new Type[] { typeof(float), typeof(EndingCinematicConfiguration), typeof(bool)})]
+        [HarmonyPatch("LoadEnding", new Type[] { typeof(EndingCinematicConfiguration), typeof(bool), typeof(Action)})]
         private static bool Prefix(ref EndingCinematicConfiguration configuration)
         {
             if (!Plugin.isRandomizer)
@@ -215,11 +221,26 @@ namespace ReventureEndingRando
             if (Core.Get<IProgressionService>().EndingsEnabled > 0) {
                 configuration.skippable = true;
             }
+            return true;
+        }
+    }
+
+    // Report Unlocked Endings to AP
+    [HarmonyPatch(typeof(ProgressionProvider))]
+    public class ProgressionProviderPatch {
+        [HarmonyPatch("UnlockEnding", new Type[] { typeof(EndingTypes) })]
+        private static bool Prefix(ref ProgressionProvider __instance, ref EndingTypes ending) {
+            if (!Plugin.isRandomizer) {
+                return true;
+            }
+
+            if (__instance.IsEndingUnlocked(ending)) {
+                return true;
+            }
 
             //Report to Archipelago
-            ArchipelagoConnection.session.Locations.CompleteLocationChecks(Plugin.reventureEndingOffset + (long) configuration.ending);
-            if (configuration.ending == EndingTypes.UltimateEnding)
-            {
+            ArchipelagoConnection.session.Locations.CompleteLocationChecks(Plugin.reventureEndingOffset + (long)ending);
+            if (ending == EndingTypes.UltimateEnding) {
                 ArchipelagoConnection.Check_Send_completion();
             }
             return true;
@@ -254,7 +275,7 @@ namespace ReventureEndingRando
                 return;
             }
 
-            Plugin.endingEffects = EndingRandomizer.UpdateWorldArchipelago();
+            EndingRandomizer.UpdateWorldArchipelago();
             return;
         }
     }
@@ -327,6 +348,7 @@ namespace ReventureEndingRando
             if (!(bool)isEmptyField.GetValue(__instance)) {
                 if (Plugin.saves.ContainsKey(slotNumber)) {
                     Plugin.isRandomizer = true;
+                    Plugin.itemManager = new ItemManager(slotNumber);
                     string[] connectionInfo = Plugin.saves[slotNumber].Split(';');
                     ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(connectionInfo[0], connectionInfo[1]);
                     archipelagoConnection.Connect();
@@ -339,6 +361,7 @@ namespace ReventureEndingRando
                 string host = Plugin.currentHost;
                 string slot = Plugin.currentSlot;
                 Plugin.isRandomizer = true;
+                Plugin.itemManager = new ItemManager(slotNumber);
                 ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(host, slot);
                 archipelagoConnection.Connect();
                 UnlockEndings(slotNumber);
@@ -374,7 +397,7 @@ namespace ReventureEndingRando
     public class TitleDirectorPatch
     {
         [HarmonyPatch("Start", new Type[] { })]
-        private static void Postfix(GameObject __instance)
+        private static void Postfix()
         {
             GUI.SetupLoginGUI();
         }

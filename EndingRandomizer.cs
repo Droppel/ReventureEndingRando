@@ -52,18 +52,18 @@ namespace ReventureEndingRando
             return enabledEffect;
         }
 
-        public static Dictionary<EndingEffectsEnum, int> UpdateWorldArchipelago()
+        public static void UpdateWorldArchipelago()
         {
-            Dictionary<EndingEffectsEnum, int> enabledEffect = GetCurrentEndingEffects();
+            ItemManager itemManager = Plugin.itemManager;
 
             foreach (EndingEffectsEnum effect in Enum.GetValues(typeof(EndingEffectsEnum)).Cast<EndingEffectsEnum>().ToList())
             {
                 EndingEffect ee = EndingEffect.InitFromEnum(effect);
-                int effectReceived;
-                enabledEffect.TryGetValue(effect, out effectReceived);
+
+                int effectReceived = itemManager.GetItemCount(effect);
                 if (ee != null)
                 {
-                    ee.ActivateEffect(effectReceived);
+                    ee.ActivateEffect(effectReceived, true);
                 } else {
                     //Plugin.PatchLogger.LogError($"EE is null for {effect}");
                 }
@@ -138,7 +138,7 @@ namespace ReventureEndingRando
             }
             signRight[0].textToDisplay = gemText;
             signRight[0].useString = true;
-            return enabledEffect;
+            return;
         }
 
         public bool LoadState()

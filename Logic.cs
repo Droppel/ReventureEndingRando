@@ -6,11 +6,7 @@ using EE = ReventureEndingRando.EndingEffects.EndingEffectsEnum;
 namespace ReventureEndingRando {
     public class Logic {
         private static bool Has(EE effect, int reqAmount = 1) {
-            int effectAmount;
-            if (!Plugin.endingEffects.TryGetValue(effect, out effectAmount)) {
-                effectAmount = 0;
-            }
-            return effectAmount >= reqAmount;
+            return Plugin.itemManager.GetItemCount(effect) >= reqAmount;
         }
 
         private static bool HasAll(params EE[] effects) {

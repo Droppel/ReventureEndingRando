@@ -10,7 +10,7 @@ namespace ReventureEndingRando.EndingEffects
 {
     abstract class EndingEffect
     {
-        public abstract void ActivateEffect(int effectsReceived);
+        public abstract void ActivateEffect(int effectsReceived, bool isGameStart);
 
         public void RemoveAlterWithObjects(GameObject go)
         {
@@ -130,8 +130,12 @@ namespace ReventureEndingRando.EndingEffects
                     return new UnlockFacePlantStone();
                 case EndingEffectsEnum.Gem:
                     return new UnlockGems();
-                //case EndingEffectsEnum.JumpHeight:
-                //    return new JumpHeight();
+                case EndingEffectsEnum.HeroNameChange:
+                    return new ChangeName(LocalizationParameterKeys.hero);
+                case EndingEffectsEnum.PrincessNameChange:
+                    return new ChangeName(LocalizationParameterKeys.princess);
+                case EndingEffectsEnum.DarkLordNameChange:
+                    return new ChangeName(LocalizationParameterKeys.villain);
                 default:
                     return null;
             }
@@ -140,8 +144,8 @@ namespace ReventureEndingRando.EndingEffects
 
     class SpawnItemSimple : EndingEffect
     {
-        string name;
-        bool inverted;
+        private readonly string name;
+        private readonly bool inverted;
 
         public SpawnItemSimple(string _name, bool _inverted=false)
         {
@@ -149,7 +153,7 @@ namespace ReventureEndingRando.EndingEffects
             inverted = _inverted;
         }
 
-        public override void ActivateEffect(int effectsReceived)
+        public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
             GameObject simpleItem = GameObject.Find(name);
             RemoveAlterWithObjects(simpleItem);
@@ -159,8 +163,9 @@ namespace ReventureEndingRando.EndingEffects
 
     class SpawnKing : EndingEffect
     {
-        public override void ActivateEffect(int effectsReceived)
+        public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
+            Plugin.PatchLogger.LogInfo("Jere");
             GameObject king = GameObject.Find("World/NPCs/KindomNPCs/TheKing");
             GameObject feedEnding = GameObject.Find("World/Interactables/98_FeedTheKing_End");
             king.SetActive(effectsReceived > 0);
@@ -169,7 +174,7 @@ namespace ReventureEndingRando.EndingEffects
     }
     class SpawnBoomerang: EndingEffect
     {
-        public override void ActivateEffect(int effectsReceived)
+        public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
             if (effectsReceived == 0)
             {
@@ -195,7 +200,7 @@ namespace ReventureEndingRando.EndingEffects
 
     class SpawnDragon : EndingEffect
     {
-        public override void ActivateEffect(int effectsReceived)
+        public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
             GameObject dragon = GameObject.Find("World/NPCs/Dragon");
             GameObject roastedEnding = GameObject.Find("World/EndTriggers/13_RoastedByDragon_End");
@@ -214,7 +219,7 @@ namespace ReventureEndingRando.EndingEffects
 
     class SpawnMimic : EndingEffect
     {
-        public override void ActivateEffect(int effectsReceived)
+        public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
             GameObject mimic = GameObject.Find("World/NPCs/FakePrincess");
             GameObject feedEnding = GameObject.Find("World/EndTriggers/84_FeedTheMimic_End");
@@ -225,7 +230,7 @@ namespace ReventureEndingRando.EndingEffects
 
     class SpawnPrincess : EndingEffect
     {
-        public override void ActivateEffect(int effectsReceived)
+        public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
             GameObject princess = GameObject.Find("World/NPCs/Item Princess");
             GameObject ventEnding = GameObject.Find("World/EndTriggers/24_AirDuctsAccident_End");
@@ -236,7 +241,7 @@ namespace ReventureEndingRando.EndingEffects
 
     class SpawnSword : EndingEffect
     {
-        public override void ActivateEffect(int effectsReceived)
+        public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
             // If the treasureRoomSword is not in logic, simply increase the itemcount by one
             if (ArchipelagoConnection.treasureRoomSword == 0)
@@ -267,7 +272,7 @@ namespace ReventureEndingRando.EndingEffects
 
     class SpawnVine : EndingEffect
     {
-        public override void ActivateEffect(int effectsReceived)
+        public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
             GameObject badCrops = GameObject.Find("World/BackgroundElements/BadCrops");
             GameObject goodCrops = GameObject.Find("World/PersistentElements/GoodCrops");
@@ -280,7 +285,7 @@ namespace ReventureEndingRando.EndingEffects
 
     class OpenCastleHole : EndingEffect
     {
-        public override void ActivateEffect(int effectsReceived)
+        public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
             GameObject castleHole = GameObject.Find("World/PersistentElements/Castlehole");
             castleHole.SetActive(effectsReceived == 0);
@@ -291,7 +296,7 @@ namespace ReventureEndingRando.EndingEffects
     }
     class UnlockFacePlantStone : EndingEffect
     {
-        public override void ActivateEffect(int effectsReceived)
+        public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
             GameObject ending = GameObject.Find("Cinematics/75_LonkFaceplant_End");
             EndTrigger trigger = ending.GetComponent<EndTrigger>();
@@ -304,7 +309,7 @@ namespace ReventureEndingRando.EndingEffects
 
     class AddPC : EndingEffect
     {
-        public override void ActivateEffect(int effectsReceived)
+        public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
             GameObject pc = GameObject.Find("World/PersistentElements/Lonk's PC");
             GameObject pcalt = GameObject.Find("World/PersistentElements/Lonk's PC Alt");
@@ -315,7 +320,7 @@ namespace ReventureEndingRando.EndingEffects
 
     class GrowChicken : EndingEffect
     {
-        public override void ActivateEffect(int effectsReceived)
+        public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
             GameObject phase0 = GameObject.Find("World/PersistentElements/ChickenNest/Phase0");
             GameObject phase1 = GameObject.Find("World/PersistentElements/ChickenNest/Phase1");
@@ -335,7 +340,7 @@ namespace ReventureEndingRando.EndingEffects
 
     class SpawnBoulderNPC : EndingEffect
     {
-        public override void ActivateEffect(int effectsReceived)
+        public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
             GameObject boulder = GameObject.Find("World/Boulders/NonNPC Boulder");
             GameObject.Destroy(boulder.GetComponent<AlterWithRestrictions>());
@@ -349,14 +354,14 @@ namespace ReventureEndingRando.EndingEffects
 
     class UnlockMilestone : EndingEffect
     {
-        MilestoneTypes milestone;
+        private readonly MilestoneTypes milestone;
 
         public UnlockMilestone(MilestoneTypes _milestone)
         {
             milestone = _milestone;
         }
 
-        public override void ActivateEffect(int effectsReceived)
+        public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
             if (effectsReceived > 0)
             {
@@ -368,7 +373,7 @@ namespace ReventureEndingRando.EndingEffects
 
     class UnlockGems : EndingEffect
     {
-        public override void ActivateEffect(int effectsReceived)
+        public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
             int requiredGems = (ArchipelagoConnection.gemsAmount * ArchipelagoConnection.gemsRequired) / 100;
             if (effectsReceived >= requiredGems)
@@ -382,8 +387,32 @@ namespace ReventureEndingRando.EndingEffects
         }
     }
 
+    class ChangeName : EndingEffect {
+
+        public LocalizationParameterKeys key;
+
+        public ChangeName(LocalizationParameterKeys _key) {
+            key = _key;
+        }
+
+        public override void ActivateEffect(int effectsReceived, bool isGameStart) {
+            if (isGameStart) {
+                return;
+            }
+            ILocalizationParametersService paramservice = Core.Get<ILocalizationParametersService>();
+            string curretName = paramservice[key];
+
+            // Get Random name
+
+            string[] names = new string[] { "Tim", "Tinku", "Pawlov", "Lump", "Ash", "Herrmaninoff", "Chuck", "Spot", "Little Minion", $"{curretName} Jr.", $"Queen {curretName}", "Jeezus", "Disgusting Creature",
+            $"{curretName}'s Brother", "Rocky", $"Mr. {curretName}", $"Dark {curretName}", $"{curretName}ette", "Weirdo", "Nosherotu", "Princess", "Dark Lord"};
+
+            paramservice[key] = names[UnityEngine.Random.RandomRangeInt(0, names.Length)];
+        }
+    }
+
     class JumpHeight : EndingEffect {
-        public override void ActivateEffect(int effectsReceived) {
+        public override void ActivateEffect(int effectsReceived, bool isGameStart) {
             GameObject heroObject = GameObject.Find("Hero");
             Hero hero = heroObject.GetComponent<Hero>();
             hero.SetWeight(effectsReceived + 2);
@@ -393,7 +422,6 @@ namespace ReventureEndingRando.EndingEffects
     public enum EndingEffectsEnum
     {
         Nothing,
-        //JumpHeight,
         //Item Locations
         ProgressiveSword,
         UNUSED, //Unused
@@ -449,7 +477,11 @@ namespace ReventureEndingRando.EndingEffects
         SpawnDolphins,
         SpawnMimicPet,
         //Gems
-        Gem
+        Gem,
+        //Fillers
+        HeroNameChange,
+        PrincessNameChange,
+        DarkLordNameChange,
     }
 
     //Selected for implementation

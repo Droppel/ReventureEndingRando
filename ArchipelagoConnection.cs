@@ -1,14 +1,8 @@
 ﻿using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Packets;
-using Atto;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net.WebSockets;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using ReventureEndingRando.EndingEffects;
 
 namespace ReventureEndingRando
 {
@@ -25,8 +19,8 @@ namespace ReventureEndingRando
         public static int hardCombat;
 
 
-        private string slot;
-        private string server;
+        private readonly string slot;
+        private readonly string server;
 
         public ArchipelagoConnection(string host, string slot)
         {
@@ -74,8 +68,13 @@ namespace ReventureEndingRando
             hardJumps = int.Parse(slotData["hardjumps"].ToString());
             hardCombat = int.Parse(slotData["hardcombat"].ToString());
 
-
-            Plugin.endingEffects = EndingRandomizer.GetCurrentEndingEffects();
+            session.Items.ItemReceived += (receivedItemsHelper) => {
+                var item = receivedItemsHelper.DequeueItem();
+                
+                int itemIndex = session.Items.Index;
+                ItemManager itemManager = Plugin.itemManager;
+                itemManager.AddItem(item.Item, itemIndex);
+            };
 
             // Successfully connected, `ArchipelagoSession` (assume statically defined as `session` from now on) can now be used to interact with the server and the returned `LoginSuccessful` contains some useful information about the initial connection (e.g. a copy of the slot data as `loginSuccess.SlotData`)
             var loginSuccess = (LoginSuccessful)result;
@@ -83,8 +82,9 @@ namespace ReventureEndingRando
 
         public static async void Check_Send_completion()
         {
-            var statusUpdatePacket = new StatusUpdatePacket();
-            statusUpdatePacket.Status = ArchipelagoClientState.ClientGoal;
+            var statusUpdatePacket = new StatusUpdatePacket {
+                Status = ArchipelagoClientState.ClientGoal
+            };
             await session.Socket.SendPacketAsync(statusUpdatePacket);
         }
     }
