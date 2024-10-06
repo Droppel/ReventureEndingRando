@@ -22,36 +22,6 @@ namespace ReventureEndingRando
         {
         }
 
-        public static Dictionary<EndingEffectsEnum, int> GetCurrentEndingEffects() {
-            Dictionary<EndingEffectsEnum, int> enabledEffect = new Dictionary<EndingEffectsEnum, int>();
-
-            Dictionary<long, int> receivedIDs = new Dictionary<long, int>();
-            foreach (NetworkItem item in ArchipelagoConnection.session.Items.AllItemsReceived) {
-                //Plugin.PatchLogger.LogInfo($"{item.Item}: ");
-                if (receivedIDs.ContainsKey(item.Item)) {
-                    receivedIDs[item.Item] += 1;
-                } else {
-                    receivedIDs.Add(item.Item, 1);
-                }
-            }
-
-
-            foreach (EndingEffectsEnum effect in Enum.GetValues(typeof(EndingEffectsEnum)).Cast<EndingEffectsEnum>().ToList()) {
-                EndingEffect ee = EndingEffect.InitFromEnum(effect);
-                int effectReceived = receivedIDs.ContainsKey(Plugin.reventureItemOffset + (long)effect) ? receivedIDs[Plugin.reventureItemOffset + (long)effect] : 0;
-                if (ee != null) {
-                    if (effectReceived != 0) {
-                        if (enabledEffect.ContainsKey(effect)) {
-                            enabledEffect[effect] += 1;
-                        } else {
-                            enabledEffect.Add(effect, 1);
-                        }
-                    }
-                }
-            }
-            return enabledEffect;
-        }
-
         public static void UpdateWorldArchipelago()
         {
             ItemManager itemManager = Plugin.itemManager;

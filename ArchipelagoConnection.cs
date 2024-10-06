@@ -69,28 +69,14 @@ namespace ReventureEndingRando
             hardCombat = int.Parse(slotData["hardcombat"].ToString());
 
             session.Items.ItemReceived += (receivedItemsHelper) => {
-                ReceiveItem();
+                Plugin.itemManager.ReceiveItem();
             };
 
             //Synchronize
-
-            while (ReceiveItem()) { }
+            Plugin.itemManager.Synchronize();
 
             // Successfully connected, `ArchipelagoSession` (assume statically defined as `session` from now on) can now be used to interact with the server and the returned `LoginSuccessful` contains some useful information about the initial connection (e.g. a copy of the slot data as `loginSuccess.SlotData`)
             var loginSuccess = (LoginSuccessful)result;
-        }
-
-        private bool ReceiveItem() {
-            if (!session.Items.Any()) {
-                return false;
-            }
-
-            var item = session.Items.DequeueItem();
-
-            int itemIndex = session.Items.Index;
-            ItemManager itemManager = Plugin.itemManager;
-            itemManager.AddItem(item.Item, itemIndex);
-            return true;
         }
 
         public static async void Check_Send_completion()

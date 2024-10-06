@@ -16,33 +16,54 @@ namespace ReventureEndingRando {
             currentSlot = saveSlot;
 
             itemsReceived = new Dictionary<long, int>();
-            saveService.Load<Dictionary<long, int>>(currentSlot, "unlockedItems").Then((dict) => {
+            saveService.Load<Dictionary<long, int>>(currentSlot, "unlockedItems", new Dictionary<long, int>()).Then((dict) => {
                 itemsReceived = dict;
             });
 
-            saveService.Load<int>(currentSlot, "lastItemReceived").Then((last) => {
+            saveService.Load<int>(currentSlot, "lastItemReceived", -1).Then((last) => {
                 lastItemReceived = last;
             });
         }
-                
-        public void AddItem(long itemID, int itemIndex) {
-            if (itemIndex <= lastItemReceived) {
-                return;
+
+        public void Synchronize() {
+
+            for (int i = 0; i < lastItemReceived; i++) {
+                var seen = ArchipelagoConnection.session.Items.DequeueItem();
             }
 
+
+            while (ReceiveItem()) { }
+        }
+
+        public bool ReceiveItem() {
+            var itemsQueue = ArchipelagoConnection.session.Items;
+            if (!itemsQueue.Any()) {
+                return false;
+            }
+
+            var item = itemsQueue.DequeueItem();
+
+            ItemManager itemManager = Plugin.itemManager;
+            itemManager.AddItem(item.Item);
+            return true;
+        }
+
+        private void AddItem(long itemID) {
             if (itemsReceived.ContainsKey(itemID)) {
                 itemsReceived[itemID] += 1;
             } else {
                 itemsReceived.Add(itemID, 1);
             }
             
-            lastItemReceived = itemIndex;
+            lastItemReceived += 1;
 
             saveService.Save<int>(currentSlot, "lastItemReceived", lastItemReceived);
             saveService.Save<Dictionary<long, int>>(currentSlot, "unlockedItems", itemsReceived);
 
             EndingEffect ee = EndingEffect.InitFromEnum((EndingEffectsEnum)(itemID - Plugin.reventureItemOffset));
-            ee.ActivateEffect(itemsReceived[itemID], false);
+            try {
+                ee.ActivateEffect(itemsReceived[itemID], false);
+            } catch {  }
             return;
         }
 
