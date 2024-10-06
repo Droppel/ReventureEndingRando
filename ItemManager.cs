@@ -26,28 +26,24 @@ namespace ReventureEndingRando {
         }
                 
         public void AddItem(long itemID, int itemIndex) {
-            Plugin.PatchLogger.LogInfo($"Item: {itemID} with index: {itemIndex}");
             if (itemIndex <= lastItemReceived) {
                 return;
             }
 
-            Plugin.PatchLogger.LogInfo($"2Item: {itemID} with index: {itemIndex}");
             if (itemsReceived.ContainsKey(itemID)) {
                 itemsReceived[itemID] += 1;
             } else {
                 itemsReceived.Add(itemID, 1);
             }
             
-            Plugin.PatchLogger.LogInfo($"3Item: {itemID} with index: {itemIndex}");
             lastItemReceived = itemIndex;
 
             saveService.Save<int>(currentSlot, "lastItemReceived", lastItemReceived);
             saveService.Save<Dictionary<long, int>>(currentSlot, "unlockedItems", itemsReceived);
 
-            Plugin.PatchLogger.LogInfo($"SavedItem: {itemID} with index: {itemIndex}");
             EndingEffect ee = EndingEffect.InitFromEnum((EndingEffectsEnum)(itemID - Plugin.reventureItemOffset));
-            Plugin.PatchLogger.LogInfo($"Effect: {ee.GetType()} with count: {itemsReceived[itemID]}");
             ee.ActivateEffect(itemsReceived[itemID], false);
+            return;
         }
 
         public int GetItemCount(long id) {

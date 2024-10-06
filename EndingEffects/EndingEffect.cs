@@ -165,7 +165,6 @@ namespace ReventureEndingRando.EndingEffects
     {
         public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
-            Plugin.PatchLogger.LogInfo("Jere");
             GameObject king = GameObject.Find("World/NPCs/KindomNPCs/TheKing");
             GameObject feedEnding = GameObject.Find("World/Interactables/98_FeedTheKing_End");
             king.SetActive(effectsReceived > 0);
