@@ -11,15 +11,16 @@ namespace ReventureEndingRando {
         public static void SetupLoginGUI() {
 
             // Change Options menu
-            if (Plugin.archipelagoSettings != null) {
-                GameObject.DestroyImmediate(Plugin.archipelagoSettings);
+            if (Plugin.archipelagoMenu != null) {
+                GameObject.DestroyImmediate(Plugin.archipelagoMenu);
             }
             GameObject globalCanvas = GameObject.Find("GlobalCanvas(Clone)");
-            Plugin.archipelagoSettings = GameObject.Instantiate(globalCanvas.transform.GetChild(2).gameObject, globalCanvas.transform);
-            Plugin.archipelagoSettings.name = "Archipelago";
-            Plugin.archipelagoSettings.SetActive(true);
-            GameObject.DestroyImmediate(Plugin.archipelagoSettings.GetComponent<OptionsController>());
-            GameObject archipelagoPanel = Plugin.archipelagoSettings.transform.GetChild(0).gameObject; // Options Panel
+            Plugin.archipelagoMenu = GameObject.Instantiate(globalCanvas.transform.GetChild(2).gameObject, globalCanvas.transform);
+            Plugin.archipelagoMenu.name = "Archipelago";
+            Plugin.archipelagoMenu.SetActive(true);
+            GameObject.DestroyImmediate(Plugin.archipelagoMenu.GetComponent<OptionsController>());
+            GameObject archipelagoPanel = Plugin.archipelagoMenu.transform.GetChild(0).gameObject; // Options Panel
+            archipelagoPanel.name = "Archipelago Panel";
             GameObject archipelagoPanelTabs = archipelagoPanel.transform.GetChild(0).gameObject; // Tabs
             GameObject.DestroyImmediate(archipelagoPanelTabs.GetComponent<OptionTabs>());
             archipelagoPanelTabs.transform.GetChild(3) // Stream
@@ -28,7 +29,6 @@ namespace ReventureEndingRando {
             GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(0).GetComponent<OptionTabElement>()); //General
             GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(1).GetComponent<OptionTabElement>()); //Extra
             GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(2).GetComponent<ControlsOptionsController>()); //Controls
-            Plugin.PatchLogger.LogInfo("For some reason deleting the objects causes an NPE when running the components OnDestroy method. This doesn't matter because we don't care about it anyways");
             GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(2).GetComponent<OptionTabElement>()); //Controls
             GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(3).GetComponent<OptionTabElement>());
             GameObject.DestroyImmediate(archipelagoPanelTabs.transform.GetChild(3).GetComponent<AlterWithRestrictionsInEachScene>());
@@ -81,13 +81,24 @@ namespace ReventureEndingRando {
             buttonGO.SetActive(true);
             Button button = buttonGO.AddComponent<Button>();
             button.onClick.AddListener(() => {
-                Plugin.currentHost = Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
-                Plugin.currentSlot = Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(1).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
+                Plugin.currentHost = Plugin.archipelagoMenu.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
+                Plugin.currentSlot = Plugin.archipelagoMenu.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(1).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
 
                 Plugin.archipelagoSettingsActive = false;
-                Plugin.archipelagoSettings.SetActive(false);
+                Plugin.archipelagoMenu.SetActive(false);
             });
-            Plugin.archipelagoSettings.SetActive(false);
+            Plugin.archipelagoMenu.SetActive(false);
+        }
+
+        private static T CopyComponent<T>(GameObject original, GameObject destination) where T : Component {
+            Component origComp = original.GetComponent<T>();
+            System.Type type = origComp.GetType();
+            Component copy = destination.AddComponent(type);
+            System.Reflection.FieldInfo[] fields = type.GetFields();
+            foreach (System.Reflection.FieldInfo field in fields) {
+                field.SetValue(copy, field.GetValue(origComp));
+            }
+            return copy as T;
         }
     }
 }

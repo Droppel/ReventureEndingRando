@@ -29,7 +29,7 @@ namespace ReventureEndingRando
         public static bool isRandomizer = false;
         public static string lastUnlocksText = "Last Unlocked: ";
 
-        public static GameObject archipelagoSettings;
+        public static GameObject archipelagoMenu;
         public static bool archipelagoSettingsActive = false;
         public static string currentHost;
         public static string currentSlot;
@@ -83,14 +83,14 @@ namespace ReventureEndingRando
                 if (archipelagoSettingsActive)
                 {
                     //Plugin.PatchLogger.LogInfo(Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text);
-                    currentHost = Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
-                    currentSlot = Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(1).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
+                    currentHost = Plugin.archipelagoMenu.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
+                    currentSlot = Plugin.archipelagoMenu.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(1).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
                 } else
                 {
-                    if (Plugin.archipelagoSettings == null) {
+                    if (Plugin.archipelagoMenu == null) {
                         GUI.SetupLoginGUI();
                     }
-                    GameObject archipelagoPanelOptions = Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
+                    GameObject archipelagoPanelOptions = Plugin.archipelagoMenu.transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
                     GameObject archipelagoHostOption = archipelagoPanelOptions.transform.GetChild(0).gameObject;
                     archipelagoHostOption.SetActive(true);
 
@@ -98,7 +98,7 @@ namespace ReventureEndingRando
                     archipelagoSlotOption.SetActive(true);
                 }
                 archipelagoSettingsActive = !archipelagoSettingsActive;
-                archipelagoSettings.SetActive(archipelagoSettingsActive);
+                archipelagoMenu.SetActive(archipelagoSettingsActive);
             }
 
             if (Input.GetKeyDown(KeyCode.F7)) {
@@ -136,8 +136,12 @@ namespace ReventureEndingRando
         private void OnDestroy()
         {
             harmony.UnpatchSelf();
-            Destroy(archipelagoSettings);
-            ArchipelagoConnection.session.Socket.DisconnectAsync();
+            if (archipelagoMenu != null) {
+                Destroy(archipelagoMenu);
+            }
+            if (ArchipelagoConnection.session != null) {
+                ArchipelagoConnection.session.Socket.DisconnectAsync();
+            }
             Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} unloaded!");
         }
 
@@ -375,15 +379,15 @@ namespace ReventureEndingRando
         [HarmonyPatch("Update", new Type[] { })]
         private static bool PrefixUpdate(SaveSlotController __instance) {
             return true;
-            //if (Input.GetKeyDown(KeyCode.F4)) {
-            //    var buttonVar = typeof(SaveSlotController).GetField("button", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
-            //    if (EventSystem.current.currentSelectedGameObject != ((Button)buttonVar.GetValue(__instance)).gameObject) {
-            //        return true;
-            //    }
-            //    var deleteSlot = typeof(SaveSlotController).GetMethod("DeleteSlot", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
-            //    deleteSlot.Invoke(__instance, new object[] { __instance.GetDisplaySlotNumber() - 1 });
-            //}
-            //return true;
+            if (Input.GetKeyDown(KeyCode.F4)) {
+                var buttonVar = typeof(SaveSlotController).GetField("button", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+                if (EventSystem.current.currentSelectedGameObject != ((Button)buttonVar.GetValue(__instance)).gameObject) {
+                    return true;
+                }
+                var deleteSlot = typeof(SaveSlotController).GetMethod("DeleteSlot", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+                deleteSlot.Invoke(__instance, new object[] { __instance.GetDisplaySlotNumber() - 1 });
+            }
+            return true;
         }
         private static void UnlockEndings(int saveSlot)
         {
@@ -429,6 +433,15 @@ namespace ReventureEndingRando
                 field.SetValue(__instance, CellStatus.Unlocked);
             }
             return;
+        }
+    }
+
+    // This fixes the NPEs that happen do to the weird UI stuff
+    [HarmonyPatch(typeof(OptionTabs))]
+    public class OptionTabsPatch {
+        [HarmonyPatch("RefreshNavigation", new Type[] { })]
+        private static bool Prefix(OptionTabs __instance) {
+            return __instance != null;
         }
     }
 }
