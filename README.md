@@ -1,7 +1,7 @@
 # ReventureEndingRando
 
 ## Installation
-1. Download [BepinEx](https://github.com/BepInEx/BepInEx/releases)https://github.com/BepInEx/BepInEx/releases you need the x86 version
+1. Download [BepinEx](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2) you need the x86 version
 2. Extract the files in the .zip into the Reventure Folder, so they are all next to the Reventure.exe
 3. Start Reventure once, if Bepinex is installed correctly, there should now be multiple folders in /BepInEx/
 4. Download the files from the current release
