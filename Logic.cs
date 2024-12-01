@@ -201,7 +201,9 @@ namespace ReventureEndingRando {
                 [EndingTypes.TriggerTrollSpikes] = () => true,
                 [EndingTypes.SacrificePrincess] = () => Has(EE.SpawnPrincessItem),
                 [EndingTypes.HugDarkLord] = () => HasAll(EE.SpawnMrHugsChest, EE.SpawnPrincessItem),
-                [EndingTypes.ShotgunFakePrincess] = () => false, // TODO
+                [EndingTypes.ShotgunFakePrincess] = () => HasSword() && HasAll(EE.SpawnShopkeeper, EE.SpawnMimic, EE.UnlockShopCannon) &&
+                     HasAny(EE.UnlockCallElevatorButtons, EE.UnlockElevatorButton) &&
+                     (HasAny(EE.SpawnBombsChest, EE.SpawnShovelChest) || ArchipelagoConnection.hardJumps == 1 || ArchipelagoConnection.hardCombat == 1),
                 [EndingTypes.FakePrincessInsideChest] = () => Has(EE.SpawnPrincessItem),
                 [EndingTypes.TakePrincessToDarkAltar] = () => Has(EE.SpawnPrincessItem),
                 [EndingTypes.GetIntoTheCloud] = () => Has(EE.GrowVine) || (HasChicken() && (HasSword() || HasAny(EE.SpawnHookChest, EE.UnlockGeyserWaterfall) ||
