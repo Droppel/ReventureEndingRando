@@ -33,6 +33,9 @@ namespace ReventureEndingRando
         public static bool archipelagoSettingsActive = false;
         public static string currentHost;
         public static string currentSlot;
+        public static string currentPassword;
+
+        public static bool inMenu = false;
 
         private int lastItemListSize = 0;
 
@@ -78,36 +81,36 @@ namespace ReventureEndingRando
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Not unused, will be executed by Unity")]
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.F5))
-            {
-                if (archipelagoSettingsActive)
-                {
-                    //Plugin.PatchLogger.LogInfo(Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text);
-                    currentHost = Plugin.archipelagoMenu.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
-                    currentSlot = Plugin.archipelagoMenu.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(1).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
-                } else
-                {
-                    if (Plugin.archipelagoMenu == null) {
-                        GUI.SetupLoginGUI();
-                    }
-                    GameObject archipelagoPanelOptions = Plugin.archipelagoMenu.transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
-                    GameObject archipelagoHostOption = archipelagoPanelOptions.transform.GetChild(0).gameObject;
-                    archipelagoHostOption.SetActive(true);
+            //if (Input.GetKeyDown(KeyCode.F5))
+            //{
+            //    if (archipelagoSettingsActive)
+            //    {
+            //        //Plugin.PatchLogger.LogInfo(Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text);
+            //        currentHost = Plugin.archipelagoMenu.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
+            //        currentSlot = Plugin.archipelagoMenu.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(1).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
+            //    } else
+            //    {
+            //        if (Plugin.archipelagoMenu == null) {
+            //            ReventureGUI.SetupLoginGUINative();
+            //        }
+            //        GameObject archipelagoPanelOptions = Plugin.archipelagoMenu.transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
+            //        GameObject archipelagoHostOption = archipelagoPanelOptions.transform.GetChild(0).gameObject;
+            //        archipelagoHostOption.SetActive(true);
 
-                    GameObject archipelagoSlotOption = archipelagoPanelOptions.transform.GetChild(1).gameObject;
-                    archipelagoSlotOption.SetActive(true);
-                }
-                archipelagoSettingsActive = !archipelagoSettingsActive;
-                archipelagoMenu.SetActive(archipelagoSettingsActive);
-            }
+            //        GameObject archipelagoSlotOption = archipelagoPanelOptions.transform.GetChild(1).gameObject;
+            //        archipelagoSlotOption.SetActive(true);
+            //    }
+            //    archipelagoSettingsActive = !archipelagoSettingsActive;
+            //    archipelagoMenu.SetActive(archipelagoSettingsActive);
+            //}
 
-            if (Input.GetKeyDown(KeyCode.F7)) {
+            //if (Input.GetKeyDown(KeyCode.F7)) {
 
-                ILocalizationParametersService paramservice= Core.Get<ILocalizationParametersService>();
-                Plugin.PatchLogger.LogInfo(paramservice[LocalizationParameterKeys.hero]);
+            //    ILocalizationParametersService paramservice= Core.Get<ILocalizationParametersService>();
+            //    Plugin.PatchLogger.LogInfo(paramservice[LocalizationParameterKeys.hero]);
 
-                paramservice[LocalizationParameterKeys.hero] = "Hallelujah";
-            }
+            //    paramservice[LocalizationParameterKeys.hero] = "Hallelujah";
+            //}
 
             if (ArchipelagoConnection.session == null)
             {
@@ -130,6 +133,10 @@ namespace ReventureEndingRando
                 TextMeshProUGUI text = GameObject.Find("Canvasses/OverlayCanvas/GamePanel/ZonePanel/zoneText").GetComponent<TextMeshProUGUI>();
                 text.text = lastUnlocksText;
             }
+        }
+
+        public void OnGUI() {
+            ReventureGUI.SetupLoginGUIIMGUI();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Not unused, will be executed by Unity")]
@@ -278,6 +285,7 @@ namespace ReventureEndingRando
             {
                 return;
             }
+            Plugin.inMenu = false;
 
             EndingRandomizer.UpdateWorldArchipelago();
             return;
@@ -348,6 +356,7 @@ namespace ReventureEndingRando
             }
             int slotNumber = __instance.GetDisplaySlotNumber() - 1;
 
+            bool connectResult = false;
             var isEmptyField = typeof(SaveSlotController).GetField("isEmpty", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
             if (!(bool)isEmptyField.GetValue(__instance)) {
                 if (Plugin.saves.ContainsKey(slotNumber)) {
@@ -355,30 +364,31 @@ namespace ReventureEndingRando
                     Plugin.itemManager = new ItemManager(slotNumber);
                     string[] connectionInfo = Plugin.saves[slotNumber].Split(';');
                     ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(connectionInfo[0], connectionInfo[1]);
-                    archipelagoConnection.Connect();
+                    connectResult = archipelagoConnection.Connect();
                     UnlockEndings(slotNumber);
                 } else {
                     Plugin.isRandomizer = false;
                 }
-                return true;
+                return connectResult;
             } else {
                 string host = Plugin.currentHost;
                 string slot = Plugin.currentSlot;
                 Plugin.isRandomizer = true;
                 Plugin.itemManager = new ItemManager(slotNumber);
                 ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(host, slot);
-                archipelagoConnection.Connect();
+                connectResult = archipelagoConnection.Connect();
                 UnlockEndings(slotNumber);
                 Plugin.saves[slotNumber] = host + ";" + slot;
                 Plugin.WriteConnectionInfos();
-                return true;
+                return connectResult;
             }
         }
 
         [HarmonyPrefix]
         [HarmonyPatch("Update", new Type[] { })]
         private static bool PrefixUpdate(SaveSlotController __instance) {
-            return true;
+            Plugin.inMenu = true;
+            //return true;
             if (Input.GetKeyDown(KeyCode.F4)) {
                 var buttonVar = typeof(SaveSlotController).GetField("button", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
                 if (EventSystem.current.currentSelectedGameObject != ((Button)buttonVar.GetValue(__instance)).gameObject) {
@@ -401,9 +411,9 @@ namespace ReventureEndingRando
     public class TitleDirectorPatch
     {
         [HarmonyPatch("Start", new Type[] { })]
-        private static void Postfix()
-        {
-            GUI.SetupLoginGUI();
+        private static void Postfix() {
+            //ReventureGUI.SetupLoginGUINative();
+            Plugin.inMenu = true;
         }
     }
 

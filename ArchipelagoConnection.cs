@@ -30,13 +30,17 @@ namespace ReventureEndingRando
             this.server = host;
         }
 
-        public void Connect()
+        public bool Connect()
         {
             LoginResult result;
 
             try
             {
-                result = session.TryConnectAndLogin("Reventure", slot, ItemsHandlingFlags.AllItems);
+                string password = Plugin.currentPassword;
+                if (password.Equals("")) {
+                    password = null;
+                }
+                result = session.TryConnectAndLogin("Reventure", slot, ItemsHandlingFlags.AllItems, password: password);
             } catch (Exception e)
             {
                 result = new LoginFailure(e.GetBaseException().Message);
@@ -56,7 +60,7 @@ namespace ReventureEndingRando
                 }
 
                 Plugin.PatchLogger.LogInfo(errorMessage);
-                return; // Did not connect, show the user the contents of `errorMessage`
+                return false; // Did not connect, show the user the contents of `errorMessage`
             }
 
             var slotData = session.DataStorage.GetSlotData(ArchipelagoConnection.session.ConnectionInfo.Slot);
@@ -77,6 +81,7 @@ namespace ReventureEndingRando
 
             // Successfully connected, `ArchipelagoSession` (assume statically defined as `session` from now on) can now be used to interact with the server and the returned `LoginSuccessful` contains some useful information about the initial connection (e.g. a copy of the slot data as `loginSuccess.SlotData`)
             var loginSuccess = (LoginSuccessful)result;
+            return true;
         }
 
         public static async void Check_Send_completion()

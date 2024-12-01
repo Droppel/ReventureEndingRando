@@ -6,9 +6,39 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace ReventureEndingRando {
-    class GUI {
+    class ReventureGUI {
 
-        public static void SetupLoginGUI() {
+        public static void SetupLoginGUIIMGUI() {
+
+            //if (APState.Session != null) {
+            //    if (APState.Authenticated) {
+            //        GUI.Label(new Rect(16, 16, 300, 20), ap_ver + " Status: Connected");
+            //    } else {
+            //        GUI.Label(new Rect(16, 16, 300, 20), ap_ver + " Status: Authentication failed");
+            //    }
+            //} else {
+            //    GUI.Label(new Rect(16, 16, 300, 20), ap_ver + " Status: Not Connected");
+            //}
+
+            //if ((APState.Session == null || !APState.Authenticated) && APState.state == APState.State.Menu) {
+            if (Plugin.inMenu) {
+                GUI.Label(new Rect(16, 36, 100, 20), "<color=black>Host: </color>");
+                GUI.Label(new Rect(16, 56, 100, 20), "<color=black>Slot:  </color>");
+                GUI.Label(new Rect(16, 76, 100, 20), "<color=black>Password:  </color>");
+
+                Plugin.currentHost = GUI.TextField(new Rect(80 + 16 + 8, 36, 150, 20),
+                    Plugin.currentHost);
+                Plugin.currentSlot = GUI.TextField(new Rect(80 + 16 + 8, 56, 150, 20),
+                    Plugin.currentSlot);
+                Plugin.currentPassword = GUI.TextField(new Rect(80 + 16 + 8, 76, 150, 20),
+                    Plugin.currentPassword);
+
+                Plugin.currentHost = "localhost:38281";
+                Plugin.currentSlot = "Droppel";
+            }
+        }
+
+        public static void SetupLoginGUINative() {
 
             // Change Options menu
             if (Plugin.archipelagoMenu != null) {
@@ -55,6 +85,7 @@ namespace ReventureEndingRando {
             GameObject.DestroyImmediate(archipelagoHostOption.GetComponent<OptionInputParam>());
             GameObject.DestroyImmediate(archipelagoHostOption.GetComponent<OptionActiveWatcher>());
             GameObject.DestroyImmediate(archipelagoHostOption.GetComponent<OptionActiveWatcher>());
+            GameObject.DestroyImmediate(archipelagoHostOption.transform.GetChild(1));
             archipelagoHostOption.SetActive(true);
             archipelagoHostOption.transform.GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().SetText("Host/Port");
             archipelagoHostOption.transform.GetChild(1) //Options Container
