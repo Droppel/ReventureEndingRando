@@ -33,8 +33,8 @@ namespace ReventureEndingRando {
                 Plugin.currentPassword = GUI.TextField(new Rect(80 + 16 + 8, 76, 150, 20),
                     Plugin.currentPassword);
 
-                Plugin.currentHost = "localhost:38281";
-                Plugin.currentSlot = "Droppel";
+                //Plugin.currentHost = "localhost:38281";
+                //Plugin.currentSlot = "Droppel";
             }
         }
 
