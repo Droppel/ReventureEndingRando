@@ -31,9 +31,9 @@ namespace ReventureEndingRando
 
         public static GameObject archipelagoMenu;
         public static bool archipelagoSettingsActive = false;
-        public static string currentHost;
-        public static string currentSlot;
-        public static string currentPassword;
+        public static string currentHost = "";
+        public static string currentSlot = "";
+        public static string currentPassword = "";
 
         public static bool inMenu = false;
 

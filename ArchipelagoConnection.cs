@@ -18,6 +18,9 @@ namespace ReventureEndingRando
         public static int hardJumps;
         public static int hardCombat;
 
+        // Regiongraph info
+        public static string spawn;
+
 
         private readonly string slot;
         private readonly string server;
@@ -71,6 +74,9 @@ namespace ReventureEndingRando
             treasureRoomSword = int.Parse(slotData["treasureSword"].ToString());
             hardJumps = int.Parse(slotData["hardjumps"].ToString());
             hardCombat = int.Parse(slotData["hardcombat"].ToString());
+
+            // Regiongraph info
+            spawn = slotData["spawn"].ToString();
 
             session.Items.ItemReceived += (receivedItemsHelper) => {
                 Plugin.itemManager.ReceiveItem();
