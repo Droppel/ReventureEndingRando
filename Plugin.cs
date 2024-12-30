@@ -388,7 +388,7 @@ namespace ReventureEndingRando
         [HarmonyPatch("Update", new Type[] { })]
         private static bool PrefixUpdate(SaveSlotController __instance) {
             Plugin.inMenu = true;
-            //return true;
+            return true;
             if (Input.GetKeyDown(KeyCode.F4)) {
                 var buttonVar = typeof(SaveSlotController).GetField("button", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
                 if (EventSystem.current.currentSelectedGameObject != ((Button)buttonVar.GetValue(__instance)).gameObject) {
