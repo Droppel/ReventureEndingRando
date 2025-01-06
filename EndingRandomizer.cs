@@ -1,21 +1,14 @@
-﻿using Archipelago.MultiClient.Net.Models;
-using Atto;
-using Newtonsoft.Json;
-using ReventureEndingRando.EndingEffects;
+﻿using ReventureEndingRando.EndingEffects;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using TMPro;
 using UnityEngine;
 
 namespace ReventureEndingRando
 {
     public class EndingRandomizer {
-        private static Dictionary<string, Vector2> spawnLocations = new Dictionary<string, Vector2>{
+        public static Dictionary<string, Vector2> spawnLocations = new Dictionary<string, Vector2>{
                 {"LonksHouse", new Vector2(132.5f, 7.5f)},
                 {"Elder", new Vector2(108.5f, 20.5f)},
                 {"Chicken", new Vector2(108.5f, 27.5f)},

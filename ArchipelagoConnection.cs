@@ -2,6 +2,7 @@
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Packets;
 using System;
+using System.Collections.Generic;
 
 namespace ReventureEndingRando
 {
@@ -19,6 +20,7 @@ namespace ReventureEndingRando
 
         // Regiongraph info
         public static string spawn;
+        public static List<string> itemLocations;
 
 
         private readonly string slot;
@@ -76,6 +78,12 @@ namespace ReventureEndingRando
 
             // Regiongraph info
             spawn = slotData["spawn"].ToString();
+            itemLocations = new List<string>();
+            var locationSlotDataNames = new List<string> { "item_Sword", "item_SwordElder", "item_Shovel", "item_Bomb", "item_Shield", "item_MrHugs", "item_Lava Trinket", "item_Hook", "item_Nuke", "item_Whistle" };
+            foreach (string name in slotData["itemlocations"].ToString().Split(','))
+            {
+                itemLocations.Add(name);
+            }
 
             session.Items.ItemReceived += (receivedItemsHelper) => {
                 Plugin.itemManager.ReceiveItem();

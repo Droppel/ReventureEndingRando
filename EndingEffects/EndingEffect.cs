@@ -25,10 +25,12 @@ namespace ReventureEndingRando.EndingEffects
         {
             switch (e)
             {
-                case EndingEffectsEnum.ProgressiveSword:
-                    return new SpawnSword();
+                case EndingEffectsEnum.SwordPedestal:
+                    return new SpawnSwordElder();
+                case EndingEffectsEnum.SwordChest:
+                    return new SpawnSwordChest();
                 case EndingEffectsEnum.SpawnShovelChest:
-                    return new SpawnItemSimple("World/Items/TreasureChest_Shovel");
+                    return new SpawnItemSimple("World/Items/TreasureChest_Shovel", _spawnlocation: 2);
                 case EndingEffectsEnum.SpawnBoomerang:
                     return new SpawnBoomerang();
                 case EndingEffectsEnum.SpawnMapChest:
@@ -36,25 +38,25 @@ namespace ReventureEndingRando.EndingEffects
                 case EndingEffectsEnum.SpawnCompassChest:
                     return new SpawnItemSimple("World/Items/TreasureChest_Compass");
                 case EndingEffectsEnum.SpawnWhistleChest:
-                    return new SpawnItemSimple("World/Items/TreasureChest_WhistleOfTime");
+                    return new SpawnItemSimple("World/Items/TreasureChest_WhistleOfTime", _spawnlocation: 9);
                 case EndingEffectsEnum.SpawnBurgerChest:
                     return new SpawnItemSimple("World/Items/TreasureChest_Pizza");
                 case EndingEffectsEnum.SpawnDarkstoneChest:
                     return new SpawnItemSimple("World/Interactables/Levers/RightLeversPlatform/TreasureChest_DarkStone");
                 case EndingEffectsEnum.SpawnHookChest:
-                    return new SpawnItemSimple("World/Items/TreasureChest_Hook");
+                    return new SpawnItemSimple("World/Items/TreasureChest_Hook", _spawnlocation: 7);
                 case EndingEffectsEnum.SpawnFishingRodChest:
                     return new SpawnItemSimple("World/Items/TreasureChest_FishingRod");
                 case EndingEffectsEnum.SpawnLavaTrinketChest:
-                    return new SpawnItemSimple("World/Items/TreasureChest_Trinket");
+                    return new SpawnItemSimple("World/Items/TreasureChest_Trinket", _spawnlocation: 6);
                 case EndingEffectsEnum.SpawnMrHugsChest:
-                    return new SpawnItemSimple("World/Items/TreasureChest_MrHugs");
+                    return new SpawnItemSimple("World/Items/TreasureChest_MrHugs", _spawnlocation: 5);
                 case EndingEffectsEnum.SpawnBombsChest:
-                    return new SpawnItemSimple("World/Items/TreasureChest_Bomb");
+                    return new SpawnItemSimple("World/Items/TreasureChest_Bomb", _spawnlocation: 3);
                 case EndingEffectsEnum.SpawnShieldChest:
-                    return new SpawnItemSimple("World/Items/TreasureChest_Shield");
+                    return new SpawnItemSimple("World/Items/TreasureChest_Shield", _spawnlocation: 4);
                 case EndingEffectsEnum.SpawnNukeItem:
-                    return new SpawnItemSimple("World/Items/TreasureChest_Cannonball");
+                    return new SpawnItemSimple("World/Items/TreasureChest_Cannonball", _spawnlocation: 8);
                 case EndingEffectsEnum.SpawnPrincessItem:
                     return new SpawnPrincess();
                 case EndingEffectsEnum.SpawnAnvilItem:
@@ -142,12 +144,14 @@ namespace ReventureEndingRando.EndingEffects
     class SpawnItemSimple : EndingEffect
     {
         private readonly string name;
+        private readonly int spawnlocation;
         private readonly bool inverted;
 
-        public SpawnItemSimple(string _name, bool _inverted=false)
+        public SpawnItemSimple(string _name, bool _inverted=false, int _spawnlocation = -1)
         {
             name = _name;
             inverted = _inverted;
+            spawnlocation = _spawnlocation;
         }
 
         public override void ActivateEffect(int effectsReceived, bool isGameStart)
@@ -155,6 +159,9 @@ namespace ReventureEndingRando.EndingEffects
             GameObject simpleItem = GameObject.Find(name);
             RemoveAlterWithObjects(simpleItem);
             simpleItem.SetActive(inverted != effectsReceived > 0);
+            if (spawnlocation != -1) {
+                simpleItem.transform.position = EndingRandomizer.spawnLocations[ArchipelagoConnection.itemLocations[spawnlocation]];
+            }
         }
     }
 
@@ -235,7 +242,7 @@ namespace ReventureEndingRando.EndingEffects
         }
     }
 
-    class SpawnSword : EndingEffect
+    class SpawnSwordProgressive : EndingEffect
     {
         public override void ActivateEffect(int effectsReceived, bool isGameStart)
         {
@@ -263,6 +270,30 @@ namespace ReventureEndingRando.EndingEffects
             openChest.SetActive(effectsReceived <= 2);
             swordAtHome.SetActive(effectsReceived > 2);
             swordChest.SetActive(effectsReceived > 2);
+        }
+    }
+    class SpawnSwordChest : EndingEffect {
+        public override void ActivateEffect(int effectsReceived, bool isGameStart) {
+            //Home Sword
+            //TODO remove chest completely
+            GameObject swordChest = GameObject.Find("World/Items/SwordAtHome/TreasureChest_Sword");
+            GameObject openChest = GameObject.Find("World/Items/SwordAtHome/OpenChest");
+            GameObject swordAtHome = GameObject.Find("World/Items/SwordAtHome");
+            openChest.SetActive(false);
+            swordAtHome.SetActive(true);
+            swordChest.SetActive(effectsReceived > 1);
+            swordChest.transform.position = EndingRandomizer.spawnLocations[ArchipelagoConnection.itemLocations[0]];
+        }
+    }
+
+    class SpawnSwordElder : EndingEffect {
+        public override void ActivateEffect(int effectsReceived, bool isGameStart) {
+            //Mountain Sword
+            GameObject itemSword = GameObject.Find("World/Items/Sword Item Pedestal/Item Sword");
+            GameObject pedestal = GameObject.Find("World/Items/Sword Item Pedestal");
+            itemSword.SetActive(effectsReceived > 1);
+            pedestal.SetActive(effectsReceived > 1);
+            pedestal.transform.position = EndingRandomizer.spawnLocations[ArchipelagoConnection.itemLocations[1]];
         }
     }
 
@@ -419,8 +450,8 @@ namespace ReventureEndingRando.EndingEffects
     {
         Nothing,
         //Item Locations
-        ProgressiveSword,
-        UNUSED, //Unused
+        SwordPedestal,
+        SwordChest,
         SpawnShovelChest,
         SpawnBoomerang,
         SpawnMapChest,
