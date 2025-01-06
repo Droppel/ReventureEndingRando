@@ -89,8 +89,8 @@ namespace ReventureEndingRando
 
         public static void UpdateWorldArchipelago()
         {
+            // Set Hero Position
             GameObject hero = GameObject.Find("Hero");
-            Plugin.PatchLogger.LogInfo(ArchipelagoConnection.spawn);
             hero.transform.position = spawnLocations[ArchipelagoConnection.spawn];
 
             ItemManager itemManager = Plugin.itemManager;
@@ -133,6 +133,81 @@ namespace ReventureEndingRando
             ((EndingCountRequirement) shopToFortress.requirementsToFail[2]).endingsUnlockedCount = 0;
             Cannon castleToDarkCastle = GameObject.Find("World/Interactables/Cannons/CastleToFortressCannon/CannonContents").GetComponent<Cannon>();
             castleToDarkCastle.requirementsToFail = shopToFortress.requirementsToFail;
+
+            // Disable princess pickup triggers
+            ActivationArea princessRescue = GameObject.Find("World/Interactables/PrincessRescueTrigger").GetComponent<ActivationArea>();
+            // // Items to deactivate
+            // // 0: Anvil
+            // // 1: #42 Airducts Accident End
+            // // 2: #22 Pickup Anvil End
+            // // 3: Anvil Bridge
+            // // 4: Princess Chat (Airduct)
+            // // 5: Princess Chat (Airduct)
+            // // 6: Darkstone/Burger Lever
+            // // 7: #07 Piranha Lake Ending
+            // // 8: #33 Leap of Faith mountain
+            // // 9: #24 Strawberry
+            // // 10: #46 extreme sports
+            // // 11: Mimic
+            // // 12: #39 big chest
+            // // 13: Guard Cannon
+            // // 14: Town to SHop Cannon
+            // // 15: Remove Non princess Elevator Behaviour
+            // // 16: #39 Get Into big chest?? Is this a mistake?? Maybe they added it twice by accident :D
+            // // Remove in reverse order to not mess up indices: 0, 1, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16
+            // List<GameObject> itemsToDeactivate = princessRescue.itemsToDeactivate.ToList();
+            // if (ArchipelagoConnection.session.Locations.AllLocationsChecked.Contains(Plugin.reventureEndingOffset + (long)EndingTypes.FakePrincessInsideChest)) {
+            //     itemsToDeactivate.RemoveAt(16); //Removes 16
+            // }
+            // itemsToDeactivate.RemoveRange(13, 2); //Removes 13 and 14
+            // if (ArchipelagoConnection.session.Locations.AllLocationsChecked.Contains(Plugin.reventureEndingOffset + (long)EndingTypes.FakePrincessInsideChest)) {
+            //     itemsToDeactivate.RemoveAt(12); // Removes 12
+            // }
+            // itemsToDeactivate.RemoveRange(6, 6); // Removes 6-11
+            // itemsToDeactivate.RemoveRange(0, 2); // Removes 0 and 1
+            // princessRescue.itemsToDeactivate = itemsToDeactivate.ToArray();
+
+            // Items to activate
+            // 0: Princess sprite
+            // 1: Fake Anvil ???
+            // 2: Anvil Bridge
+            // 3: Crashed Anvil debris
+            // 4: Unactive darkstone levers
+            // 5: Wind Push Area
+            // 6: Raising Lava
+            // 7: Thief Minions (That steal all items)
+            // 8: Dropped Mimic Crown
+            // 9: Guard Cannon Dead
+            // 10: Broken Town Cannon
+            // 11: Activate princess elevator behaviour
+            // 12: #75 mimic in chest
+            // 13: Acticate dark lord portrait
+            // 14: Minion HQ Switch???
+            // Remove in reverse order: 6
+            List<GameObject> itemsToActivate = princessRescue.itemsToActivate.ToList();
+            itemsToActivate.RemoveAt(6);
+            princessRescue.itemsToActivate = itemsToActivate.ToArray();
+
+            // // Items to send activate message
+            // // 0: Graveyard gate
+            // // 1: FortressBridge
+            // // 2: Elevator
+            // // 3: Lower Bridge???
+            // // 4: Whistle Pedestals
+            // // 5: Entrance to ultimate door
+            // // Remove in reverse order 0, 5
+            List<GameObject> itemsToSendActivateMessage = princessRescue.itemsToSendActivateMessage.ToList();
+            itemsToSendActivateMessage.RemoveAt(5); //Removes 5
+            princessRescue.itemsToSendActivateMessage = itemsToSendActivateMessage.ToArray();
+
+            // // Deactivate Ending Triggers if obtained
+            // if (ArchipelagoConnection.session.Locations.AllLocationsChecked.Contains(Plugin.reventureEndingOffset + (long)EndingTypes.FallIntoWaterfallWithPrincess)) {
+            //     GameObject.Destroy(GameObject.Find("World/EndTriggers/56_FallIntoWaterfallWithPrincess_End"));
+            // }
+
+            // if (ArchipelagoConnection.session.Locations.AllLocationsChecked.Contains(Plugin.reventureEndingOffset + (long)EndingTypes.PrincessToDesertGate)) {
+            //     GameObject.Destroy(GameObject.Find("World/EndTriggers/97_PrincessToDesertGate_End"));
+            // }
 
             // Change Ultimate Door signs texts
             DisplayChat[] signLeft = Resources.FindObjectsOfTypeAll<DisplayChat>().Where(obj => obj.transform.position.x == 194.0 && obj.transform.position.y == -24.0).ToArray();
