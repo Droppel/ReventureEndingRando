@@ -2,7 +2,6 @@
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Packets;
 using System;
-using ReventureEndingRando.EndingEffects;
 
 namespace ReventureEndingRando
 {

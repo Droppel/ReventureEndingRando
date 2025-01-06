@@ -9,12 +9,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 namespace ReventureEndingRando
 {
@@ -175,16 +173,9 @@ namespace ReventureEndingRando
             {
                 // Fix Boomerang Audio
                 GameObject boomerangItem = GameObject.Find("Hero/Items/Boomerang(Clone)");
-                Plugin.PatchLogger.LogInfo("asdasd");
-                Plugin.PatchLogger.LogInfo(boomerangItem);
                 AudioSource boomerangAudio = boomerangItem.GetComponent<AudioSource>();
-                Plugin.PatchLogger.LogInfo(boomerangAudio);
                 AudioSource audioHero = GameObject.Find("Hero").GetComponent<AudioSource>();
-                Plugin.PatchLogger.LogInfo(audioHero);
-                Plugin.PatchLogger.LogInfo(audioHero.outputAudioMixerGroup);
-                Plugin.PatchLogger.LogInfo(boomerangAudio.outputAudioMixerGroup);
                 boomerangAudio.outputAudioMixerGroup = audioHero.outputAudioMixerGroup;
-                Plugin.PatchLogger.LogInfo(boomerangAudio.outputAudioMixerGroup);
                 return;
             }
 

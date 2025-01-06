@@ -1,9 +1,4 @@
 ﻿using Atto;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using UnityEngine;
 
 namespace ReventureEndingRando.EndingEffects
@@ -136,6 +131,8 @@ namespace ReventureEndingRando.EndingEffects
                     return new ChangeName(LocalizationParameterKeys.princess);
                 case EndingEffectsEnum.DarkLordNameChange:
                     return new ChangeName(LocalizationParameterKeys.villain);
+                case EndingEffectsEnum.JumpIncrease:
+                    return new JumpHeight();
                 default:
                     return null;
             }
@@ -414,7 +411,7 @@ namespace ReventureEndingRando.EndingEffects
         public override void ActivateEffect(int effectsReceived, bool isGameStart) {
             GameObject heroObject = GameObject.Find("Hero");
             Hero hero = heroObject.GetComponent<Hero>();
-            hero.SetWeight(effectsReceived + 2);
+            hero.SetWeight(effectsReceived + 6);
         }
     }
 
@@ -481,6 +478,8 @@ namespace ReventureEndingRando.EndingEffects
         HeroNameChange,
         PrincessNameChange,
         DarkLordNameChange,
+        // Movement
+        JumpIncrease,
     }
 
     //Selected for implementation
