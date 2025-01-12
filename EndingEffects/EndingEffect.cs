@@ -161,6 +161,7 @@ namespace ReventureEndingRando.EndingEffects
             simpleItem.SetActive(inverted != effectsReceived > 0);
             if (spawnlocation != -1) {
                 simpleItem.transform.position = EndingRandomizer.spawnLocations[ArchipelagoConnection.itemLocations[spawnlocation]];
+                simpleItem.GetComponent<TreasureChest>().pickingChestPosition = 0;
             }
         }
     }
@@ -283,6 +284,7 @@ namespace ReventureEndingRando.EndingEffects
             swordAtHome.SetActive(true);
             swordChest.SetActive(effectsReceived > 1);
             swordChest.transform.position = EndingRandomizer.spawnLocations[ArchipelagoConnection.itemLocations[0]];
+            swordChest.GetComponent<TreasureChest>().pickingChestPosition = 0;
         }
     }
 
@@ -440,6 +442,10 @@ namespace ReventureEndingRando.EndingEffects
 
     class JumpHeight : EndingEffect {
         public override void ActivateEffect(int effectsReceived, bool isGameStart) {
+            EndingData lastEnding = Core.Get<IProgressionService>().EndingUnlockedInLastRun;
+            if (lastEnding != null && lastEnding.endingType == EndingTypes.BreakSpaceTimeContinuum) { // Don't change jump height if we respawn at an altar
+                return;
+            }
             GameObject heroObject = GameObject.Find("Hero");
             Hero hero = heroObject.GetComponent<Hero>();
             hero.SetWeight(effectsReceived + 6);
