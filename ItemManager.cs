@@ -42,6 +42,9 @@ namespace ReventureEndingRando {
             }
 
             var item = itemsQueue.DequeueItem();
+            string itemName = ArchipelagoConnection.session.Items.GetItemName(item.Item);
+            string playerName = ArchipelagoConnection.session.Players.GetPlayerAlias(item.Player);
+            Plugin.DisplayText($"Received {itemName} from {playerName}!");
 
             ItemManager itemManager = Plugin.itemManager;
             itemManager.AddItem(item.Item);

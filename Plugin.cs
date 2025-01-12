@@ -1,7 +1,9 @@
 ﻿using Archipelago.MultiClient.Net.Models;
+using Archipelago.MultiClient.Net.Packets;
 using Atto;
 using BepInEx;
 using BepInEx.Logging;
+using DG.Tweening;
 using HarmonyLib;
 using ReventureEndingRando.EndingEffects;
 using System;
@@ -9,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -160,6 +163,18 @@ namespace ReventureEndingRando
             output = output.Substring(0, output.Length - 1);
             File.WriteAllText("randosaves", output);
         }
+
+        public static void DisplayText(string text)
+        {
+            if (TreasureTextManager.instance == null) {
+                return;
+            }
+
+            TreasureTextManager.instance.text.text = text;
+            Sequence s = DOTween.Sequence();
+            s.Append(TreasureTextManager.instance.transform.DOScale(1f, 0.8f).SetEase(Ease.OutBack).SetUpdate(true));
+            s.Append(TreasureTextManager.instance.transform.DOScale(0f, 0.3f).SetEase(Ease.OutExpo).SetUpdate(true).SetDelay(TreasureTextManager.instance.holdTime));
+        }
     }
 
     //Disable Extrea swords, if one is picked up
@@ -236,6 +251,21 @@ namespace ReventureEndingRando
                 return true;
             }
 
+            // Display Message if nonstop
+            if (GameplayDirectorPatch.nonstopEnding.Contains(ending)) {
+                Task<LocationInfoPacket> scoutTask = ArchipelagoConnection.session.Locations.ScoutLocationsAsync(new long[] { Plugin.reventureEndingOffset + (long)ending });
+                scoutTask.Wait();
+
+                LocationInfoPacket scoutResult = scoutTask.Result;
+                foreach (NetworkItem item in scoutResult.Locations) {
+                    long id = item.Item;
+                    int playerId = item.Player;
+                    string playerName = ArchipelagoConnection.session.Players.GetPlayerAlias(playerId);
+                    string name = ArchipelagoConnection.session.Items.GetItemName(id);
+                    Plugin.DisplayText($"Found {name} for {playerName} from {ending}");
+                }
+            }
+
             if (__instance.IsEndingUnlocked(ending)) {
                 return true;
             }
@@ -281,7 +311,7 @@ namespace ReventureEndingRando
             EndingRandomizer.UpdateWorldArchipelago();
             return;
         }
-        private static List<EndingTypes> nonstopEnding = new List<EndingTypes> {
+        public static List<EndingTypes> nonstopEnding = new List<EndingTypes> {
             EndingTypes.StabElder,
             EndingTypes.StabGuard,
             EndingTypes.KillTheKing,
