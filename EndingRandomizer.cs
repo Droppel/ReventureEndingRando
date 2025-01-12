@@ -1,4 +1,5 @@
-﻿using ReventureEndingRando.EndingEffects;
+﻿using Atto;
+using ReventureEndingRando.EndingEffects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,12 @@ namespace ReventureEndingRando
                 {"Elder", new Vector2(108.5f, 20.5f)},
                 {"Chicken", new Vector2(108.5f, 27.5f)},
                 {"Shovel", new Vector2(105.5f, 8.5f)},
-                {"CastleFirstFloor", new Vector2(160.5f, 7.5f)},
-                {"CastleShieldChest", new Vector2(169.5f, 10.5f)},
+                {"CastleFirstFloor", new Vector2(156.5f, 7.5f)},
+                {"CastleShieldChest", new Vector2(169f, 10.5f)},
                 {"CastleMapChest", new Vector2(155.5f, 10.5f)},
                 {"CastleRoof", new Vector2(160.5f, 18.5f)},
                 {"PrincessRoom", new Vector2(160.5f, 13.5f)},
-                {"VolcanoTopExit", new Vector2(82.5f, 24.5f)},
+                {"VolcanoTopExit", new Vector2(82, 24.5f)},
                 {"LavaTrinket", new Vector2(96.5f, 11.5f)},
                 {"VolcanoDropStone", new Vector2(78.5f, -3.5f)},
                 {"VolcanoBridge", new Vector2(96.5f, 0.5f)},
@@ -83,8 +84,12 @@ namespace ReventureEndingRando
         public static void UpdateWorldArchipelago()
         {
             // Set Hero Position
-            GameObject hero = GameObject.Find("Hero");
-            hero.transform.position = spawnLocations[ArchipelagoConnection.spawn];
+            EndingData lastEnding = Core.Get<IProgressionService>().EndingUnlockedInLastRun;
+            Plugin.PatchLogger.LogInfo($"Last Ending: {lastEnding}");
+            if (lastEnding != null && lastEnding.endingType != EndingTypes.BreakSpaceTimeContinuum) { //Don't change the spawn if we respawn at an altar
+                GameObject hero = GameObject.Find("Hero");
+                hero.transform.position = spawnLocations[ArchipelagoConnection.spawn];
+            }
 
             ItemManager itemManager = Plugin.itemManager;
 
