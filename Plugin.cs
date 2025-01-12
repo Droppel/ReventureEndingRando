@@ -281,6 +281,102 @@ namespace ReventureEndingRando
             EndingRandomizer.UpdateWorldArchipelago();
             return;
         }
+        private static List<EndingTypes> nonstopEnding = new List<EndingTypes> {
+            EndingTypes.StabElder,
+            EndingTypes.StabGuard,
+            EndingTypes.KillTheKing,
+            EndingTypes.JumpIntoPiranhaLake,
+            EndingTypes.StabShopKeeper,
+            EndingTypes.RescueCat,
+            EndingTypes.FindFishingRod,
+            EndingTypes.HugMinion,
+            EndingTypes.StabDragon,
+            EndingTypes.HugTheKing,
+            EndingTypes.HugGuard,
+            EndingTypes.TakeTheDayOff,
+            EndingTypes.ClimbMountain,
+            EndingTypes.StabMinionMultipleTimes,
+            EndingTypes.ShootCannonballToCastle,
+            EndingTypes.EnterTheChimney,
+            EndingTypes.DestroyAllPots,
+            EndingTypes.StabBoulder,
+            EndingTypes.LeapOfFaithFromTheMountain,
+            EndingTypes.GetIntoThePipe,
+            EndingTypes.HugShopkeeper,
+            EndingTypes.GetIntoBigChest,
+            EndingTypes.HugElder,
+            EndingTypes.HugDragon,
+            EndingTypes.TakePrincessToBed,
+            EndingTypes.JumpOffTheCliff,
+            EndingTypes.SelfDestructFortress,
+            EndingTypes.HundredMinionsMassacre,
+            EndingTypes.TakePrincessBackToTown,
+            EndingTypes.ShootPrincessToTown,
+            EndingTypes.HugBoulder,
+            EndingTypes.JumpOffTheBalconyWithPrincess,
+            EndingTypes.ShootCannonballToShop,
+            EndingTypes.HugPrincess,
+            EndingTypes.JumpOffTheBalcony,
+            EndingTypes.StayAfk,
+            EndingTypes.PlaceBombUnderCastle,
+            EndingTypes.DontKillMinions,
+            EndingTypes.KillChicken,
+            EndingTypes.StabPrincess,
+            EndingTypes.DarkStoneToAltar,
+            EndingTypes.DarkLordComicStash,
+            EndingTypes.StabDarkLord,
+            EndingTypes.SacrificePrincess,
+            EndingTypes.HugDarkLord,
+            EndingTypes.TakePrincessToDarkAltar,
+            EndingTypes.GetIntoTheCloud,
+            EndingTypes.HugChicken,
+            EndingTypes.TakeChickenToDarkAltar,
+            EndingTypes.ShootCannonballToTown,
+            EndingTypes.KillAllFairies,
+            EndingTypes.MakeBabiesWithPrincess,
+            EndingTypes.FindAlienLarvae,
+            EndingTypes.StabDarkLord,
+            EndingTypes.DatePrincessAndDragon,
+            EndingTypes.GiveDarkStoneToDarkLord,
+            EndingTypes.TakePrincessToLonksHouse,
+            EndingTypes.StayInTheWater,
+            EndingTypes.AboardPirateShip,
+            EndingTypes.SwimIntoTheOcean,
+            EndingTypes.FeedTheMimic,
+            EndingTypes.FeedTheKing,
+        };
+
+        [HarmonyPatch("LoadEnding", new Type[] { typeof(EndingTypes), typeof(float) })]
+        private static bool Prefix(ref EndingTypes endingType) {
+            if (!Plugin.isRandomizer) {
+                return true;
+            }
+
+            Plugin.PatchLogger.LogInfo($"Ending: {endingType}");
+
+            if (!nonstopEnding.Contains(endingType)) {
+                return true;
+            }
+
+            var movementStateProperty = typeof(InputManipulator).GetProperty("State", BindingFlags.Public | BindingFlags.Instance);
+            movementStateProperty.SetValue(Hero.instance.inputManipulator, HeroInputState.Enabled);
+            Core.Get<IProgressionService>().UnlockEnding(endingType);
+            return false;
+        }
+    }
+
+    [HarmonyPatch(typeof(StopPlayerTrigger))]
+    public class StopPlayerTriggerPatch
+    {
+        [HarmonyPatch("OnTriggerEnterAction", new Type[] { typeof(Collider2D) })]
+        private static bool Prefix()
+        {
+            if (!Plugin.isRandomizer)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 
     [HarmonyPatch(typeof(UltimateDoor))]
