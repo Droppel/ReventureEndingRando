@@ -251,23 +251,20 @@ namespace ReventureEndingRando
                 return true;
             }
 
-            // Display Message if nonstop
-            if (GameplayDirectorPatch.nonstopEnding.Contains(ending)) {
-                Task<LocationInfoPacket> scoutTask = ArchipelagoConnection.session.Locations.ScoutLocationsAsync(new long[] { Plugin.reventureEndingOffset + (long)ending });
-                scoutTask.Wait();
-
-                LocationInfoPacket scoutResult = scoutTask.Result;
-                foreach (NetworkItem item in scoutResult.Locations) {
-                    long id = item.Item;
-                    int playerId = item.Player;
-                    string playerName = ArchipelagoConnection.session.Players.GetPlayerAlias(playerId);
-                    string name = ArchipelagoConnection.session.Items.GetItemName(id);
-                    Plugin.DisplayText($"Found {name} for {playerName} from {ending}");
-                }
-            }
-
             if (__instance.IsEndingUnlocked(ending)) {
                 return true;
+            }
+
+            Task<LocationInfoPacket> scoutTask = ArchipelagoConnection.session.Locations.ScoutLocationsAsync(new long[] { Plugin.reventureEndingOffset + (long)ending });
+            scoutTask.Wait();
+
+            LocationInfoPacket scoutResult = scoutTask.Result;
+            foreach (NetworkItem item in scoutResult.Locations) {
+                long id = item.Item;
+                int playerId = item.Player;
+                string playerName = ArchipelagoConnection.session.Players.GetPlayerAlias(playerId);
+                string name = ArchipelagoConnection.session.Items.GetItemName(id);
+                Plugin.DisplayText($"Found {name} for {playerName} from {ending}");
             }
 
             //Report to Archipelago
