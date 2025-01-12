@@ -533,7 +533,7 @@ namespace ReventureEndingRando
         }
     }
 
-    // This fixes the NPEs that happen do to the weird UI stuff
+    // This fixes the NPEs that happen due to the weird UI stuff
     [HarmonyPatch(typeof(OptionTabs))]
     public class OptionTabsPatch {
         [HarmonyPatch("RefreshNavigation", new Type[] { })]
