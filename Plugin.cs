@@ -134,6 +134,10 @@ namespace ReventureEndingRando
                 TextMeshProUGUI text = GameObject.Find("Canvasses/OverlayCanvas/GamePanel/ZonePanel/zoneText").GetComponent<TextMeshProUGUI>();
                 text.text = lastUnlocksText;
             }
+
+            if (Input.GetKeyDown(KeyCode.F)) {
+                GameObject.Find("Controllers(Clone)").GetComponent<CheatActions>().GottaGoFast();
+            }
         }
 
         public void OnGUI() {
