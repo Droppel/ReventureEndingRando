@@ -86,9 +86,11 @@ namespace ReventureEndingRando
             // Set Hero Position
             EndingData lastEnding = Core.Get<IProgressionService>().EndingUnlockedInLastRun;
             Plugin.PatchLogger.LogInfo($"Last Ending: {lastEnding}");
-            if (lastEnding != null && lastEnding.endingType != EndingTypes.BreakSpaceTimeContinuum) { //Don't change the spawn if we respawn at an altar
-                GameObject hero = GameObject.Find("Hero");
-                hero.transform.position = spawnLocations[ArchipelagoConnection.spawn];
+            if (ArchipelagoConnection.experimentalRegionGraph != 0) {
+                if (lastEnding != null && lastEnding.endingType != EndingTypes.BreakSpaceTimeContinuum) { //Don't change the spawn if we respawn at an altar
+                    GameObject hero = GameObject.Find("Hero");
+                    hero.transform.position = spawnLocations[ArchipelagoConnection.spawn];
+                }
             }
 
             ItemManager itemManager = Plugin.itemManager;

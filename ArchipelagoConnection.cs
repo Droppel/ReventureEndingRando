@@ -17,6 +17,7 @@ namespace ReventureEndingRando
         public static int gemsRequired;
         public static int hardJumps;
         public static int hardCombat;
+        public static int experimentalRegionGraph;
 
         // Regiongraph info
         public static string spawn;
@@ -77,12 +78,15 @@ namespace ReventureEndingRando
             hardCombat = int.Parse(slotData["hardcombat"].ToString());
 
             // Regiongraph info
-            spawn = slotData["spawn"].ToString();
-            itemLocations = new List<string>();
-            var locationSlotDataNames = new List<string> { "item_Sword", "item_SwordElder", "item_Shovel", "item_Bomb", "item_Shield", "item_MrHugs", "item_Lava Trinket", "item_Hook", "item_Nuke", "item_Whistle" };
-            foreach (string name in slotData["itemlocations"].ToString().Split(','))
-            {
-                itemLocations.Add(name);
+            experimentalRegionGraph = int.Parse(slotData["experimentalRegionGraph"].ToString());
+
+            if (experimentalRegionGraph != 0) {
+                spawn = slotData["spawn"].ToString();
+                itemLocations = new List<string>();
+                var locationSlotDataNames = new List<string> { "item_Sword", "item_SwordElder", "item_Shovel", "item_Bomb", "item_Shield", "item_MrHugs", "item_Lava Trinket", "item_Hook", "item_Nuke", "item_Whistle" };
+                foreach (string name in slotData["itemlocations"].ToString().Split(',')) {
+                    itemLocations.Add(name);
+                }
             }
 
             session.Items.ItemReceived += (receivedItemsHelper) => {

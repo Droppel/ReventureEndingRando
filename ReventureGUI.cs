@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -7,6 +8,9 @@ using UnityEngine.UI;
 
 namespace ReventureEndingRando {
     class ReventureGUI {
+
+        private static CanvasGroup cg = null;
+        private static Button promoButton = null;
 
         public static void SetupLoginGUIIMGUI() {
 
@@ -26,15 +30,49 @@ namespace ReventureEndingRando {
                 GUI.Label(new Rect(16, 56, 100, 20), "<color=black>Slot:  </color>");
                 GUI.Label(new Rect(16, 76, 100, 20), "<color=black>Password:  </color>");
 
+                GUI.SetNextControlName("Host");
                 Plugin.currentHost = GUI.TextField(new Rect(80 + 16 + 8, 36, 150, 20),
                     Plugin.currentHost);
+                GUI.SetNextControlName("Slot");
                 Plugin.currentSlot = GUI.TextField(new Rect(80 + 16 + 8, 56, 150, 20),
                     Plugin.currentSlot);
+                GUI.SetNextControlName("Password");
                 Plugin.currentPassword = GUI.TextField(new Rect(80 + 16 + 8, 76, 150, 20),
                     Plugin.currentPassword);
 
-                //Plugin.currentHost = "localhost:38281";
-                //Plugin.currentSlot = "Droppel";
+                if (cg == null) {
+                    GameObject go = GameObject.Find("Canvas/MainLayout/MainPanel/LogoPanel/BottomPannel/SaveSelectionContainer");
+                    if (go == null) {
+                        return;
+                    }
+                    cg = go.GetComponent<CanvasGroup>();
+                }
+                if (promoButton == null) {
+                    GameObject go = GameObject.Find("Canvas/MainLayout/PromotionPanel/Content/Image/Button");
+                    if (go == null) {
+                        return;
+                    }
+                    UrlButton urlbutt = go.GetComponent<UrlButton>();
+                    if (urlbutt == null) {
+                        return;
+                    }
+                    var buttonVar = typeof(UrlButton).GetField("button", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+                    if (buttonVar == null) {
+                        return;
+                    }
+                    promoButton = (Button)buttonVar.GetValue(urlbutt);
+                }
+                if (cg == null || promoButton == null) {
+                    return;
+                }
+                string currentSelected = GUI.GetNameOfFocusedControl();
+                if (currentSelected == "Host" || currentSelected == "Slot" || currentSelected == "Password") {
+                    cg.interactable = false;
+                    promoButton.interactable = false;
+                } else {
+                    cg.interactable = true;
+                    promoButton.interactable = true;
+                }
             }
         }
 

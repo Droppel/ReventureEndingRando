@@ -75,6 +75,10 @@ namespace ReventureEndingRando
                 }
             }
 
+            //Plugin.currentHost = "archipelago.gg:52688";
+            //Plugin.currentSlot = "Reventurelex45";
+            //Plugin.currentPassword = "palexpassword";
+
             logic = new Logic();
             Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} Version {MyPluginInfo.PLUGIN_VERSION} is loaded!");
         }
@@ -125,9 +129,9 @@ namespace ReventureEndingRando
 
                 //Update Text
                 lastUnlocksText = "Last unlocked: ";
-                foreach (NetworkItem item in ArchipelagoConnection.session.Items.AllItemsReceived.Skip(Math.Max(0, currentItemListSize - 3)))
+                foreach (ItemInfo item in ArchipelagoConnection.session.Items.AllItemsReceived.Skip(Math.Max(0, currentItemListSize - 3)))
                 {
-                    lastUnlocksText += ((EndingEffectsEnum) (item.Item - reventureItemOffset)).ToString() + ",";
+                    lastUnlocksText += ((EndingEffectsEnum) (item.ItemId - reventureItemOffset)).ToString() + ",";
                 }
                 lastUnlocksText = lastUnlocksText.Remove(lastUnlocksText.Length - 1);
 
@@ -259,16 +263,13 @@ namespace ReventureEndingRando
                 return true;
             }
 
-            Task<LocationInfoPacket> scoutTask = ArchipelagoConnection.session.Locations.ScoutLocationsAsync(new long[] { Plugin.reventureEndingOffset + (long)ending });
+            Task<Dictionary<long, ScoutedItemInfo>> scoutTask = ArchipelagoConnection.session.Locations.ScoutLocationsAsync(new long[] { Plugin.reventureEndingOffset + (long)ending });
             scoutTask.Wait();
 
-            LocationInfoPacket scoutResult = scoutTask.Result;
-            foreach (NetworkItem item in scoutResult.Locations) {
-                long id = item.Item;
-                int playerId = item.Player;
-                string playerName = ArchipelagoConnection.session.Players.GetPlayerAlias(playerId);
-                string name = ArchipelagoConnection.session.Items.GetItemName(id);
-                Plugin.DisplayText($"Found {name} for {playerName} from {ending}");
+            Dictionary<long, ScoutedItemInfo> scoutResult = scoutTask.Result;
+            foreach (ScoutedItemInfo item in scoutResult.Values) {
+                string playerName = ArchipelagoConnection.session.Players.GetPlayerAlias(item.Player);
+                Plugin.DisplayText($"Found {item.ItemName} for {playerName} from {ending}");
             }
 
             //Report to Archipelago

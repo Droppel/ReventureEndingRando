@@ -26,7 +26,6 @@ namespace ReventureEndingRando {
         }
 
         public void Synchronize() {
-
             for (int i = 0; i < lastItemReceived; i++) {
                 var seen = ArchipelagoConnection.session.Items.DequeueItem();
             }
@@ -42,12 +41,10 @@ namespace ReventureEndingRando {
             }
 
             var item = itemsQueue.DequeueItem();
-            string itemName = ArchipelagoConnection.session.Items.GetItemName(item.Item);
-            string playerName = ArchipelagoConnection.session.Players.GetPlayerAlias(item.Player);
-            Plugin.DisplayText($"Received {itemName} from {playerName}!");
+            Plugin.DisplayText($"Received {item.ItemDisplayName} from {item.Player.Alias}!");
 
             ItemManager itemManager = Plugin.itemManager;
-            itemManager.AddItem(item.Item);
+            itemManager.AddItem(item.ItemId);
             return true;
         }
 

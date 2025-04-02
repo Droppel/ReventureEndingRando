@@ -25,6 +25,8 @@ namespace ReventureEndingRando.EndingEffects
         {
             switch (e)
             {
+                case EndingEffectsEnum.ProgressiveSword:
+                    return new SpawnSwordProgressive();
                 case EndingEffectsEnum.SwordPedestal:
                     return new SpawnSwordElder();
                 case EndingEffectsEnum.SwordChest:
@@ -159,7 +161,7 @@ namespace ReventureEndingRando.EndingEffects
             GameObject simpleItem = GameObject.Find(name);
             RemoveAlterWithObjects(simpleItem);
             simpleItem.SetActive(inverted != effectsReceived > 0);
-            if (spawnlocation != -1) {
+            if (spawnlocation != -1 && ArchipelagoConnection.experimentalRegionGraph != 0) {
                 simpleItem.transform.position = EndingRandomizer.spawnLocations[ArchipelagoConnection.itemLocations[spawnlocation]];
                 simpleItem.GetComponent<TreasureChest>().pickingChestPosition = 0;
             }
@@ -245,8 +247,10 @@ namespace ReventureEndingRando.EndingEffects
 
     class SpawnSwordProgressive : EndingEffect
     {
-        public override void ActivateEffect(int effectsReceived, bool isGameStart)
-        {
+        public override void ActivateEffect(int effectsReceived, bool isGameStart) {
+            if (ArchipelagoConnection.experimentalRegionGraph != 0) {
+                return;
+            }
             // If the treasureRoomSword is not in logic, simply increase the itemcount by one
             if (ArchipelagoConnection.treasureRoomSword == 0)
             {
@@ -275,6 +279,10 @@ namespace ReventureEndingRando.EndingEffects
     }
     class SpawnSwordChest : EndingEffect {
         public override void ActivateEffect(int effectsReceived, bool isGameStart) {
+            if (ArchipelagoConnection.experimentalRegionGraph == 0) {
+                return;
+            }
+
             //Home Sword
             //TODO remove chest completely
             GameObject swordChest = GameObject.Find("World/Items/SwordAtHome/TreasureChest_Sword");
@@ -290,6 +298,9 @@ namespace ReventureEndingRando.EndingEffects
 
     class SpawnSwordElder : EndingEffect {
         public override void ActivateEffect(int effectsReceived, bool isGameStart) {
+            if (ArchipelagoConnection.experimentalRegionGraph == 0) {
+                return;
+            }
             //Mountain Sword
             GameObject itemSword = GameObject.Find("World/Items/Sword Item Pedestal/Item Sword");
             GameObject pedestal = GameObject.Find("World/Items/Sword Item Pedestal");
@@ -439,7 +450,7 @@ namespace ReventureEndingRando.EndingEffects
             paramservice[key] = names[UnityEngine.Random.RandomRangeInt(0, names.Length)];
         }
     }
-
+   
     class JumpHeight : EndingEffect {
         public override void ActivateEffect(int effectsReceived, bool isGameStart) {
             EndingData lastEnding = Core.Get<IProgressionService>().EndingUnlockedInLastRun;
@@ -456,8 +467,8 @@ namespace ReventureEndingRando.EndingEffects
     {
         Nothing,
         //Item Locations
+        ProgressiveSword,
         SwordPedestal,
-        SwordChest,
         SpawnShovelChest,
         SpawnBoomerang,
         SpawnMapChest,
@@ -517,6 +528,7 @@ namespace ReventureEndingRando.EndingEffects
         DarkLordNameChange,
         // Movement
         JumpIncrease,
+        SwordChest,
     }
 
     //Selected for implementation
