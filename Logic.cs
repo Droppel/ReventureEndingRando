@@ -42,17 +42,16 @@ namespace ReventureEndingRando {
         }
 
         private static bool HasSword() {
-            return true;
-            //if (ArchipelagoConnection.treasureRoomSword == 1) {
-            //    if (Has(EE.ProgressiveSword, 2)) {
-            //        return true;
-            //    } else if (Has(EE.ProgressiveSword, 1)) {
-            //        return Has(EE.SpawnShovelChest) && HasAny(EE.SpawnHookChest, EE.UnlockGeyserWaterfall);
-            //    }
-            //    return false;
-            //} else {
-            //    return Has(EE.ProgressiveSword);
-            //}
+            if (ArchipelagoConnection.treasureRoomSword == 1) {
+               if (Has(EE.ProgressiveSword, 2)) {
+                   return true;
+               } else if (Has(EE.ProgressiveSword, 1)) {
+                   return Has(EE.SpawnShovelChest) && HasAny(EE.SpawnHookChest, EE.UnlockGeyserWaterfall);
+               }
+               return false;
+            } else {
+               return Has(EE.ProgressiveSword);
+            }
         }
 
         private static bool HasWeight(int req) {
