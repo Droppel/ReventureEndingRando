@@ -1,4 +1,5 @@
 ﻿using Atto;
+using PlatformerPro;
 using ReventureEndingRando.EndingEffects;
 using System;
 using System.Collections.Generic;
@@ -124,6 +125,22 @@ namespace ReventureEndingRando
             versionText.SetText($"{versionText.text}; Rando: {MyPluginInfo.PLUGIN_VERSION}");
 
             //Permanent changes
+            // Disable LavaAreas if NonStopMode Everything is enabled
+            if (ArchipelagoConnection.nonStopMode == (int)NonStopLevels.Everything)
+            {
+                GameObject lavaAreasParent = GameObject.Find("World/Interactables/Lava Areas");
+                if (lavaAreasParent != null)
+                {
+                    foreach (Transform child in lavaAreasParent.transform)
+                    {
+                        foreach (EventResponder responder in child.gameObject.GetComponents<EventResponder>())
+                        {
+                            responder.enabled = false;
+                        }
+                    }
+                }
+            }
+
             //Disable cannon ending requirement and Add the missing ones to castle cannon
             Cannon townToShopCannon = GameObject.Find("World/Interactables/Cannons/TownToShopCannon/33_ShootCannonballToShop_End").GetComponent<Cannon>();
             ((EndingCountRequirement) townToShopCannon.requirementsToFail[0]).endingsUnlockedCount = 0;

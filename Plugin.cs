@@ -1,5 +1,4 @@
 ﻿using Archipelago.MultiClient.Net.Models;
-using Archipelago.MultiClient.Net.Packets;
 using Atto;
 using BepInEx;
 using BepInEx.Logging;
@@ -108,14 +107,35 @@ namespace ReventureEndingRando
             //    archipelagoSettingsActive = !archipelagoSettingsActive;
             //    archipelagoMenu.SetActive(archipelagoSettingsActive);
             //}
+            if (Input.GetKeyDown(KeyCode.F8))
+            {
+                Hero.instance.transform.position = EndingRandomizer.spawnLocations["FortressMoat"];
+                // Hero.instance.transform.position = new Vector2(10.5f, 17.5f);
+            }
+            if (Input.GetKeyDown(KeyCode.F9))
+            {
+                Hero.instance.transform.position = EndingRandomizer.spawnLocations["FortressRoof"];
+                // Hero.instance.transform.position = new Vector2(10.5f, 17.5f);
+            }
 
-            //if (Input.GetKeyDown(KeyCode.F7)) {
+            if (Input.GetKeyDown(KeyCode.F7))
+            {
 
-            //    ILocalizationParametersService paramservice= Core.Get<ILocalizationParametersService>();
-            //    Plugin.PatchLogger.LogInfo(paramservice[LocalizationParameterKeys.hero]);
+                if (ArchipelagoConnection.session != null)
+                {
+                    ArchipelagoConnection.session.Socket.DisconnectAsync();
+                }
 
-            //    paramservice[LocalizationParameterKeys.hero] = "Hallelujah";
-            //}
+                string host = "localhost:38281";
+                string slot = "Player1";
+                Plugin.isRandomizer = true;
+                Plugin.itemManager = new ItemManager(0);
+                ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(host, slot);
+                archipelagoConnection.Connect();
+                SaveSlotSelectPatch.UnlockEndings(0);
+                Plugin.saves[0] = host + ";" + slot;
+                Plugin.WriteConnectionInfos();
+            }
 
             if (ArchipelagoConnection.session == null)
             {
@@ -313,70 +333,70 @@ namespace ReventureEndingRando
             EndingRandomizer.UpdateWorldArchipelago();
             return;
         }
-        public static List<EndingTypes> nonstopEnding = new List<EndingTypes> {
-            EndingTypes.StabElder,
-            EndingTypes.StabGuard,
-            EndingTypes.KillTheKing,
-            EndingTypes.JumpIntoPiranhaLake,
-            EndingTypes.StabShopKeeper,
-            EndingTypes.RescueCat,
-            EndingTypes.FindFishingRod,
-            EndingTypes.HugMinion,
-            EndingTypes.StabDragon,
-            EndingTypes.HugTheKing,
-            EndingTypes.HugGuard,
-            EndingTypes.TakeTheDayOff,
-            EndingTypes.ClimbMountain,
-            EndingTypes.StabMinionMultipleTimes,
-            EndingTypes.ShootCannonballToCastle,
-            EndingTypes.EnterTheChimney,
-            EndingTypes.DestroyAllPots,
-            EndingTypes.StabBoulder,
-            EndingTypes.LeapOfFaithFromTheMountain,
-            EndingTypes.GetIntoThePipe,
-            EndingTypes.HugShopkeeper,
-            EndingTypes.GetIntoBigChest,
-            EndingTypes.HugElder,
-            EndingTypes.HugDragon,
-            EndingTypes.TakePrincessToBed,
-            EndingTypes.JumpOffTheCliff,
-            EndingTypes.SelfDestructFortress,
-            EndingTypes.HundredMinionsMassacre,
-            EndingTypes.TakePrincessBackToTown,
-            EndingTypes.ShootPrincessToTown,
-            EndingTypes.HugBoulder,
-            EndingTypes.JumpOffTheBalconyWithPrincess,
-            EndingTypes.ShootCannonballToShop,
-            EndingTypes.HugPrincess,
-            EndingTypes.JumpOffTheBalcony,
-            EndingTypes.StayAfk,
-            EndingTypes.PlaceBombUnderCastle,
-            EndingTypes.DontKillMinions,
-            EndingTypes.KillChicken,
-            EndingTypes.StabPrincess,
-            EndingTypes.DarkStoneToAltar,
-            EndingTypes.DarkLordComicStash,
-            EndingTypes.StabDarkLord,
-            EndingTypes.SacrificePrincess,
-            EndingTypes.HugDarkLord,
-            EndingTypes.TakePrincessToDarkAltar,
-            EndingTypes.GetIntoTheCloud,
-            EndingTypes.HugChicken,
-            EndingTypes.TakeChickenToDarkAltar,
-            EndingTypes.ShootCannonballToTown,
-            EndingTypes.KillAllFairies,
-            EndingTypes.MakeBabiesWithPrincess,
-            EndingTypes.FindAlienLarvae,
-            EndingTypes.StabDarkLord,
-            EndingTypes.DatePrincessAndDragon,
-            EndingTypes.GiveDarkStoneToDarkLord,
-            EndingTypes.TakePrincessToLonksHouse,
-            EndingTypes.StayInTheWater,
-            EndingTypes.AboardPirateShip,
-            EndingTypes.SwimIntoTheOcean,
-            EndingTypes.FeedTheMimic,
-            EndingTypes.FeedTheKing,
-        };
+        // public static List<EndingTypes> nonstopEnding = new List<EndingTypes> {
+        //     EndingTypes.StabElder,
+        //     EndingTypes.StabGuard,
+        //     EndingTypes.KillTheKing,
+        //     EndingTypes.JumpIntoPiranhaLake,
+        //     EndingTypes.StabShopKeeper,
+        //     EndingTypes.RescueCat,
+        //     EndingTypes.FindFishingRod,
+        //     EndingTypes.HugMinion,
+        //     EndingTypes.StabDragon,
+        //     EndingTypes.HugTheKing,
+        //     EndingTypes.HugGuard,
+        //     EndingTypes.TakeTheDayOff,
+        //     EndingTypes.ClimbMountain,
+        //     EndingTypes.StabMinionMultipleTimes,
+        //     EndingTypes.ShootCannonballToCastle,
+        //     EndingTypes.EnterTheChimney,
+        //     EndingTypes.DestroyAllPots,
+        //     EndingTypes.StabBoulder,
+        //     EndingTypes.LeapOfFaithFromTheMountain,
+        //     EndingTypes.GetIntoThePipe,
+        //     EndingTypes.HugShopkeeper,
+        //     EndingTypes.GetIntoBigChest,
+        //     EndingTypes.HugElder,
+        //     EndingTypes.HugDragon,
+        //     EndingTypes.TakePrincessToBed,
+        //     EndingTypes.JumpOffTheCliff,
+        //     EndingTypes.SelfDestructFortress,
+        //     EndingTypes.HundredMinionsMassacre,
+        //     EndingTypes.TakePrincessBackToTown,
+        //     EndingTypes.ShootPrincessToTown,
+        //     EndingTypes.HugBoulder,
+        //     EndingTypes.JumpOffTheBalconyWithPrincess,
+        //     EndingTypes.ShootCannonballToShop,
+        //     EndingTypes.HugPrincess,
+        //     EndingTypes.JumpOffTheBalcony,
+        //     EndingTypes.StayAfk,
+        //     EndingTypes.PlaceBombUnderCastle,
+        //     EndingTypes.DontKillMinions,
+        //     EndingTypes.KillChicken,
+        //     EndingTypes.StabPrincess,
+        //     EndingTypes.DarkStoneToAltar,
+        //     EndingTypes.DarkLordComicStash,
+        //     EndingTypes.StabDarkLord,
+        //     EndingTypes.SacrificePrincess,
+        //     EndingTypes.HugDarkLord,
+        //     EndingTypes.TakePrincessToDarkAltar,
+        //     EndingTypes.GetIntoTheCloud,
+        //     EndingTypes.HugChicken,
+        //     EndingTypes.TakeChickenToDarkAltar,
+        //     EndingTypes.ShootCannonballToTown,
+        //     EndingTypes.KillAllFairies,
+        //     EndingTypes.MakeBabiesWithPrincess,
+        //     EndingTypes.FindAlienLarvae,
+        //     EndingTypes.StabDarkLord,
+        //     EndingTypes.DatePrincessAndDragon,
+        //     EndingTypes.GiveDarkStoneToDarkLord,
+        //     EndingTypes.TakePrincessToLonksHouse,
+        //     EndingTypes.StayInTheWater,
+        //     EndingTypes.AboardPirateShip,
+        //     EndingTypes.SwimIntoTheOcean,
+        //     EndingTypes.FeedTheMimic,
+        //     EndingTypes.FeedTheKing,
+        // };
 
         [HarmonyPatch("LoadEnding", new Type[] { typeof(EndingTypes), typeof(float) })]
         private static bool Prefix(ref EndingTypes endingType) {
@@ -384,16 +404,35 @@ namespace ReventureEndingRando
                 return true;
             }
 
-            Plugin.PatchLogger.LogInfo($"Ending: {endingType}");
-
-            if (!nonstopEnding.Contains(endingType)) {
+            // Check if the ending is eligible for non-stop mode
+            if (!NonStopEndings.nonstopEndings.TryGetValue(endingType, out NonStopEnding nonStopEnding))
+            {
+                return true;
+            }
+            Plugin.PatchLogger.LogInfo($"NonStopEnding: {endingType} - {nonStopEnding.level} - {nonStopEnding.GetType()}");
+            if (ArchipelagoConnection.nonStopMode < (int)nonStopEnding.level)
+            {
                 return true;
             }
 
-            var movementStateProperty = typeof(InputManipulator).GetProperty("State", BindingFlags.Public | BindingFlags.Instance);
-            movementStateProperty.SetValue(Hero.instance.inputManipulator, HeroInputState.Enabled);
+            nonStopEnding.CleanUp();
             Core.Get<IProgressionService>().UnlockEnding(endingType);
             return false;
+        }
+    }
+
+    [HarmonyPatch(typeof(NPC))]
+    public class NPCPatch
+    {
+        // Prevent sticking the murder weapon into NPCs
+        [HarmonyPatch("InsertItem", new Type[] { typeof(CharacterItem) })]
+        private static bool Prefix()
+        {
+            if (!Plugin.isRandomizer)
+            {
+                return true;
+            }
+            return false; 
         }
     }
 
@@ -507,7 +546,7 @@ namespace ReventureEndingRando
         [HarmonyPatch("Update", new Type[] { })]
         private static bool PrefixUpdate(SaveSlotController __instance) {
             Plugin.inMenu = true;
-            return true;
+            // return true;
             if (Input.GetKeyDown(KeyCode.F4)) {
                 var buttonVar = typeof(SaveSlotController).GetField("button", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
                 if (EventSystem.current.currentSelectedGameObject != ((Button)buttonVar.GetValue(__instance)).gameObject) {
@@ -518,7 +557,7 @@ namespace ReventureEndingRando
             }
             return true;
         }
-        private static void UnlockEndings(int saveSlot)
+        public static void UnlockEndings(int saveSlot)
         {
             ISaveSlotService saveService = Core.Get<ISaveSlotService>();
             IEnumerable<EndingTypes> unlockedEndings = ArchipelagoConnection.session.Locations.AllLocationsChecked.Select(location => (EndingTypes)(location - Plugin.reventureEndingOffset));

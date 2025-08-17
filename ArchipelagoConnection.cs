@@ -17,6 +17,7 @@ namespace ReventureEndingRando
         public static int gemsRequired;
         public static int hardJumps;
         public static int hardCombat;
+        public static int nonStopMode;
         public static int experimentalRegionGraph;
 
         // Regiongraph info
@@ -76,6 +77,7 @@ namespace ReventureEndingRando
             treasureRoomSword = int.Parse(slotData["treasureSword"].ToString());
             hardJumps = int.Parse(slotData["hardjumps"].ToString());
             hardCombat = int.Parse(slotData["hardcombat"].ToString());
+            nonStopMode = int.Parse(slotData["nonStopMode"].ToString());
 
             // Regiongraph info
             experimentalRegionGraph = int.Parse(slotData["experimentalRegionGraph"].ToString());
