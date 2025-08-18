@@ -18,9 +18,7 @@ namespace ReventureEndingRando
         public NonStopLevels level;
         public virtual void CleanUp()
         {
-            // Hero.instance.ReturnPlayerControl();
-            // var movementStateProperty = typeof(InputManipulator).GetProperty("State", BindingFlags.Public | BindingFlags.Instance);
-            // movementStateProperty.SetValue(Hero.instance.inputManipulator, HeroInputState.Enabled);
+            Hero.instance.gameObject.SetActive(true);
             Hero.instance.InputState = HeroInputState.Enabled;
             Hero.instance.character.InputEnabled = true;
 		    GameplayDirector.instance.PauseDisabled = false;
@@ -43,8 +41,8 @@ namespace ReventureEndingRando
     {
         public static Dictionary<EndingTypes, NonStopEnding> nonstopEndings = new Dictionary<EndingTypes, NonStopEnding>
         {
-            // { EndingTypes.PickupAnvil, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.CrushedByOwnStuff, new NonStopEnding { level = NonStopLevels.Logical } },
+            { EndingTypes.PickupAnvil, new NonStopEnding { level = NonStopLevels.NotImplemented } }, // TODO Softlocks you because it takes to long
+            { EndingTypes.CrushedByOwnStuff, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.DestroyAllPots, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.StabDragon, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.FindTreasure, new NonStopEndingTreasureRoom { level = NonStopLevels.Canonical } },
@@ -53,7 +51,7 @@ namespace ReventureEndingRando
             { EndingTypes.JumpOffTheCliff, new NonStopEnding { level = NonStopLevels.Logical } },
             { EndingTypes.HugBoulder, new NonStopEnding { level = NonStopLevels.Everything } }, // Allows skipping past the boulder so it could break logic
             { EndingTypes.DigIntoBottomlessPit, new NonStopEnding { level = NonStopLevels.Everything } }, // You're stuck anyways
-            { EndingTypes.FaultyCannonShot, new NonStopEnding { level = NonStopLevels.Logical } },
+            { EndingTypes.FaultyCannonShot, new NonStopEnding { level = NonStopLevels.NotImplemented } }, // TODO Cannon endings are weird
             { EndingTypes.CaughtByOwnBomb, new NonStopEnding { level = NonStopLevels.Logical } },
             { EndingTypes.RoastedByDragon, new NonStopEnding { level = NonStopLevels.Logical } },
             { EndingTypes.HugDragon, new NonStopEnding { level = NonStopLevels.Canonical } },
@@ -74,9 +72,9 @@ namespace ReventureEndingRando
             { EndingTypes.ClimbMountain, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.DarkStoneToAltar, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.JumpOffTheBalcony, new NonStopEnding { level = NonStopLevels.Logical } },
-            { EndingTypes.ShootCannonballToCastle, new NonStopEnding { level = NonStopLevels.Canonical } },
-            { EndingTypes.ShootCannonballToShop, new NonStopEnding { level = NonStopLevels.Canonical } },
-            { EndingTypes.ShootCannonballToTown, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.ShootCannonballToCastle, new NonStopEnding { level = NonStopLevels.NotImplemented } }, // TODO Cannon endings are weird
+            { EndingTypes.ShootCannonballToShop, new NonStopEnding { level = NonStopLevels.NotImplemented } }, // TODO Cannon endings are weird
+            { EndingTypes.ShootCannonballToTown, new NonStopEnding { level = NonStopLevels.NotImplemented } }, // TODO Cannon endings are weird
             { EndingTypes.FallWithPrincessToAnvilPit, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.StabGuard, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.HugPrincess, new NonStopEnding { level = NonStopLevels.Canonical } },
@@ -85,7 +83,7 @@ namespace ReventureEndingRando
             { EndingTypes.HugGuard, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.RescueCat, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.StabPrincess, new NonStopEnding { level = NonStopLevels.Canonical } },
-            { EndingTypes.JumpOffTheBalconyWithPrincess, new NonStopEnding { level = NonStopLevels.Everything } }, // Allows going to the right side of the castle with just the princess
+            { EndingTypes.JumpOffTheBalconyWithPrincess, new NonStopEnding { level = NonStopLevels.Everything } }, // Allows going to the right side of the fortress with just the princess
             { EndingTypes.KilledByDarkLord, new NonStopEnding { level = NonStopLevels.Logical } },
             { EndingTypes.StabDarkLord, new NonStopEnding { level = NonStopLevels.Logical } },
             { EndingTypes.GiveDarkStoneToDarkLord, new NonStopEnding { level = NonStopLevels.Logical } },
@@ -111,7 +109,7 @@ namespace ReventureEndingRando
             { EndingTypes.SelfDestructFortress, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.ShootPrincessToTown, new NonStopEnding { level = NonStopLevels.NotImplemented } }, // TODO Cannon endings are weird
             { EndingTypes.HundredMinionsMassacre, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.WrongLever2, new NonStopEnding { level = NonStopLevels.Everything } },
+            { EndingTypes.WrongLever2, new NonStopEnding { level = NonStopLevels.Everything } }, // Gives access to burger/darkstone
             { EndingTypes.KilledByDarkArenaMinion, new NonStopEnding { level = NonStopLevels.NotImplemented } }, // TODO broken in all sorts of ways
             { EndingTypes.GetIntoThePipe, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.DarkLordComicStash, new NonStopEnding { level = NonStopLevels.Canonical } },
@@ -119,29 +117,29 @@ namespace ReventureEndingRando
             { EndingTypes.DesertEnd, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.LonkFaceplant, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.MultipleDesertJumps, new NonStopEnding { level = NonStopLevels.Canonical } },
-            // { EndingTypes.GetIntoBigChest, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.TakePrincessToLonksHouse, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.EnterTheChimney, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.DontKillMinions, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.TakeChickenToDarkAltar, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.BreakSpaceTimeContinuum, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.SwimIntoTheOcean, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.FeedTheMimic, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.StayInTheWater, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.FindAlienLarvae, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.AboardPirateShip, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.CrushedAtUltimateDoor, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.KillAllFairies, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.OverhealByFairies, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.KillChicken, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.HugChicken, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.TakePrincessToDarkAltar, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.GetIntoTheCloud, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.TriggerTrollSpikes, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.StayAfk, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.PrincessToDesertGate, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.FeedTheKing, new NonStopEnding { level = NonStopLevels.Everything } },
-            // { EndingTypes.SacrificeEveryItem, new NonStopEnding { level = NonStopLevels.Everything } },
+            { EndingTypes.GetIntoBigChest, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.TakePrincessToLonksHouse, new NonStopEnding { level = NonStopLevels.Canonical } }, // This does allow going through lonks house with the princess but that is equivalent to going over the house
+            { EndingTypes.EnterTheChimney, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.DontKillMinions, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.TakeChickenToDarkAltar, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.BreakSpaceTimeContinuum, new NonStopEnding { level = NonStopLevels.NotImplemented } }, // TODO Whistle strikes once again
+            { EndingTypes.SwimIntoTheOcean, new NonStopEnding { level = NonStopLevels.Logical } },
+            { EndingTypes.FeedTheMimic, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.StayInTheWater, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.FindAlienLarvae, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.AboardPirateShip, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.CrushedAtUltimateDoor, new NonStopEnding { level = NonStopLevels.Everything } }, // Traps you beneath the floor
+            { EndingTypes.KillAllFairies, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.OverhealByFairies, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.KillChicken, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.HugChicken, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.TakePrincessToDarkAltar, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.GetIntoTheCloud, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.TriggerTrollSpikes, new NonStopEnding { level = NonStopLevels.Logical } },
+            { EndingTypes.StayAfk, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.PrincessToDesertGate, new NonStopEnding { level = NonStopLevels.Everything } }, // Traps you beneath the floor
+            { EndingTypes.FeedTheKing, new NonStopEnding { level = NonStopLevels.Canonical } },
+            { EndingTypes.SacrificeEveryItem, new NonStopEnding { level = NonStopLevels.Canonical } },
         };
     }
 }

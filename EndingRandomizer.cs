@@ -125,9 +125,10 @@ namespace ReventureEndingRando
             versionText.SetText($"{versionText.text}; Rando: {MyPluginInfo.PLUGIN_VERSION}");
 
             //Permanent changes
-            // Disable LavaAreas if NonStopMode Everything is enabled
+            // Disable NonStopMode Everything specific things
             if (ArchipelagoConnection.nonStopMode == (int)NonStopLevels.Everything)
             {
+                // Disable LavaAreas
                 GameObject lavaAreasParent = GameObject.Find("World/Interactables/Lava Areas");
                 if (lavaAreasParent != null)
                 {

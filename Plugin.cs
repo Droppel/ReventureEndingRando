@@ -107,18 +107,23 @@ namespace ReventureEndingRando
             //    archipelagoSettingsActive = !archipelagoSettingsActive;
             //    archipelagoMenu.SetActive(archipelagoSettingsActive);
             //}
-            if (Input.GetKeyDown(KeyCode.F8))
+            if (Input.GetKeyDown(KeyCode.F8)) // DEBUG
             {
-                Hero.instance.transform.position = EndingRandomizer.spawnLocations["FortressMoat"];
+                Hero.instance.transform.position = EndingRandomizer.spawnLocations["Anvil"];
                 // Hero.instance.transform.position = new Vector2(10.5f, 17.5f);
             }
-            if (Input.GetKeyDown(KeyCode.F9))
+            if (Input.GetKeyDown(KeyCode.F9)) // DEBUG
             {
-                Hero.instance.transform.position = EndingRandomizer.spawnLocations["FortressRoof"];
+                Hero.instance.transform.position = EndingRandomizer.spawnLocations["CastleFirstFloor"];
+                // Hero.instance.transform.position = new Vector2(10.5f, 17.5f);
+            }
+            if (Input.GetKeyDown(KeyCode.F11)) // DEBUG
+            {
+                Hero.instance.transform.position = EndingRandomizer.spawnLocations["Princess"];
                 // Hero.instance.transform.position = new Vector2(10.5f, 17.5f);
             }
 
-            if (Input.GetKeyDown(KeyCode.F7))
+            if (Input.GetKeyDown(KeyCode.F7)) // DEBUG
             {
 
                 if (ArchipelagoConnection.session != null)
@@ -414,12 +419,42 @@ namespace ReventureEndingRando
             {
                 return true;
             }
+            if (Core.Get<ISessionService>().HasRespawn())
+            {
+                return true; // Otherwise whistle will be skipped preventing the time continuum ending
+            }
 
             nonStopEnding.CleanUp();
             Core.Get<IProgressionService>().UnlockEnding(endingType);
             return false;
         }
     }
+
+    // Ensure the hero object is reenabled after the troll platform hits him
+    [HarmonyPatch(typeof(TrollPlatform))]
+    public class TrollPlatformPatch
+    {
+        [HarmonyPatch("Start", new Type[] { })]
+        private static void Postfix(TrollPlatform __instance)
+        {
+            if (!Plugin.isRandomizer)
+            {
+                return;
+            }
+
+            // Skip if NonStopMode is not Everything
+            if (ArchipelagoConnection.nonStopMode != (int)NonStopLevels.Everything)
+            {
+                return;
+            }
+            
+            __instance.GetComponent<Platform>().onMoveEnd += delegate ()
+            {
+                Hero.instance.gameObject.SetActive(true);
+            };
+        }
+    }
+
 
     [HarmonyPatch(typeof(NPC))]
     public class NPCPatch
@@ -547,7 +582,7 @@ namespace ReventureEndingRando
         private static bool PrefixUpdate(SaveSlotController __instance) {
             Plugin.inMenu = true;
             // return true;
-            if (Input.GetKeyDown(KeyCode.F4)) {
+            if (Input.GetKeyDown(KeyCode.F4)) { // DEBUG
                 var buttonVar = typeof(SaveSlotController).GetField("button", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
                 if (EventSystem.current.currentSelectedGameObject != ((Button)buttonVar.GetValue(__instance)).gameObject) {
                     return true;
