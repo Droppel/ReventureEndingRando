@@ -85,62 +85,40 @@ namespace ReventureEndingRando
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Not unused, will be executed by Unity")]
         private void Update()
         {
-            //if (Input.GetKeyDown(KeyCode.F5))
-            //{
-            //    if (archipelagoSettingsActive)
-            //    {
-            //        //Plugin.PatchLogger.LogInfo(Plugin.archipelagoSettings.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text);
-            //        currentHost = Plugin.archipelagoMenu.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
-            //        currentSlot = Plugin.archipelagoMenu.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(1).GetChild(1).GetChild(0).gameObject.GetComponent<TMP_InputField>().text;
-            //    } else
-            //    {
-            //        if (Plugin.archipelagoMenu == null) {
-            //            ReventureGUI.SetupLoginGUINative();
-            //        }
-            //        GameObject archipelagoPanelOptions = Plugin.archipelagoMenu.transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
-            //        GameObject archipelagoHostOption = archipelagoPanelOptions.transform.GetChild(0).gameObject;
-            //        archipelagoHostOption.SetActive(true);
+            // if (Input.GetKeyDown(KeyCode.F8)) // DEBUG
+            // {
+            //     Hero.instance.transform.position = EndingRandomizer.spawnLocations["Anvil"];
+            //     // Hero.instance.transform.position = new Vector2(10.5f, 17.5f);
+            // }
+            // if (Input.GetKeyDown(KeyCode.F9)) // DEBUG
+            // {
+            //     Hero.instance.transform.position = EndingRandomizer.spawnLocations["CastleFirstFloor"];
+            //     // Hero.instance.transform.position = new Vector2(10.5f, 17.5f);
+            // }
+            // if (Input.GetKeyDown(KeyCode.F11)) // DEBUG
+            // {
+            //     Hero.instance.transform.position = EndingRandomizer.spawnLocations["Princess"];
+            //     // Hero.instance.transform.position = new Vector2(10.5f, 17.5f);
+            // }
 
-            //        GameObject archipelagoSlotOption = archipelagoPanelOptions.transform.GetChild(1).gameObject;
-            //        archipelagoSlotOption.SetActive(true);
-            //    }
-            //    archipelagoSettingsActive = !archipelagoSettingsActive;
-            //    archipelagoMenu.SetActive(archipelagoSettingsActive);
-            //}
-            if (Input.GetKeyDown(KeyCode.F8)) // DEBUG
-            {
-                Hero.instance.transform.position = EndingRandomizer.spawnLocations["Anvil"];
-                // Hero.instance.transform.position = new Vector2(10.5f, 17.5f);
-            }
-            if (Input.GetKeyDown(KeyCode.F9)) // DEBUG
-            {
-                Hero.instance.transform.position = EndingRandomizer.spawnLocations["CastleFirstFloor"];
-                // Hero.instance.transform.position = new Vector2(10.5f, 17.5f);
-            }
-            if (Input.GetKeyDown(KeyCode.F11)) // DEBUG
-            {
-                Hero.instance.transform.position = EndingRandomizer.spawnLocations["Princess"];
-                // Hero.instance.transform.position = new Vector2(10.5f, 17.5f);
-            }
+            // if (Input.GetKeyDown(KeyCode.F7)) // DEBUG
+            // {
 
-            if (Input.GetKeyDown(KeyCode.F7)) // DEBUG
-            {
+            //     if (ArchipelagoConnection.session != null)
+            //     {
+            //         ArchipelagoConnection.session.Socket.DisconnectAsync();
+            //     }
 
-                if (ArchipelagoConnection.session != null)
-                {
-                    ArchipelagoConnection.session.Socket.DisconnectAsync();
-                }
-
-                string host = "localhost:38281";
-                string slot = "Player1";
-                Plugin.isRandomizer = true;
-                Plugin.itemManager = new ItemManager(0);
-                ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(host, slot);
-                archipelagoConnection.Connect();
-                SaveSlotSelectPatch.UnlockEndings(0);
-                Plugin.saves[0] = host + ";" + slot;
-                Plugin.WriteConnectionInfos();
-            }
+            //     string host = "localhost:38281";
+            //     string slot = "Player1";
+            //     Plugin.isRandomizer = true;
+            //     Plugin.itemManager = new ItemManager(0);
+            //     ArchipelagoConnection archipelagoConnection = new ArchipelagoConnection(host, slot);
+            //     archipelagoConnection.Connect();
+            //     SaveSlotSelectPatch.UnlockEndings(0);
+            //     Plugin.saves[0] = host + ";" + slot;
+            //     Plugin.WriteConnectionInfos();
+            // }
 
             if (ArchipelagoConnection.session == null)
             {
@@ -581,7 +559,7 @@ namespace ReventureEndingRando
         [HarmonyPatch("Update", new Type[] { })]
         private static bool PrefixUpdate(SaveSlotController __instance) {
             Plugin.inMenu = true;
-            // return true;
+            return true;
             if (Input.GetKeyDown(KeyCode.F4)) { // DEBUG
                 var buttonVar = typeof(SaveSlotController).GetField("button", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
                 if (EventSystem.current.currentSelectedGameObject != ((Button)buttonVar.GetValue(__instance)).gameObject) {
