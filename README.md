@@ -7,8 +7,8 @@
 4. Download the files from the current release
 5. Put the ReventureEndingRando.dll into the /BepInEx/plugins folder
 6. Put the Archipelago.MultiClient.Net.dllinto /BepInEx/core folder
-7. Start the game. BEFORE selecting a new save file, press F5.
-8. In the now open menu input \<host\>:\<port\> into the upper input field and your slot name into the lower inputfield.
+7. Start the game.
+8. In the top left input \<host\>:\<port\> into the upper input field and your slot name into the lower inputfield.
 9. Start a new file (Saveslots can be deleted by holding down "delete" for 10 seconds)
 10. The mod remembers the connection info for existing files. So when you want to continue later, just load the associated save file (No need to use F5 again)
 
