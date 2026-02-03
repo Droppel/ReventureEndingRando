@@ -4,6 +4,7 @@ using ReventureEndingRando.EndingEffects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 
@@ -143,6 +144,19 @@ namespace ReventureEndingRando
                     }
                 }
             }
+
+            // Reduce Hypothermia and AFK timers
+            SwimAreaHypothermia[] swimAreaHypothermias = Resources.FindObjectsOfTypeAll<SwimAreaHypothermia>();
+            var timeToEnding = typeof(SwimAreaHypothermia).GetField("timeToTriggerEnding", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+            foreach (SwimAreaHypothermia swimAreaHypothermia in swimAreaHypothermias) {
+                if (swimAreaHypothermia == null) {
+                    continue;
+                }
+                timeToEnding.SetValue(swimAreaHypothermia, 10.0f);
+            }
+            var timeToAfkEnding = typeof(Hero).GetField("timeToTriggerAFKEnding", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+            Hero heroInstance = GameObject.Find("Hero").GetComponent<Hero>();
+            timeToAfkEnding.SetValue(heroInstance, 10.0f);
 
             //Disable cannon ending requirement and Add the missing ones to castle cannon
             Cannon townToShopCannon = GameObject.Find("World/Interactables/Cannons/TownToShopCannon/33_ShootCannonballToShop_End").GetComponent<Cannon>();
