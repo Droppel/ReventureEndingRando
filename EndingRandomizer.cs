@@ -12,6 +12,8 @@ namespace ReventureEndingRando
     public class EndingRandomizer {
         public static Dictionary<string, Vector2> spawnLocations = new Dictionary<string, Vector2>{
                 {"LonksHouse", new Vector2(132.5f, 7.5f)},
+                {"LonksFrontGarden", new Vector2(142.5f, 7.5f)},
+                {"LonksBackGarden", new Vector2(122.5f, 7.5f)},
                 {"Elder", new Vector2(108.5f, 20.5f)},
                 {"Chicken", new Vector2(108.5f, 27.5f)},
                 {"Shovel", new Vector2(105.5f, 8.5f)},

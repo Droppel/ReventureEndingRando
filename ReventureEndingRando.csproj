@@ -31,29 +31,30 @@
   
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\SteamLibrary\steamapps\common\Reventure\Reventure_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>/home/droppel/.local/share/Steam/steamapps/common/Reventure/Reventure_Data/Managed/Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\SteamLibrary\steamapps\common\Reventure\Reventure_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>/home/droppel/.local/share/Steam/steamapps/common/Reventure/Reventure_Data/Managed/Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="DOTween">
-      <HintPath>..\..\SteamLibrary\steamapps\common\Reventure\Reventure_Data\Managed\DOTween.dll</HintPath>
+      <HintPath>/home/droppel/.local/share/Steam/steamapps/common/Reventure/Reventure_Data/Managed/DOTween.dll</HintPath>
     </Reference>
     <Reference Include="RSGPromiseAssembly">
-      <HintPath>..\..\SteamLibrary\steamapps\common\Reventure\Reventure_Data\Managed\RSGPromiseAssembly.dll</HintPath>
+      <HintPath>/home/droppel/.local/share/Steam/steamapps/common/Reventure/Reventure_Data/Managed/RSGPromiseAssembly.dll</HintPath>
     </Reference>
     <Reference Include="Sirenix.Serialization">
-      <HintPath>..\..\SteamLibrary\steamapps\common\Reventure\Reventure_Data\Managed\Sirenix.Serialization.dll</HintPath>
+      <HintPath>/home/droppel/.local/share/Steam/steamapps/common/Reventure/Reventure_Data/Managed/Sirenix.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>..\..\SteamLibrary\steamapps\common\Reventure\Reventure_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+      <HintPath>/home/droppel/.local/share/Steam/steamapps/common/Reventure/Reventure_Data/Managed/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\SteamLibrary\steamapps\common\Reventure\Reventure_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <HintPath>/home/droppel/.local/share/Steam/steamapps/common/Reventure/Reventure_Data/Managed/UnityEngine.UI.dll</HintPath>
     </Reference>
   </ItemGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /Y &quot;$(TargetDir)ReventureEndingRando.dll&quot; &quot;D:\SteamLibrary\steamapps\common\Reventure\BepInEx\scripts\ReventureEndingRando.dll&quot;" />
+    <Exec Command="cp &quot;$(TargetDir)ReventureEndingRando.dll&quot; &quot;/home/droppel/.local/share/Steam/steamapps/common/Reventure/BepInEx/scripts/ReventureEndingRando.dll&quot;" />
+    <Exec Command="cp &quot;$(TargetDir)ReventureEndingRando.pdb&quot; &quot;/home/droppel/.local/share/Steam/steamapps/common/Reventure/BepInEx/scripts/ReventureEndingRando.pdb&quot;" />
   </Target>
 </Project>
