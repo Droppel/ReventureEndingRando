@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace ReventureEndingRando
@@ -18,7 +19,8 @@ namespace ReventureEndingRando
         public virtual void CleanUp()
         {
             Hero.instance.gameObject.SetActive(true);
-            Hero.instance.InputState = HeroInputState.Enabled;
+            var inputStateField = typeof(InputManipulator).GetField("state", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+            inputStateField.SetValue(Hero.instance.inputManipulator, HeroInputState.Enabled);
             Hero.instance.character.InputEnabled = true;
 		    GameplayDirector.instance.PauseDisabled = false;
             return;
