@@ -30,7 +30,6 @@ namespace ReventureEndingRando {
                 var seen = ArchipelagoConnection.session.Items.DequeueItem();
             }
 
-
             while (ReceiveItem()) { }
         }
 

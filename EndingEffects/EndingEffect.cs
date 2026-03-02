@@ -459,7 +459,7 @@ namespace ReventureEndingRando.EndingEffects
             }
             GameObject heroObject = GameObject.Find("Hero");
             Hero hero = heroObject.GetComponent<Hero>();
-            hero.SetWeight(effectsReceived + 6);
+            hero.SetWeight(effectsReceived + ArchipelagoConnection.startingJumpHeight*2);
         }
     }
 
