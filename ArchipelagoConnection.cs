@@ -23,6 +23,7 @@ namespace ReventureEndingRando
         // Regiongraph info
         public static string spawn;
         public static List<string> itemLocations;
+        public static int startingJumpHeight;
 
 
         private readonly string slot;
@@ -84,11 +85,8 @@ namespace ReventureEndingRando
 
             if (experimentalRegionGraph != 0) {
                 spawn = slotData["spawn"].ToString();
-                itemLocations = new List<string>();
-                var locationSlotDataNames = new List<string> { "item_Sword", "item_SwordElder", "item_Shovel", "item_Bomb", "item_Shield", "item_MrHugs", "item_Lava Trinket", "item_Hook", "item_Nuke", "item_Whistle" };
-                foreach (string name in slotData["itemlocations"].ToString().Split(',')) {
-                    itemLocations.Add(name);
-                }
+                startingJumpHeight = int.Parse(slotData["startingjumps"].ToString());
+                itemLocations = [.. slotData["itemlocations"].ToString().Split('|')];
             }
 
             session.Items.ItemReceived += (receivedItemsHelper) => {
