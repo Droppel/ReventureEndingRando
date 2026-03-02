@@ -186,7 +186,9 @@ namespace ReventureEndingRando
             // // 15: Remove Non princess Elevator Behaviour
             // // 16: #39 Get Into big chest?? Is this a mistake?? Maybe they added it twice by accident :D
             // // Remove in reverse order to not mess up indices: 0, 1, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16
-            // List<GameObject> itemsToDeactivate = princessRescue.itemsToDeactivate.ToList();
+            List<GameObject> itemsToDeactivate = princessRescue.itemsToDeactivate.ToList();
+            itemsToDeactivate.RemoveAt(10); //Removes 10
+            itemsToDeactivate.RemoveAt(8); //Removes 8
             // if (ArchipelagoConnection.session.Locations.AllLocationsChecked.Contains(Plugin.reventureEndingOffset + (long)EndingTypes.FakePrincessInsideChest)) {
             //     itemsToDeactivate.RemoveAt(16); //Removes 16
             // }
@@ -196,7 +198,7 @@ namespace ReventureEndingRando
             // }
             // itemsToDeactivate.RemoveRange(6, 6); // Removes 6-11
             // itemsToDeactivate.RemoveRange(0, 2); // Removes 0 and 1
-            // princessRescue.itemsToDeactivate = itemsToDeactivate.ToArray();
+            princessRescue.itemsToDeactivate = itemsToDeactivate.ToArray();
 
             // Items to activate
             // 0: Princess sprite
@@ -239,6 +241,11 @@ namespace ReventureEndingRando
             // if (ArchipelagoConnection.session.Locations.AllLocationsChecked.Contains(Plugin.reventureEndingOffset + (long)EndingTypes.PrincessToDesertGate)) {
             //     GameObject.Destroy(GameObject.Find("World/EndTriggers/97_PrincessToDesertGate_End"));
             // }
+
+            // Permanently open entrance to princess
+            MethodInfo onDamageMethod = typeof(Switch).GetMethod("OnDamage", BindingFlags.NonPublic | BindingFlags.Instance);
+            Switch princessSwitch = GameObject.Find("World/Interactables/Switch (2)").GetComponent<Switch>();
+            onDamageMethod.Invoke(princessSwitch, new object[] { new Damage() });
 
             // Change Ultimate Door signs texts
             DisplayChat[] signLeft = Resources.FindObjectsOfTypeAll<DisplayChat>().Where(obj => obj.transform.position.x == 194.0 && obj.transform.position.y == -24.0).ToArray();
