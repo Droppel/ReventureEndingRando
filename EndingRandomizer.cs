@@ -89,7 +89,6 @@ namespace ReventureEndingRando
         {
             // Set Hero Position
             EndingData lastEnding = Core.Get<IProgressionService>().EndingUnlockedInLastRun;
-            Plugin.PatchLogger.LogInfo($"Last Ending: {lastEnding}");
             if (ArchipelagoConnection.experimentalRegionGraph != 0) {
                 if (lastEnding != null && lastEnding.endingType != EndingTypes.BreakSpaceTimeContinuum) { //Don't change the spawn if we respawn at an altar
                     GameObject hero = GameObject.Find("Hero");
@@ -107,8 +106,6 @@ namespace ReventureEndingRando
                 if (ee != null)
                 {
                     ee.ActivateEffect(effectReceived, true);
-                } else {
-                    //Plugin.PatchLogger.LogError($"EE is null for {effect}");
                 }
             }
 
