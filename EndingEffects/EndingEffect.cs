@@ -288,6 +288,7 @@ namespace ReventureEndingRando.EndingEffects
             GameObject swordChest = GameObject.Find("World/Items/SwordAtHome/TreasureChest_Sword");
             GameObject openChest = GameObject.Find("World/Items/SwordAtHome/OpenChest");
             GameObject swordAtHome = GameObject.Find("World/Items/SwordAtHome");
+            GameObject.Destroy(swordChest.GetComponent<AlterWithRestrictions>());
             openChest.SetActive(false);
             swordAtHome.SetActive(true);
             swordChest.SetActive(effectsReceived >= 1);
