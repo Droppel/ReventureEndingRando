@@ -65,7 +65,7 @@ namespace ReventureEndingRando
             { EndingTypes.ElevatorCrush, new NonStopEnding { level = NonStopLevels.Everything } }, // Clips you through the ground into the arena room
             { EndingTypes.FallIntoSpikes, new NonStopEnding { level = NonStopLevels.Everything } }, // Allows walking through the spikes
             { EndingTypes.LeapOfFaithFromTheMountain, new NonStopEnding { level = NonStopLevels.Logical } },
-            { EndingTypes.AirDuctsAccident, new NonStopEnding { level = NonStopLevels.Logical } },
+            { EndingTypes.AirDuctsAccident, new NonStopEnding { level = NonStopLevels.Everything } },
             { EndingTypes.SacrificePrincess, new NonStopEnding { level = NonStopLevels.Everything } }, // Allows using the princess as an item for ending 71
             { EndingTypes.StabBoulder, new NonStopEnding { level = NonStopLevels.Everything } }, // Allows removing the boulder
             { EndingTypes.WaterfallsBottom, new NonStopEnding { level = NonStopLevels.Everything } }, // Allows going to the bottom of waterfalls
@@ -119,7 +119,7 @@ namespace ReventureEndingRando
             { EndingTypes.LonkFaceplant, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.MultipleDesertJumps, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.GetIntoBigChest, new NonStopEnding { level = NonStopLevels.Canonical } },
-            { EndingTypes.TakePrincessToLonksHouse, new NonStopEnding { level = NonStopLevels.Canonical } }, // This does allow going through lonks house with the princess but that is equivalent to going over the house
+            { EndingTypes.TakePrincessToLonksHouse, new NonStopEnding { level = NonStopLevels.Everything } },
             { EndingTypes.EnterTheChimney, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.DontKillMinions, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.TakeChickenToDarkAltar, new NonStopEnding { level = NonStopLevels.Canonical } },
