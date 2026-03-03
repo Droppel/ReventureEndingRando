@@ -1,4 +1,5 @@
-﻿using Atto;
+﻿using System.Reflection;
+using Atto;
 using UnityEngine;
 
 namespace ReventureEndingRando.EndingEffects
@@ -459,7 +460,13 @@ namespace ReventureEndingRando.EndingEffects
             }
             GameObject heroObject = GameObject.Find("Hero");
             Hero hero = heroObject.GetComponent<Hero>();
-            hero.SetWeight(effectsReceived + ArchipelagoConnection.startingJumpHeight*2);
+            if (isGameStart) {
+                hero.SetWeight(effectsReceived + ArchipelagoConnection.startingJumpHeight*2);
+            } else
+            {
+                var heroJumpLevel = typeof(Hero).GetField("currentJumpLevel", BindingFlags.NonPublic | BindingFlags.Instance);
+                hero.SetWeight((int)heroJumpLevel.GetValue(hero) + 1);
+            }
         }
     }
 
