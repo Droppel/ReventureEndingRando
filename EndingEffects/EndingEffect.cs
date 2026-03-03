@@ -373,10 +373,7 @@ namespace ReventureEndingRando.EndingEffects
             GameObject.Destroy(phase2.GetComponent<AlterWithRestrictions>());
             GameObject.Destroy(phase3.GetComponent<AlterWithRestrictions>());
 
-            phase0.SetActive(effectsReceived == 1);
-            phase1.SetActive(effectsReceived == 2);
-            phase2.SetActive(effectsReceived == 3);
-            phase3.SetActive(effectsReceived >= 4);
+            phase3.SetActive(effectsReceived >= 1);
         }
     }
 
