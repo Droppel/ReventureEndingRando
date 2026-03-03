@@ -290,7 +290,7 @@ namespace ReventureEndingRando.EndingEffects
             GameObject swordAtHome = GameObject.Find("World/Items/SwordAtHome");
             openChest.SetActive(false);
             swordAtHome.SetActive(true);
-            swordChest.SetActive(effectsReceived > 1);
+            swordChest.SetActive(effectsReceived >= 1);
             swordChest.transform.position = EndingRandomizer.spawnLocations[ArchipelagoConnection.itemLocations[0]];
             swordChest.GetComponent<TreasureChest>().pickingChestPosition = 0;
         }
@@ -304,9 +304,11 @@ namespace ReventureEndingRando.EndingEffects
             //Mountain Sword
             GameObject itemSword = GameObject.Find("World/Items/Sword Item Pedestal/Item Sword");
             GameObject pedestal = GameObject.Find("World/Items/Sword Item Pedestal");
-            itemSword.SetActive(effectsReceived > 1);
-            pedestal.SetActive(effectsReceived > 1);
-            pedestal.transform.position = EndingRandomizer.spawnLocations[ArchipelagoConnection.itemLocations[1]];
+            itemSword.SetActive(effectsReceived >= 1);
+            pedestal.SetActive(effectsReceived >= 1);
+            Vector2 pedestalLocation = EndingRandomizer.spawnLocations[ArchipelagoConnection.itemLocations[1]];
+            pedestalLocation.y -= 0.5f; // Lower the pedestal a bit
+            pedestal.transform.position = pedestalLocation;
         }
     }
 
