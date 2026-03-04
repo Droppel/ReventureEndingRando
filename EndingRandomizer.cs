@@ -29,7 +29,7 @@ namespace ReventureEndingRando
                 {"VolcanoBridge", new Vector2(96.5f, 0.5f)},
                 {"BelowVolcanoBridge", new Vector2(102.5f, -8.5f)},
                 {"Sewer", new Vector2(157.5f, 4.5f)},
-                // {"leftOfDragon", new Vector2()}, // Cannot escape from here as soon as dragon spawns (So logically never)
+                {"LeftOfDragon", new Vector2(133.5f, -24.5f)},
                 {"RightOfDragon", new Vector2(151.5f, -22.5f)},
                 {"GoldRoom", new Vector2(144.5f, -18.5f)},
                 {"SewerPipe", new Vector2(144.5f, -8.5f)},
@@ -246,6 +246,78 @@ namespace ReventureEndingRando
             MethodInfo onDamageMethod = typeof(Switch).GetMethod("OnDamage", BindingFlags.NonPublic | BindingFlags.Instance);
             Switch princessSwitch = GameObject.Find("World/Interactables/Switch (2)").GetComponent<Switch>();
             onDamageMethod.Invoke(princessSwitch, new object[] { new Damage() });
+
+            // Set Location hints for randomized locations graph
+            if (ArchipelagoConnection.experimentalRegionGraph != 0) {
+                GameObject swordSign = GameObject.Find("World/Interactables/Signposts/FirstTutorialPost");
+                GameObject.Destroy(swordSign.GetComponent<AlterWithRestrictions>());
+                swordSign.SetActive(true);
+                GameObject.Destroy(swordSign.GetComponent<ControlerDisplayChat>());
+                DisplayChat swordSignText = swordSign.AddComponent<DisplayChat>();
+                swordSignText.textToDisplay = $"WASD: MOVE\nSPACE & E keys: JUMP & ACTION\nEsc: PAUSE/OPTIONS\nYou can find the sword at {ArchipelagoConnection.itemLocations[0]}.";
+                swordSignText.useString = true;
+
+                GameObject swordPedestalSign = GameObject.Find("World/Interactables/Signposts/Post (59)");
+                GameObject.Destroy(swordPedestalSign.GetComponent<AlterWithEnding>());
+                swordPedestalSign.SetActive(true);
+                DisplayChat swordPedestalSignText = swordPedestalSign.GetComponent<DisplayChat>();
+                swordPedestalSignText.textToDisplay = $"Sword of Legend: Missing, Last seen at {ArchipelagoConnection.itemLocations[1]}.";
+                swordPedestalSignText.useString = true;
+
+                DisplayChat elderChat = GameObject.Find("World/NPCs/KingdomChats/DefaultChats/Elder_Chat").GetComponent<DisplayChat>();
+                elderChat.textToDisplay = $"It's dangerous to go without a shovel! You can use mine. I stored it at {ArchipelagoConnection.itemLocations[2]}.";
+                elderChat.useString = true;
+
+                GameObject bombMinion = GameObject.Find("World/Enemies/DarkAdventureMinion (20)");
+                GameObject bombMinionChatBox = new GameObject("BombMinionChatBox")
+                {
+                    layer = LayerMask.NameToLayer("OtherTriggers")
+                };
+                bombMinionChatBox.transform.position = bombMinion.transform.position + new Vector3(0, 0, 0);
+                bombMinionChatBox.transform.parent = bombMinion.transform;
+                BoxCollider2D bombMinionCollider = bombMinionChatBox.AddComponent<BoxCollider2D>();
+                bombMinionCollider.isTrigger = true;
+                bombMinionCollider.size = new Vector2(10, 10);
+                DisplayChat bombMinionChat = bombMinionChatBox.AddComponent<DisplayChat>();
+                bombMinionChat.audioSource = GameObject.Find("World/NPCs").GetComponent<AudioSource>();
+                bombMinionChat.speaker = bombMinion;
+                bombMinionChat.textToDisplay = $"The bomb has been moved to {ArchipelagoConnection.itemLocations[3]}.";
+                bombMinionChat.useString = true;
+
+                ILocalizationParametersService paramservice = Core.Get<ILocalizationParametersService>();
+                string curretName = paramservice[LocalizationParameterKeys.hero];
+                DisplayChat kingChat = GameObject.Find("World/NPCs/KingdomChats/DefaultChats/TheKing_Chat").GetComponent<DisplayChat>();
+                kingChat.textToDisplay = $"Please {curretName}, hurry and bring my daughter back...\n" +
+                                          "I was gonna give you an item to protect you on your journey...\nBut I misplaced it...\n" +
+                                         $"I think I left it at {ArchipelagoConnection.itemLocations[4]}.";
+                kingChat.useString = true;
+
+                DisplayChat mrhugsSignText = GameObject.Find("World/Interactables/Signposts/TutorialPost").GetComponent<DisplayChat>();
+                mrhugsSignText.textToDisplay = $"Mr. Hugs can be found at {ArchipelagoConnection.itemLocations[5]}.";
+                mrhugsSignText.useString = true;
+
+
+                GameObject hookMinion = GameObject.Find("World/Enemies/DarkAdventureMinion (12)");
+                GameObject hookMinionChatBox = new GameObject("HookMinionChatBox")
+                {
+                    layer = LayerMask.NameToLayer("OtherTriggers")
+                };
+                hookMinionChatBox.transform.position = hookMinion.transform.position + new Vector3(0, 0, 0);
+                hookMinionChatBox.transform.parent = hookMinion.transform;
+                BoxCollider2D hookMinionCollider = hookMinionChatBox.AddComponent<BoxCollider2D>();
+                hookMinionCollider.isTrigger = true;
+                hookMinionCollider.size = new Vector2(3, 3);
+                DisplayChat hookMinionChat = hookMinionChatBox.AddComponent<DisplayChat>();
+                hookMinionChat.audioSource = GameObject.Find("World/NPCs").GetComponent<AudioSource>();
+                hookMinionChat.speaker = hookMinion;
+                hookMinionChat.textToDisplay = $"My friend took the hook to go mountainclimbing at {ArchipelagoConnection.itemLocations[7]}.";
+                hookMinionChat.useString = true;
+
+                GameObject shopSign = GameObject.Find("World/Interactables/Signposts/Post (64)");
+                DisplayChat shopSignText = shopSign.GetComponent<DisplayChat>();
+                shopSignText.textToDisplay = $"The Shop. Our second branch specialised on explosives is located at {ArchipelagoConnection.itemLocations[8]}.";
+                shopSignText.useString = true;
+            }
 
             // Change Ultimate Door signs texts
             DisplayChat[] signLeft = Resources.FindObjectsOfTypeAll<DisplayChat>().Where(obj => obj.transform.position.x == 194.0 && obj.transform.position.y == -24.0).ToArray();
