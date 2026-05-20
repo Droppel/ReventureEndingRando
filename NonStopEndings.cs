@@ -100,7 +100,7 @@ namespace ReventureEndingRando
             { EndingTypes.FallIntoWaterfallWithPrincess, new NonStopEnding { level = NonStopLevels.Everything } }, // Allows going to the bottom of waterfalls
             { EndingTypes.DragonWithShield, new NonStopEnding { level = NonStopLevels.Logical } },
             { EndingTypes.DragonWithShieldAndFireTrinket, new NonStopEnding { level = NonStopLevels.Logical } },
-            { EndingTypes.EatenByFakePrincess, new NonStopEnding { level = NonStopLevels.Logical } },
+            { EndingTypes.EatenByFakePrincess, new NonStopEnding { level = NonStopLevels.NotImplemented } }, // TODO breaks the camera
             { EndingTypes.ShotgunFakePrincess, new NonStopEnding { level = NonStopLevels.Logical } },
             { EndingTypes.KillAllDevsHell, new NonStopEnding { level = NonStopLevels.Everything } }, // You're stuck anyways
             { EndingTypes.TakePrincessToBed, new NonStopEnding { level = NonStopLevels.Canonical } },
