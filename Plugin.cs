@@ -87,18 +87,7 @@ namespace ReventureEndingRando
         {
             // if (Input.GetKeyDown(KeyCode.F8)) // DEBUG
             // {
-            //     Hero.instance.transform.position = EndingRandomizer.spawnLocations["Anvil"];
-            //     // Hero.instance.transform.position = new Vector2(10.5f, 17.5f);
-            // }
-            // if (Input.GetKeyDown(KeyCode.F9)) // DEBUG
-            // {
-            //     Hero.instance.transform.position = EndingRandomizer.spawnLocations["CastleFirstFloor"];
-            //     // Hero.instance.transform.position = new Vector2(10.5f, 17.5f);
-            // }
-            // if (Input.GetKeyDown(KeyCode.F11)) // DEBUG
-            // {
-            //     Hero.instance.transform.position = EndingRandomizer.spawnLocations["Princess"];
-            //     // Hero.instance.transform.position = new Vector2(10.5f, 17.5f);
+            //     Hero.instance.transform.position = new Vector2(310.5f, 7.5f);
             // }
 
             // if (Input.GetKeyDown(KeyCode.F7)) // DEBUG

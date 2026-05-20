@@ -249,6 +249,7 @@ namespace ReventureEndingRando
 
             // Set Location hints for randomized locations graph
             if (ArchipelagoConnection.experimentalRegionGraph != 0) {
+                // House Sword
                 GameObject swordSign = GameObject.Find("World/Interactables/Signposts/FirstTutorialPost");
                 GameObject.Destroy(swordSign.GetComponent<AlterWithRestrictions>());
                 swordSign.SetActive(true);
@@ -257,6 +258,7 @@ namespace ReventureEndingRando
                 swordSignText.textToDisplay = $"WASD: MOVE\nSPACE & E keys: JUMP & ACTION\nEsc: PAUSE/OPTIONS\nYou can find the sword at {ArchipelagoConnection.itemLocations[0]}.";
                 swordSignText.useString = true;
 
+                // Elder Sword
                 GameObject swordPedestalSign = GameObject.Find("World/Interactables/Signposts/Post (59)");
                 GameObject.Destroy(swordPedestalSign.GetComponent<AlterWithEnding>());
                 swordPedestalSign.SetActive(true);
@@ -264,10 +266,12 @@ namespace ReventureEndingRando
                 swordPedestalSignText.textToDisplay = $"Sword of Legend: Missing, Last seen at {ArchipelagoConnection.itemLocations[1]}.";
                 swordPedestalSignText.useString = true;
 
+                // Shovel
                 DisplayChat elderChat = GameObject.Find("World/NPCs/KingdomChats/DefaultChats/Elder_Chat").GetComponent<DisplayChat>();
                 elderChat.textToDisplay = $"It's dangerous to go without a shovel! You can use mine. I stored it at {ArchipelagoConnection.itemLocations[2]}.";
                 elderChat.useString = true;
 
+                // Bomb
                 GameObject bombMinion = GameObject.Find("World/Enemies/DarkAdventureMinion (20)");
                 GameObject bombMinionChatBox = new GameObject("BombMinionChatBox")
                 {
@@ -284,6 +288,7 @@ namespace ReventureEndingRando
                 bombMinionChat.textToDisplay = $"The bomb has been moved to {ArchipelagoConnection.itemLocations[3]}.";
                 bombMinionChat.useString = true;
 
+                // Shield
                 ILocalizationParametersService paramservice = Core.Get<ILocalizationParametersService>();
                 string curretName = paramservice[LocalizationParameterKeys.hero];
                 DisplayChat kingChat = GameObject.Find("World/NPCs/KingdomChats/DefaultChats/TheKing_Chat").GetComponent<DisplayChat>();
@@ -292,11 +297,21 @@ namespace ReventureEndingRando
                                          $"I think I left it at {ArchipelagoConnection.itemLocations[4]}.";
                 kingChat.useString = true;
 
+                // Mr Hugs
                 DisplayChat mrhugsSignText = GameObject.Find("World/Interactables/Signposts/TutorialPost").GetComponent<DisplayChat>();
                 mrhugsSignText.textToDisplay = $"Mr. Hugs can be found at {ArchipelagoConnection.itemLocations[5]}.";
                 mrhugsSignText.useString = true;
 
 
+                // Lava Trinket
+                GameObject lavaTrinketSign = GameObject.Instantiate(GameObject.Find("World/FinalAreas/TransformationElements/RockPost"));
+                lavaTrinketSign.name = "LavaTrinketSign";
+                lavaTrinketSign.transform.position = new Vector2(96.5f, 11.5f);
+                DisplayChat lavaTrinketSignText = lavaTrinketSign.GetComponent<DisplayChat>();
+                lavaTrinketSignText.textToDisplay = $"The Lava Trinket is currently located at {ArchipelagoConnection.itemLocations[6]}.";
+                lavaTrinketSignText.useString = true;
+
+                // Hook
                 GameObject hookMinion = GameObject.Find("World/Enemies/DarkAdventureMinion (12)");
                 GameObject hookMinionChatBox = new GameObject("HookMinionChatBox")
                 {
@@ -313,10 +328,28 @@ namespace ReventureEndingRando
                 hookMinionChat.textToDisplay = $"My friend took the hook to go mountainclimbing at {ArchipelagoConnection.itemLocations[7]}.";
                 hookMinionChat.useString = true;
 
+                // Nuke
                 GameObject shopSign = GameObject.Find("World/Interactables/Signposts/Post (64)");
                 DisplayChat shopSignText = shopSign.GetComponent<DisplayChat>();
-                shopSignText.textToDisplay = $"The Shop. Our second branch specialised on explosives is located at {ArchipelagoConnection.itemLocations[8]}.";
+                shopSignText.textToDisplay = $"The Shop. Our second branch specialised in explosives is located at {ArchipelagoConnection.itemLocations[8]}.";
                 shopSignText.useString = true;
+
+                // Whistle
+                GameObject whistleMinion = GameObject.Find("World/Enemies/DarkAdventureMinion (1)");
+                GameObject whistleMinionChatBox = new GameObject("whistleMinionChatBox")
+                {
+                    layer = LayerMask.NameToLayer("OtherTriggers")
+                };
+                whistleMinionChatBox.transform.position = whistleMinion.transform.position + new Vector3(0, 0, 0);
+                whistleMinionChatBox.transform.parent = whistleMinion.transform;
+                BoxCollider2D whistleMinionCollider = whistleMinionChatBox.AddComponent<BoxCollider2D>();
+                whistleMinionCollider.isTrigger = true;
+                whistleMinionCollider.size = new Vector2(5, 3);
+                DisplayChat whistleMinionChat = whistleMinionChatBox.AddComponent<DisplayChat>();
+                whistleMinionChat.audioSource = GameObject.Find("World/NPCs").GetComponent<AudioSource>();
+                whistleMinionChat.speaker = whistleMinion;
+                whistleMinionChat.textToDisplay = $"I hate whistling, so I yeeted the Whistle all the way to {ArchipelagoConnection.itemLocations[9]}.";
+                whistleMinionChat.useString = true;
             }
 
             // Change Ultimate Door signs texts
@@ -328,10 +361,10 @@ namespace ReventureEndingRando
                 signLeft[0].textToDisplay = "Perseverance and Patience yield... Wait ZERO? REALLY?";
             } else if (ArchipelagoConnection.requiredEndings == 1)
             {
-                signLeft[0].textToDisplay = "Perseverance and Patience yield the ultimate reward. Or 1 Ending will do to";
+                signLeft[0].textToDisplay = "Perseverance and Patience yield the ultimate reward. Or 1 Ending will do too";
             } else
             {
-                signLeft[0].textToDisplay = "Perseverance and Patience yield the ultimate reward. Or " + ArchipelagoConnection.requiredEndings +" Endings will do to";
+                signLeft[0].textToDisplay = "Perseverance and Patience yield the ultimate reward. Or " + ArchipelagoConnection.requiredEndings +" Endings will do too";
             }
             signLeft[0].useString = true;
             //This temple is guarded by the 4 gems that keep nature in balance: Earth, Water, Wind and Fire
