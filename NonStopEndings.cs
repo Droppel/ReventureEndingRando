@@ -106,7 +106,7 @@ namespace ReventureEndingRando
             { EndingTypes.TakePrincessToBed, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.PlaceBombUnderCastle, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.StabMinionMultipleTimes, new NonStopEnding { level = NonStopLevels.Canonical } },
-            { EndingTypes.HarakiriSuicide, new NonStopEnding { level = NonStopLevels.Logical } },
+            { EndingTypes.HarakiriSuicide, new NonStopEnding { level = NonStopLevels.NotImplemented } }, // TODO Softlocks
             { EndingTypes.SelfDestructFortress, new NonStopEnding { level = NonStopLevels.Canonical } },
             { EndingTypes.ShootPrincessToTown, new NonStopEnding { level = NonStopLevels.NotImplemented } }, // TODO Cannon endings are weird
             { EndingTypes.HundredMinionsMassacre, new NonStopEnding { level = NonStopLevels.Everything } },
