@@ -142,6 +142,12 @@ namespace ReventureEndingRando
                 }
             }
 
+            // Disable the devs cutscene
+            GameObject devsMenace = GameObject.Find("DevsMenaceCinematic");
+            if (devsMenace != null) {
+                devsMenace.GetComponent<BoxCollider2D>().enabled = false;
+            }
+
             // Reduce Hypothermia and AFK timers
             SwimAreaHypothermia[] swimAreaHypothermias = Resources.FindObjectsOfTypeAll<SwimAreaHypothermia>();
             var timeToEnding = typeof(SwimAreaHypothermia).GetField("timeToTriggerEnding", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
