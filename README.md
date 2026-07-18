@@ -3,14 +3,15 @@
 ## Installation
 1. Download [BepinEx](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2) you need the x86 version
 2. Extract the files in the .zip into the Reventure Folder, so they are all next to the Reventure.exe
-3. Start Reventure once, if Bepinex is installed correctly, there should now be multiple folders in /BepInEx/
-4. Download the files from the current release
-5. Put the ReventureEndingRando.dll into the /BepInEx/plugins folder
-6. Put the Archipelago.MultiClient.Net.dllinto /BepInEx/core folder
-7. Start the game.
-8. In the top left input \<host\>:\<port\> into the upper input field and your slot name into the lower inputfield.
-9. Start a new file (Saveslots can be deleted by holding down "delete" for 10 seconds)
-10. The mod remembers the connection info for existing files. So when you want to continue later, just load the associated save file (No need to use F5 again)
+3. LINUX ONLY: Add the following Launch Parameters in Steam: WINEDLLOVERRIDES="winhttp=n,b" %command%
+4. Start Reventure once, if Bepinex is installed correctly, there should now be multiple folders in /BepInEx/
+5. Download the files from the current release
+6. Put the ReventureEndingRando.dll into the /BepInEx/plugins folder
+7. Put the Archipelago.MultiClient.Net.dllinto /BepInEx/core folder
+8. Start the game.
+9. In the top left input \<host\>:\<port\> into the upper input field and your slot name into the lower inputfield.
+10. Start a new file (Saveslots can be deleted by holding down "delete" for 10 seconds)
+11. The mod remembers the connection info for existing files. So when you want to continue later, just load the associated save file (No need to use F5 again)
 
 ## Settings
 | Setting      | Range   | Default | Description                              |
