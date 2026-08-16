@@ -1291,7 +1291,7 @@ pub fn setup_region_connections(base_regions: &mut [BaseRegion], start_region: u
 
     // ComicStash connections
     base_regions[COMIC_STASH].add_connection(BaseConnection::new(FORTRESS_TREASURE, rules::always, SimpleBitset::new_empty()));
-    base_regions[COMIC_STASH].add_location(BaseConnection::new(LOC86, rules::always, SimpleBitset::new_empty()));
+    base_regions[COMIC_STASH].add_location(BaseConnection::new(LOC68, rules::always, SimpleBitset::new_empty()));
 
 
     // RightOfFortress connections
