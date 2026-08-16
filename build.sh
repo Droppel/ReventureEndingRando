@@ -1,10 +1,17 @@
-mkdir build
+mkdir -p build
 rm -rf build/*
 cp Client/bin/Debug/netstandard2.0/Archipelago.MultiClient.Net.dll build/Archipelago.MultiClient.Net.dll
 
 # Build APWorld
-zip -r reventure.apworld World/*
-mv reventure.apworld build/reventure.apworld
+mkdir -p tmp/reventure
+cp -r World/* tmp/reventure/
+rm -rf tmp/reventure/__pycache__
+cd tmp
+zip -r reventure.apworld reventure/*
+cd ..
+pwd
+mv tmp/reventure.apworld build/reventure.apworld
+rm -rf tmp/
 
 # Build RegionsGenerator
 # Linux
