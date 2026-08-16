@@ -72,3 +72,5 @@ All Endings that require a specific amount of endings are now always available.
 
 ## Ingame Tracker
 Endings marked with the hint icon in the ending overview are currently in logic. The normal hint menu where you can select the hint the compass and map show you still works the same way.
+
+This breaks completely for the advanced generation. Please make use of the universal tracker for that.
