@@ -1,16 +1,4 @@
-# General
-.vs/
 .vscode/
-
-# Client
-ReventureEndingRando.sln
-bin/
-obj/
-
-# World
-__pycache__/
-
-# RegionsGenerator
 out/
 *.puml
 *.plantuml
