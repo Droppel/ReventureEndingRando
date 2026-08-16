@@ -1,6 +1,7 @@
 # General
 .vs/
 .vscode/
+build/
 
 # Client
 ReventureEndingRando.sln
