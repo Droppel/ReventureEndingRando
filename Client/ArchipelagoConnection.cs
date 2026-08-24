@@ -32,6 +32,11 @@ namespace ReventureEndingRando
         public ArchipelagoConnection(string host, string slot)
         {
             string[] hostSplit = host.Split(':');
+            if (hostSplit.Length != 2)
+            {
+                Plugin.PatchLogger.LogInfo($"Invalid host format: {host}. Expected format: <hostname>:<port>");
+                throw new ArgumentException($"Invalid host format: {host}. Expected format: <hostname>:<port>");
+            }
             session = ArchipelagoSessionFactory.CreateSession(hostSplit[0], int.Parse(hostSplit[1]));
             this.slot = slot;
             this.server = host;
@@ -87,6 +92,9 @@ namespace ReventureEndingRando
                 spawn = slotData["spawn"].ToString();
                 startingJumpHeight = int.Parse(slotData["startingjumps"].ToString());
                 itemLocations = [.. slotData["itemlocations"].ToString().Split('|')];
+            } else
+            {
+                startingJumpHeight = 3;
             }
 
             session.Items.ItemReceived += (receivedItemsHelper) => {
